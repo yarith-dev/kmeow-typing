@@ -1,0 +1,25 @@
+{
+  "cases": [
+    {"word":"កាស","inputs":["kah","kas"]},
+    {"word":"កាសកា","inputs":["kahka","kaska"]},
+    {"word":"កាសកាសកា","inputs":["kahkahka","kahkaska","kaskahka","kaskaska"]},
+    {"word":"សាសនា","inputs":["sahnea","sahnia","sasnea","sasnia"]},
+    {"word":"ទេសធម៌","inputs":["tehthoa","testhoa"]},
+    {"word":"ក្រដាសខ្សាច់","inputs":["krodahkhsach","krodaskhsach"]}
+  ],
+  "currentAdmissionReadings": {
+    "សុខសប្បាយ":["soksabbay","suksabbay"]
+  },
+  "parts":["សុខ","សប្បាយ","វិទ្យុ","សកម្ម","កិច្ច","សន្យា","កិរិយា","សព្ទ"],
+  "onsets": [
+    {"word":"សា","inputs":["sa"],"rejected":["ha"]},
+    {"word":"កាសា","inputs":["kasa"],"rejected":["kaha"]},
+    {"word":"ក្សា","inputs":["ksa"],"rejected":["kha"]},
+    {"word":"ស្កា","inputs":["ska"],"rejected":["hka"]},
+    {"word":"សុខសប្បាយ","inputs":["soksabbay","suksabbay"],"rejected":["sokhohbbay","sukhohbbay"]},
+    {"word":"វិទ្យុសកម្ម","inputs":["vityoskam","vityuskam"],"rejected":["vityohkam","vityuhkam"]},
+    {"word":"កិច្ចសន្យា","inputs":["kechsonya","kejjosnyea"],"rejected":["kejjohnyea"]},
+    {"word":"កិរិយាសព្ទ","inputs":["kiriyasap","kiriyaspto"],"rejected":["kiriyahpto"]},
+    {"word":"សុខសប្បាយកាស","inputs":["soksabbaykah","soksabbaykas"],"rejected":["sokhohbbaykah","sokhohbbaykas"]}
+  ]
+}

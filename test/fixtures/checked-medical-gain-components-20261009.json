@@ -1,0 +1,512 @@
+{
+  "rows": [
+    {
+      "word": "មន្ទីរពេទ្យ"
+    },
+    {
+      "word": "ឱសថការី"
+    },
+    {
+      "word": "ឱសថស្ថាន"
+    },
+    {
+      "word": "ភាគលាភ"
+    }
+  ],
+  "newPairs": [
+    [
+      "aosotkari",
+      "ឱសថការី"
+    ],
+    [
+      "aosotsthan",
+      "ឱសថស្ថាន"
+    ],
+    [
+      "peakleap",
+      "ភាគលាភ"
+    ],
+    [
+      "peakliap",
+      "ភាគលាភ"
+    ],
+    [
+      "pheakleap",
+      "ភាគលាភ"
+    ],
+    [
+      "pheakliap",
+      "ភាគលាភ"
+    ],
+    [
+      "phiakleap",
+      "ភាគលាភ"
+    ],
+    [
+      "phiakliap",
+      "ភាគលាភ"
+    ],
+    [
+      "piakleap",
+      "ភាគលាភ"
+    ],
+    [
+      "piakliap",
+      "ភាគលាភ"
+    ]
+  ],
+  "compatibility": [
+    [
+      "montirpetyo",
+      "មន្ទីរពេទ្យ"
+    ],
+    [
+      "aosothkari",
+      "ឱសថការី"
+    ],
+    [
+      "aosothsthan",
+      "ឱសថស្ថាន"
+    ],
+    [
+      "peakleaph",
+      "ភាគលាភ"
+    ],
+    [
+      "peakliaph",
+      "ភាគលាភ"
+    ],
+    [
+      "pheakleaph",
+      "ភាគលាភ"
+    ],
+    [
+      "pheakliaph",
+      "ភាគលាភ"
+    ],
+    [
+      "phiakleaph",
+      "ភាគលាភ"
+    ],
+    [
+      "phiakliaph",
+      "ភាគលាភ"
+    ],
+    [
+      "piakleaph",
+      "ភាគលាភ"
+    ],
+    [
+      "piakliaph",
+      "ភាគលាភ"
+    ]
+  ],
+  "guardReadings": [
+    {
+      "word": "កភាគលាភ",
+      "inputs": [
+        "kapeakleaph",
+        "kapeakliaph",
+        "kapheakleaph",
+        "kapheakliaph",
+        "kaphiakleaph",
+        "kaphiakliaph",
+        "kapiakleaph",
+        "kapiakliaph"
+      ]
+    },
+    {
+      "word": "កភាគលាភក",
+      "inputs": [
+        "kapeakleaphok",
+        "kapeakleapok",
+        "kapeakliaphok",
+        "kapeakliapok",
+        "kapheakleaphok",
+        "kapheakleapok",
+        "kapheakliaphok",
+        "kapheakliapok",
+        "kaphiakleaphok",
+        "kaphiakleapok",
+        "kaphiakliaphok",
+        "kaphiakliapok",
+        "kapiakleaphok",
+        "kapiakleapok",
+        "kapiakliaphok",
+        "kapiakliapok"
+      ]
+    },
+    {
+      "word": "កមន្ទីរពេទ្យ",
+      "inputs": [
+        "komntirpetyo"
+      ]
+    },
+    {
+      "word": "កមន្ទីរពេទ្យក",
+      "inputs": [
+        "komntirpetyok"
+      ]
+    },
+    {
+      "word": "កឱសថការី",
+      "inputs": []
+    },
+    {
+      "word": "កឱសថការីក",
+      "inputs": []
+    },
+    {
+      "word": "កឱសថស្ថាន",
+      "inputs": [
+        "kaaosothsthan"
+      ]
+    },
+    {
+      "word": "កឱសថស្ថានក",
+      "inputs": [
+        "kaaosothsthanok"
+      ]
+    },
+    {
+      "word": "ការី",
+      "inputs": [
+        "karei",
+        "karey"
+      ]
+    },
+    {
+      "word": "គ្រូពេទ្យ",
+      "inputs": [
+        "kroupetyo",
+        "krupetyo"
+      ]
+    },
+    {
+      "word": "ទន្តពេទ្យ",
+      "inputs": []
+    },
+    {
+      "word": "ធនលាភ",
+      "inputs": [
+        "thonleaph",
+        "thonliaph"
+      ]
+    },
+    {
+      "word": "បុព្វលាភ",
+      "inputs": [
+        "bopvoleaph",
+        "bopvoliaph",
+        "bopwoleaph",
+        "bopwoliaph",
+        "bupvoleaph",
+        "bupvoliaph",
+        "bupwoleaph",
+        "bupwoliaph"
+      ]
+    },
+    {
+      "word": "ផ្កាចន្ទន៍",
+      "inputs": [
+        "phkachnto",
+        "pkachnto"
+      ]
+    },
+    {
+      "word": "ពេទ្យ",
+      "inputs": [
+        "pet"
+      ]
+    },
+    {
+      "word": "ពេទ្យធ្មេញ",
+      "inputs": [
+        "petyothmenh"
+      ]
+    },
+    {
+      "word": "ពេទ្យសត្វ",
+      "inputs": [
+        "petyostvo",
+        "petyostwo"
+      ]
+    },
+    {
+      "word": "ពេទ្យស្ថាន",
+      "inputs": [
+        "petyosthan"
+      ]
+    },
+    {
+      "word": "ព្រួយបារម្ភ",
+      "inputs": [
+        "prurybarmpho",
+        "prurybarmpo"
+      ]
+    },
+    {
+      "word": "ភាគ",
+      "inputs": [
+        "peak",
+        "pheak",
+        "phiak",
+        "piak"
+      ]
+    },
+    {
+      "word": "ភាគលាភក",
+      "inputs": [
+        "peakleaphok",
+        "peakleapok",
+        "peakliaphok",
+        "peakliapok",
+        "pheakleaphok",
+        "pheakleapok",
+        "pheakliaphok",
+        "pheakliapok",
+        "phiakleaphok",
+        "phiakleapok",
+        "phiakliaphok",
+        "phiakliapok",
+        "piakleaphok",
+        "piakleapok",
+        "piakliaphok",
+        "piakliapok"
+      ]
+    },
+    {
+      "word": "ភាគលាភា",
+      "inputs": [
+        "peakleapea",
+        "peakleaphea",
+        "peakleaphia",
+        "peakleapia",
+        "peakliapea",
+        "peakliaphea",
+        "peakliaphia",
+        "peakliapia",
+        "pheakleapea",
+        "pheakleaphea",
+        "pheakleaphia",
+        "pheakleapia",
+        "pheakliapea",
+        "pheakliaphea",
+        "pheakliaphia",
+        "pheakliapia",
+        "phiakleapea",
+        "phiakleaphea",
+        "phiakleaphia",
+        "phiakleapia",
+        "phiakliapea",
+        "phiakliaphea",
+        "phiakliaphia",
+        "phiakliapia",
+        "piakleapea",
+        "piakleaphea",
+        "piakleaphia",
+        "piakleapia",
+        "piakliapea",
+        "piakliaphea",
+        "piakliaphia",
+        "piakliapia"
+      ]
+    },
+    {
+      "word": "ភាគលាភ៍",
+      "inputs": [
+        "peaklea",
+        "peaklia",
+        "pheaklea",
+        "pheaklia",
+        "phiaklea",
+        "phiaklia",
+        "piaklea",
+        "piaklia"
+      ]
+    },
+    {
+      "word": "ភាគលាភៗ",
+      "inputs": []
+    },
+    {
+      "word": "ភោគលាភ",
+      "inputs": [
+        "phokleaph",
+        "phokliaph",
+        "pokleaph",
+        "pokliaph"
+      ]
+    },
+    {
+      "word": "មន្ទីរ",
+      "inputs": [
+        "monti"
+      ]
+    },
+    {
+      "word": "មន្ទីរពេទ្យក",
+      "inputs": [
+        "montirpetyok"
+      ]
+    },
+    {
+      "word": "មន្ទីរពេទ្យា",
+      "inputs": [
+        "montirpetyea",
+        "montirpetyia"
+      ]
+    },
+    {
+      "word": "មន្ទីរពេទ្យ៍",
+      "inputs": []
+    },
+    {
+      "word": "មន្ទីរពេទ្យៗ",
+      "inputs": []
+    },
+    {
+      "word": "មិត្តភាព",
+      "inputs": []
+    },
+    {
+      "word": "លាភ",
+      "inputs": [
+        "leap",
+        "leaph",
+        "liap",
+        "liaph"
+      ]
+    },
+    {
+      "word": "លាភគិទ្ធ",
+      "inputs": [
+        "leaphkettho",
+        "leaphkittho",
+        "liaphkettho",
+        "liaphkittho"
+      ]
+    },
+    {
+      "word": "លាភតណ្ហា",
+      "inputs": [
+        "leaphotnha",
+        "leapotnha",
+        "liaphotnha",
+        "liapotnha"
+      ]
+    },
+    {
+      "word": "លាភន្តរាយ",
+      "inputs": [
+        "leaphntareay",
+        "leaphntariay",
+        "liaphntareay",
+        "liaphntariay"
+      ]
+    },
+    {
+      "word": "លោការីត",
+      "inputs": [
+        "lokarit"
+      ]
+    },
+    {
+      "word": "សន្យា",
+      "inputs": [
+        "sonya"
+      ]
+    },
+    {
+      "word": "សុទ្ធតែ",
+      "inputs": [
+        "sotthotae",
+        "sutthotae"
+      ]
+    },
+    {
+      "word": "ស្ថាន",
+      "inputs": [
+        "sthan"
+      ]
+    },
+    {
+      "word": "ឱសថ",
+      "inputs": [
+        "aosoth"
+      ]
+    },
+    {
+      "word": "ឱសថការីក",
+      "inputs": [
+        "aosothkarik"
+      ]
+    },
+    {
+      "word": "ឱសថការីា",
+      "inputs": [
+        "aosothkariea",
+        "aosothkariia"
+      ]
+    },
+    {
+      "word": "ឱសថការី៍",
+      "inputs": []
+    },
+    {
+      "word": "ឱសថការីៗ",
+      "inputs": []
+    },
+    {
+      "word": "ឱសថដ្ឋាន",
+      "inputs": [
+        "aosothdthan",
+        "aosotthan"
+      ]
+    },
+    {
+      "word": "ឱសថស្ថានក",
+      "inputs": [
+        "aosothsthanok"
+      ]
+    },
+    {
+      "word": "ឱសថស្ថានា",
+      "inputs": [
+        "aosothsthanea",
+        "aosothsthania"
+      ]
+    },
+    {
+      "word": "ឱសថស្ថាន៍",
+      "inputs": [
+        "aosothstha"
+      ]
+    },
+    {
+      "word": "ឱសថស្ថានៗ",
+      "inputs": []
+    },
+    {
+      "word": "ឱសថាល័យ",
+      "inputs": [
+        "aosathalai"
+      ]
+    },
+    {
+      "word": "ឱសថូបករណ៍",
+      "inputs": [
+        "aosathobakor"
+      ]
+    }
+  ],
+  "rankPriority": 0,
+  "retiredGenerated": {
+    "newPairs": [
+      [
+        "montipet",
+        "មន្ទីរពេទ្យ"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "rows": [
+    {
+      "word": "រូបមន្ត"
+    },
+    {
+      "word": "ព្រះសង្ឃ"
+    }
+  ],
+  "newPairs": [
+    [
+      "roupmon",
+      "រូបមន្ត"
+    ],
+    [
+      "rupmon",
+      "រូបមន្ត"
+    ],
+    [
+      "preahsong",
+      "ព្រះសង្ឃ"
+    ]
+  ],
+  "compatibility": [
+    [
+      "roubomntor",
+      "រូបមន្ត"
+    ],
+    [
+      "rubomntor",
+      "រូបមន្ត"
+    ],
+    [
+      "preahsngkho",
+      "ព្រះសង្ឃ"
+    ]
+  ],
+  "guardReadings": [
+    {
+      "word": "កព្រះសង្ឃ",
+      "inputs": [
+        "kapreahsngkho"
+      ]
+    },
+    {
+      "word": "កព្រះសង្ឃក",
+      "inputs": [
+        "kapreahsngkhok"
+      ]
+    },
+    {
+      "word": "កម្មន្ត",
+      "inputs": [
+        "kamnta"
+      ]
+    },
+    {
+      "word": "កម្មន្តសាល",
+      "inputs": [
+        "kamntasal"
+      ]
+    },
+    {
+      "word": "ករូបមន្ត",
+      "inputs": [
+        "karoubomnta",
+        "karubomnta"
+      ]
+    },
+    {
+      "word": "ករូបមន្តក",
+      "inputs": [
+        "karoubomntok",
+        "karubomntok"
+      ]
+    },
+    {
+      "word": "គណៈរដ្ឋមន្ត្រី",
+      "inputs": [
+        "konaroatmontrei",
+        "konaroatmontrey"
+      ]
+    },
+    {
+      "word": "ដីឥដ្ឋ",
+      "inputs": [
+        "deiedtha",
+        "deyedtha"
+      ]
+    },
+    {
+      "word": "ទឹកមន្ត",
+      "inputs": [
+        "teukomnta",
+        "toeukomnta"
+      ]
+    },
+    {
+      "word": "ពុទ្ធមន្ត",
+      "inputs": [
+        "potthomnta",
+        "putthomnta"
+      ]
+    },
+    {
+      "word": "ព្រះ",
+      "inputs": [
+        "preah"
+      ]
+    },
+    {
+      "word": "ព្រះសង្ឃក",
+      "inputs": [
+        "preahsngkhok"
+      ]
+    },
+    {
+      "word": "ព្រះសង្ឃា",
+      "inputs": [
+        "preahsngkhea",
+        "preahsngkhia"
+      ]
+    },
+    {
+      "word": "ព្រះសង្ឃ៍",
+      "inputs": []
+    },
+    {
+      "word": "ព្រះសង្ឃៗ",
+      "inputs": []
+    },
+    {
+      "word": "ភិក្ខុ",
+      "inputs": [
+        "pekkho",
+        "pekkhu",
+        "phekkho",
+        "phekkhu",
+        "phikkho",
+        "phikkhu",
+        "pikkho",
+        "pikkhu"
+      ]
+    },
+    {
+      "word": "ភិក្ខុសង្ឃ",
+      "inputs": [
+        "pekkhosngkho",
+        "pekkhusngkho",
+        "phekkhosngkho",
+        "phekkhusngkho",
+        "phikkhosngkho",
+        "phikkhusngkho",
+        "pikkhosngkho",
+        "pikkhusngkho"
+      ]
+    },
+    {
+      "word": "មន",
+      "inputs": [
+        "mon"
+      ]
+    },
+    {
+      "word": "មន់",
+      "inputs": [
+        "mun"
+      ]
+    },
+    {
+      "word": "មន្ត",
+      "inputs": [
+        "monta"
+      ]
+    },
+    {
+      "word": "មន្តុ",
+      "inputs": [
+        "monto",
+        "montu"
+      ]
+    },
+    {
+      "word": "មន្ត្រី",
+      "inputs": [
+        "montrei",
+        "montrey"
+      ]
+    },
+    {
+      "word": "រដ្ឋមន្ត្រី",
+      "inputs": [
+        "roatmontrei",
+        "roatmontrey",
+        "rodthomntri"
+      ]
+    },
+    {
+      "word": "រូប",
+      "inputs": [
+        "roup",
+        "rup"
+      ]
+    },
+    {
+      "word": "រូបមន្តក",
+      "inputs": [
+        "roubomntok",
+        "rubomntok"
+      ]
+    },
+    {
+      "word": "រូបមន្តគីមី",
+      "inputs": [
+        "roubomntakimi",
+        "rubomntakimi"
+      ]
+    },
+    {
+      "word": "រូបមន្តា",
+      "inputs": [
+        "roubomnta",
+        "rubomnta"
+      ]
+    },
+    {
+      "word": "រូបមន្ត៍",
+      "inputs": []
+    },
+    {
+      "word": "រូបមន្តៗ",
+      "inputs": []
+    },
+    {
+      "word": "លោក",
+      "inputs": [
+        "lok"
+      ]
+    },
+    {
+      "word": "លោកសង្ឃ",
+      "inputs": [
+        "lokosngkho"
+      ]
+    },
+    {
+      "word": "វេទមន្ត",
+      "inputs": [
+        "vetomnta",
+        "wetomnta"
+      ]
+    },
+    {
+      "word": "សង",
+      "inputs": [
+        "song"
+      ]
+    },
+    {
+      "word": "សង់",
+      "inputs": [
+        "song"
+      ]
+    },
+    {
+      "word": "សង្ឃ",
+      "inputs": [
+        "sangkho"
+      ]
+    },
+    {
+      "word": "សង្ឃការី",
+      "inputs": [
+        "sangkhokari"
+      ]
+    },
+    {
+      "word": "សង្ឃកិច្ច",
+      "inputs": [
+        "sangkhokejja",
+        "sangkhokijja"
+      ]
+    },
+    {
+      "word": "សង្ឃាដី",
+      "inputs": [
+        "songkheadei",
+        "songkheadey",
+        "songkhiadei",
+        "songkhiadey"
+      ]
+    },
+    {
+      "word": "សង្ឃឹម",
+      "inputs": [
+        "songkheum",
+        "songkhoeum"
+      ]
+    },
+    {
+      "word": "សតិមន្ត",
+      "inputs": [
+        "satemnta",
+        "satimnta"
+      ]
+    },
+    {
+      "word": "សារធាតុ",
+      "inputs": [
+        "sartheato",
+        "sartheatu",
+        "sarthiato",
+        "sarthiatu",
+        "satheat",
+        "sathiat"
+      ]
+    },
+    {
+      "word": "អរិយ",
+      "inputs": [
+        "arey",
+        "ariy"
+      ]
+    },
+    {
+      "word": "អរិយសង្ឃ",
+      "inputs": [
+        "areyosngkho",
+        "ariyosngkho"
+      ]
+    },
+    {
+      "word": "អាកាសធាតុ",
+      "inputs": [
+        "akahtheat",
+        "akahthiat",
+        "akastheat",
+        "akastheato",
+        "akastheatu",
+        "akasthiat",
+        "akasthiato",
+        "akasthiatu"
+      ]
+    }
+  ],
+  "rankPriority": 0
+}

@@ -1,0 +1,18 @@
+{
+  "originalTables": {
+    "fixedSyllables": "e0edbe9c45eac2b2c6e47a0039b9a30c025e13ab43534bb4528235f946ff9c09",
+    "terminalLexicalUnits": "c168258956fc075f9e0cc9c876a0e07aa29b5f95c9fb7699884dbbb5a2cea3b9",
+    "checkedTerminalRoots": "a1182669ddc053e41351cf7f51c1d1b8167cc3c27c5713ed3455035d29c52db2",
+    "wordReadings": "06a95a22226796bf7af54e19375113b4d276ae0a9b1d4d587ace85de9d119e78"
+  },
+  "originalBoundaryTables": {
+    "writtenNtrBoundary": "d4b1a2f839ae5955486a40bedecf40a99b5ffdcf1fac067e019817d7d51a528d",
+    "writtenNdrBoundary": "e230fafff34bccccaddbdb7318350ecf5357b5d75de5c27e5ec77c0d475e703d",
+    "writtenNhRBoundary": "ce3da85ec3e8dd46302ee1c9f7e0f21543eb833adc22110eaffe3887624c8a63",
+    "unwrittenNasalStopBoundary": "ffcd0314f5e2d979863f7faa5f4ea0875d73e7842b08650ed9962a32a4392b16",
+    "unwrittenNasalAspiratedBoundary": "9dbf2dfe280a57068e2ae57febf4422f6e70c9b610e5a9bbc5ecdeccfe4baa4e"
+  },
+  "wordParts": 56,
+  "cases": 68,
+  "shorthands": 1
+}

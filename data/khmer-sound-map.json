@@ -1,0 +1,3574 @@
+{
+  "consonants": [
+    {
+      "khmer": "ក",
+      "series": "a",
+      "onsetKeys": [
+        "k"
+      ]
+    },
+    {
+      "khmer": "ខ",
+      "series": "a",
+      "onsetKeys": [
+        "kh"
+      ]
+    },
+    {
+      "khmer": "គ",
+      "series": "o",
+      "onsetKeys": [
+        "k"
+      ]
+    },
+    {
+      "khmer": "ឃ",
+      "series": "o",
+      "onsetKeys": [
+        "kh"
+      ]
+    },
+    {
+      "khmer": "ង",
+      "series": "o",
+      "onsetKeys": [
+        "ng"
+      ]
+    },
+    {
+      "khmer": "ច",
+      "series": "a",
+      "onsetKeys": [
+        "j"
+      ]
+    },
+    {
+      "khmer": "ឆ",
+      "series": "a",
+      "onsetKeys": [
+        "ch"
+      ]
+    },
+    {
+      "khmer": "ជ",
+      "series": "o",
+      "onsetKeys": [
+        "ch",
+        "j"
+      ]
+    },
+    {
+      "khmer": "ឈ",
+      "series": "o",
+      "onsetKeys": [
+        "ch"
+      ]
+    },
+    {
+      "khmer": "ញ",
+      "series": "o",
+      "onsetKeys": [
+        "nh",
+        "ny"
+      ]
+    },
+    {
+      "khmer": "ដ",
+      "series": "a",
+      "onsetKeys": [
+        "d"
+      ]
+    },
+    {
+      "khmer": "ឋ",
+      "series": "a",
+      "onsetKeys": [
+        "th"
+      ]
+    },
+    {
+      "khmer": "ឌ",
+      "series": "o",
+      "onsetKeys": [
+        "d"
+      ]
+    },
+    {
+      "khmer": "ឍ",
+      "series": "o",
+      "onsetKeys": [
+        "th"
+      ]
+    },
+    {
+      "khmer": "ណ",
+      "series": "a",
+      "onsetKeys": [
+        "n"
+      ]
+    },
+    {
+      "khmer": "ត",
+      "series": "a",
+      "onsetKeys": [
+        "t"
+      ]
+    },
+    {
+      "khmer": "ថ",
+      "series": "a",
+      "onsetKeys": [
+        "th"
+      ]
+    },
+    {
+      "khmer": "ទ",
+      "series": "o",
+      "onsetKeys": [
+        "t"
+      ]
+    },
+    {
+      "khmer": "ធ",
+      "series": "o",
+      "onsetKeys": [
+        "th"
+      ]
+    },
+    {
+      "khmer": "ន",
+      "series": "o",
+      "onsetKeys": [
+        "n"
+      ]
+    },
+    {
+      "khmer": "ប",
+      "series": "a",
+      "onsetKeys": [
+        "b"
+      ]
+    },
+    {
+      "khmer": "ផ",
+      "series": "a",
+      "onsetKeys": [
+        "ph",
+        "p"
+      ],
+      "codaFallbackKeys": [
+        "ph",
+        "p"
+      ]
+    },
+    {
+      "khmer": "ព",
+      "series": "o",
+      "onsetKeys": [
+        "p"
+      ]
+    },
+    {
+      "khmer": "ភ",
+      "series": "o",
+      "onsetKeys": [
+        "ph",
+        "p"
+      ],
+      "codaFallbackKeys": [
+        "ph",
+        "p"
+      ]
+    },
+    {
+      "khmer": "ម",
+      "series": "o",
+      "onsetKeys": [
+        "m"
+      ]
+    },
+    {
+      "khmer": "យ",
+      "series": "o",
+      "onsetKeys": [
+        "y"
+      ]
+    },
+    {
+      "khmer": "រ",
+      "series": "o",
+      "onsetKeys": [
+        "r"
+      ]
+    },
+    {
+      "khmer": "ល",
+      "series": "o",
+      "onsetKeys": [
+        "l"
+      ]
+    },
+    {
+      "khmer": "វ",
+      "series": "o",
+      "onsetKeys": [
+        "v",
+        "w"
+      ]
+    },
+    {
+      "khmer": "ស",
+      "series": "a",
+      "onsetKeys": [
+        "s"
+      ]
+    },
+    {
+      "khmer": "ហ",
+      "series": "a",
+      "onsetKeys": [
+        "h"
+      ]
+    },
+    {
+      "khmer": "ឡ",
+      "series": "a",
+      "onsetKeys": [
+        "l"
+      ]
+    },
+    {
+      "khmer": "អ",
+      "series": "a",
+      "onsetKeys": []
+    }
+  ],
+  "dependentVowels": [
+    {
+      "khmer": "ា",
+      "aSeriesKeys": [
+        "a"
+      ],
+      "oSeriesKeys": [
+        "ea",
+        "ia"
+      ]
+    },
+    {
+      "khmer": "ិ",
+      "aSeriesKeys": [
+        "i",
+        "e"
+      ],
+      "oSeriesKeys": [
+        "i",
+        "e"
+      ]
+    },
+    {
+      "khmer": "ី",
+      "aSeriesKeys": [
+        "ei",
+        "ey"
+      ],
+      "oSeriesKeys": [
+        "i"
+      ]
+    },
+    {
+      "khmer": "ឹ",
+      "aSeriesKeys": [
+        "er",
+        "oeu"
+      ],
+      "oSeriesKeys": [
+        "er",
+        "oeu"
+      ]
+    },
+    {
+      "khmer": "ឺ",
+      "aSeriesKeys": [
+        "eu"
+      ],
+      "oSeriesKeys": [
+        "eu"
+      ]
+    },
+    {
+      "khmer": "ុ",
+      "aSeriesKeys": [
+        "o",
+        "u"
+      ],
+      "oSeriesKeys": [
+        "o",
+        "u"
+      ]
+    },
+    {
+      "khmer": "ូ",
+      "aSeriesKeys": [
+        "o"
+      ],
+      "oSeriesKeys": [
+        "u",
+        "ou"
+      ]
+    },
+    {
+      "khmer": "ួ",
+      "aSeriesKeys": [
+        "ur"
+      ],
+      "oSeriesKeys": [
+        "ur"
+      ]
+    },
+    {
+      "khmer": "ើ",
+      "aSeriesKeys": [
+        "er"
+      ],
+      "oSeriesKeys": [
+        "er"
+      ]
+    },
+    {
+      "khmer": "ឿ",
+      "aSeriesKeys": [
+        "oeu"
+      ],
+      "oSeriesKeys": [
+        "oeu"
+      ]
+    },
+    {
+      "khmer": "ៀ",
+      "aSeriesKeys": [
+        "ea",
+        "ie"
+      ],
+      "oSeriesKeys": [
+        "ea",
+        "ie"
+      ]
+    },
+    {
+      "khmer": "េ",
+      "aSeriesKeys": [
+        "e"
+      ],
+      "oSeriesKeys": [
+        "e"
+      ]
+    },
+    {
+      "khmer": "ែ",
+      "aSeriesKeys": [
+        "ae"
+      ],
+      "oSeriesKeys": [
+        "e",
+        "ae"
+      ]
+    },
+    {
+      "khmer": "ៃ",
+      "aSeriesKeys": [
+        "ai"
+      ],
+      "oSeriesKeys": [
+        "ey",
+        "ai"
+      ]
+    },
+    {
+      "khmer": "ោ",
+      "aSeriesKeys": [
+        "ao"
+      ],
+      "oSeriesKeys": [
+        "o"
+      ]
+    },
+    {
+      "khmer": "ៅ",
+      "aSeriesKeys": [
+        "au",
+        "ao"
+      ],
+      "oSeriesKeys": [
+        "ov",
+        "ou"
+      ]
+    }
+  ],
+  "additionalVowelForms": [
+    {
+      "khmer": "ិះ",
+      "aSeriesKeys": [
+        "ih",
+        "is"
+      ],
+      "oSeriesKeys": [
+        "ih",
+        "is"
+      ]
+    },
+    {
+      "khmer": "ំ",
+      "aSeriesKeys": [
+        "om",
+        "um"
+      ],
+      "oSeriesKeys": [
+        "om",
+        "um"
+      ]
+    },
+    {
+      "khmer": "ាំ",
+      "aSeriesKeys": [
+        "am"
+      ],
+      "oSeriesKeys": [
+        "orm",
+        {
+          "key": "oam",
+          "rankPriority": -1000000
+        }
+      ]
+    },
+    {
+      "khmer": "ុំ",
+      "aSeriesKeys": [
+        "om"
+      ],
+      "oSeriesKeys": [
+        "um"
+      ]
+    },
+    {
+      "khmer": "ះ",
+      "aSeriesKeys": [
+        "ah"
+      ],
+      "oSeriesKeys": [
+        "eah"
+      ]
+    },
+    {
+      "khmer": "ុះ",
+      "aSeriesKeys": [
+        "oh"
+      ],
+      "oSeriesKeys": [
+        "uh"
+      ]
+    },
+    {
+      "khmer": "េះ",
+      "aSeriesKeys": [
+        "eh",
+        "es"
+      ],
+      "oSeriesKeys": [
+        "eh",
+        "es"
+      ]
+    },
+    {
+      "khmer": "ោះ",
+      "aSeriesKeys": [
+        "oh",
+        "os"
+      ],
+      "oSeriesKeys": [
+        "uh",
+        "us"
+      ]
+    }
+  ],
+  "independentVowels": [
+    {
+      "khmer": "ឥ",
+      "keys": [
+        "e"
+      ]
+    },
+    {
+      "khmer": "ឦ",
+      "keys": [
+        "ei",
+        "ey"
+      ]
+    },
+    {
+      "khmer": "ឧ",
+      "keys": [
+        "o",
+        "u"
+      ]
+    },
+    {
+      "khmer": "ឨ",
+      "keys": []
+    },
+    {
+      "khmer": "ឩ",
+      "keys": [
+        "u",
+        "ou"
+      ]
+    },
+    {
+      "khmer": "ឪ",
+      "keys": [
+        "ov"
+      ]
+    },
+    {
+      "khmer": "ឫ",
+      "keys": [
+        "reu",
+        "roeu"
+      ]
+    },
+    {
+      "khmer": "ឬ",
+      "keys": [
+        "reu"
+      ]
+    },
+    {
+      "khmer": "ឭ",
+      "keys": [
+        "leu",
+        "loeu"
+      ]
+    },
+    {
+      "khmer": "ឮ",
+      "keys": [
+        "leu"
+      ]
+    },
+    {
+      "khmer": "ឯ",
+      "keys": [
+        "ae"
+      ]
+    },
+    {
+      "khmer": "ឰ",
+      "keys": [
+        "ai"
+      ]
+    },
+    {
+      "khmer": "ឱ",
+      "keys": [
+        "ao"
+      ]
+    },
+    {
+      "khmer": "ឲ",
+      "keys": [
+        "ao"
+      ]
+    },
+    {
+      "khmer": "ឳ",
+      "keys": [
+        "au",
+        "ao"
+      ]
+    }
+  ],
+  "runtime": {
+    "inherent": {
+      "a": [
+        "or",
+        "ar",
+        {
+          "key": "oa",
+          "rankPriority": -1000000
+        }
+      ],
+      "o": [
+        "o"
+      ]
+    },
+    "shortInherent": {
+      "a": [
+        "o"
+      ],
+      "o": [
+        "o"
+      ]
+    },
+    "closedInherent": {
+      "a": [
+        "o"
+      ],
+      "o": [
+        "o"
+      ]
+    },
+    "localVowelPairs": [
+      {
+        "first": "ក",
+        "second": "ញ",
+        "subscript": "ញ",
+        "structures": [
+          "medialVowel"
+        ],
+        "keys": [
+          "a"
+        ]
+      },
+      {
+        "first": "ស",
+        "second": "ញ",
+        "subscript": "ញ",
+        "structures": [
+          "medialVowel"
+        ],
+        "keys": [
+          "a"
+        ]
+      },
+      {
+        "first": "ប",
+        "second": "ញ",
+        "subscript": "ញ",
+        "structures": [
+          "medialVowel"
+        ],
+        "keys": [
+          "a"
+        ]
+      },
+      {
+        "first": "ស",
+        "second": "ប",
+        "subscript": "ប",
+        "structures": [
+          "medialVowel"
+        ],
+        "keys": [
+          "a"
+        ]
+      },
+      {
+        "first": "ប",
+        "second": "ណ",
+        "subscript": "ណ",
+        "structures": [
+          "medialVowel"
+        ],
+        "keys": [
+          "o"
+        ]
+      },
+      {
+        "first": "វ",
+        "second": "គ",
+        "subscript": "គ",
+        "structures": [
+          "medialVowel",
+          "finalCluster"
+        ],
+        "keys": [
+          "ae"
+        ]
+      },
+      {
+        "first": "ល",
+        "second": "ក",
+        "subscript": "ខ",
+        "structures": [
+          "closedCluster"
+        ],
+        "keys": [
+          "ae"
+        ]
+      },
+      {
+        "first": "ល",
+        "second": "ទ",
+        "subscript": "ធ",
+        "structures": [
+          "medialVowel",
+          "medialContinuation"
+        ],
+        "keys": [
+          "er"
+        ],
+        "joinConsonants": true
+      }
+    ],
+    "consonantCountTolerance": {
+      "enabled": true,
+      "letters": "bcdfghjklmnprstvw"
+    },
+    "codas": {
+      "ក": [
+        "k"
+      ],
+      "ខ": [
+        "k"
+      ],
+      "គ": [
+        "k"
+      ],
+      "ង": [
+        "ng"
+      ],
+      "ច": [
+        "ch"
+      ],
+      "ញ": [
+        "nh"
+      ],
+      "ន": [
+        "n"
+      ],
+      "ណ": [
+        "n"
+      ],
+      "ម": [
+        "m"
+      ],
+      "យ": [
+        "y"
+      ],
+      "វ": [
+        "v"
+      ],
+      "ល": [
+        "l"
+      ],
+      "ឡ": [
+        "l"
+      ],
+      "ត": [
+        "t"
+      ],
+      "ទ": [
+        "t"
+      ],
+      "ប": [
+        "p"
+      ],
+      "ព": [
+        "p"
+      ],
+      "ស": [
+        "h",
+        "s"
+      ]
+    },
+    "terminalReadingUnits": [
+      {
+        "khmer": "ទស្សន៍",
+        "retained": "ទស្ស",
+        "words": [
+          "ទស្សន៍",
+          "ទូរទស្សន៍",
+          "ស្ថានីយទូរទស្សន៍"
+        ]
+      }
+    ],
+    "silentCodaClusters": [
+      {
+        "khmer": "ស្ស",
+        "coda": "ស",
+        "initialInherentKeys": {
+          "ទ": [
+            "u"
+          ]
+        },
+        "vowelSubstitutions": [
+          {
+            "onset": "ស",
+            "from": "ិ",
+            "to": "ឹ"
+          }
+        ],
+        "followingVowelGovernance": {
+          "onsets": [
+            "ន"
+          ],
+          "vowels": [
+            "ា"
+          ],
+          "targetSeries": "a",
+          "terminalMark": "ៈ"
+        }
+      },
+      {
+        "khmer": "ក្ខ",
+        "coda": "ក"
+      }
+    ],
+    "terminalSilentCodaClusters": [
+      {
+        "khmer": "ង្គ",
+        "coda": "ង",
+        "precedingVowels": [
+          "ា"
+        ],
+        "precedingOnsets": [
+          "ព្យ",
+          "វ្យ",
+          "រ"
+        ],
+        "originalTerminalRequired": true
+      },
+      {
+        "khmer": "ម្ព",
+        "coda": "ម",
+        "precedingVowels": [
+          "ិ",
+          "ុ"
+        ]
+      },
+      {
+        "khmer": "ន្យ",
+        "coda": "ន",
+        "precedingVowels": [
+          "ិ",
+          "ុ",
+          "ូ",
+          "ា",
+          "ែ"
+        ]
+      },
+      {
+        "khmer": "ណ្យ",
+        "coda": "ណ",
+        "precedingVowels": [
+          "ិ",
+          "ុ",
+          "ូ",
+          "ា",
+          "ែ"
+        ]
+      }
+    ],
+    "terminalShortCodaClusters": [
+      {
+        "khmer": "ទ្ធ",
+        "coda": "ទ",
+        "contexts": [
+          {
+            "consonant": "ស",
+            "vowel": "ិ"
+          },
+          {
+            "consonant": "ស",
+            "vowel": "ុ"
+          },
+          {
+            "consonant": "រ",
+            "vowel": "ុ"
+          }
+        ],
+        "retainedKeys": [
+          "ttho"
+        ]
+      }
+    ],
+    "terminalSilentGroups": [
+      {
+        "khmer": "រ្យ",
+        "vowel": "ា",
+        "precedingConsonants": [
+          "ក",
+          "ច",
+          "ហ"
+        ]
+      }
+    ],
+    "pairVowelReadings": [
+      {
+        "coda": "ម",
+        "onset": "ល",
+        "vowel": "ាំ",
+        "finalConsonant": "ង",
+        "firstVowelKeys": [
+          "o",
+          "a"
+        ]
+      }
+    ],
+    "optionalInitialOnsets": [
+      {
+        "base": "ប",
+        "subscripts": [
+          "ដ",
+          "រ",
+          "ល",
+          "អ"
+        ],
+        "keys": [
+          "p"
+        ]
+      }
+    ],
+    "terminalInherentBoundaryCodas": [
+      "ក",
+      "គ",
+      "ង",
+      "ញ",
+      "យ",
+      "ប"
+    ],
+    "wordRuleReuse": {
+      "enabled": true,
+      "rankPriority": -3000000
+    },
+    "wordParts": [
+      {
+        "khmer": "កប៉ាល់",
+        "keys": [
+          "kapal"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 30,
+            "words": [
+              "មេកប៉ាល់"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "មេកប៉ាល់",
+                "khmer": "មេ",
+                "keys": [
+                  "me"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សកម្ម",
+        "keys": [
+          "sakkam"
+        ],
+        "cases": [
+          {
+            "kind": "syllable",
+            "order": 6,
+            "words": [
+              "សកម្ម"
+            ],
+            "positions": [
+              "standalone"
+            ],
+            "originalSpellingOnly": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "កិច្ច",
+        "keys": [
+          "kich",
+          "kech"
+        ],
+        "cases": [
+          {
+            "kind": "ending",
+            "order": 2,
+            "words": [
+              "កិច្ច",
+              "កាតព្វកិច្ច",
+              "ទស្សនកិច្ច",
+              "បដិសណ្ឋារកិច្ច",
+              "សមត្ថកិច្ច",
+              "សេដ្ឋកិច្ច"
+            ],
+            "retainedChunkGroups": [
+              [
+                [
+                  "k"
+                ],
+                [
+                  "i",
+                  "e"
+                ],
+                [
+                  "j"
+                ],
+                [
+                  "j"
+                ],
+                [
+                  "or"
+                ]
+              ]
+            ]
+          },
+          {
+            "kind": "scoped",
+            "order": 16,
+            "keys": [
+              "kech",
+              "kich"
+            ],
+            "positions": [
+              "start",
+              "end"
+            ],
+            "words": [
+              "កិច្ចការ",
+              "កិច្ចប្រជុំ",
+              "កិច្ចពិភាក្សា",
+              "កិច្ចព្រមព្រៀង",
+              "កិច្ចសន្យា",
+              "កិច្ចសិក្សា",
+              "ការកិច្ច"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "កិច្ចសន្យា",
+                "khmer": "សន្យា",
+                "keys": [
+                  "sonya"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "កិច្ចសិក្សា",
+                "khmer": "សិក្សា",
+                "keys": [
+                  "seksa",
+                  "siksa"
+                ],
+                "originalWordOnly": true
+              }
+            ],
+            "checkedPrefixReadings": [
+              {
+                "word": "ការកិច្ច",
+                "khmer": "ការ",
+                "keys": [
+                  "ka"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ក្សាន្ត",
+        "keys": [
+          "ksan"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 7,
+            "words": [
+              "ក្សាន្ត",
+              "ក្សេមក្សាន្ត"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ខណ្ឌ",
+        "keys": [
+          "khan"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 13,
+            "words": [
+              "កថាខណ្ឌ",
+              "លក្ខខណ្ឌ"
+            ],
+            "preserveMapped": true
+          },
+          {
+            "kind": "scoped",
+            "order": 24,
+            "words": [
+              "ខណ្ឌប័ណ្ណ",
+              "ខណ្ឌភាគ",
+              "ខណ្ឌសញ្ញា"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ខណ្ឌប័ណ្ណ",
+                "khmer": "ប័ណ្ណ",
+                "keys": [
+                  "ban"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "ខណ្ឌភាគ",
+                "khmer": "ភាគ",
+                "keys": [
+                  "peak",
+                  "pheak",
+                  "phiak",
+                  "piak"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "ខណ្ឌសញ្ញា",
+                "khmer": "សញ្ញា",
+                "keys": [
+                  "sanha"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "គណៈ",
+        "keys": [
+          "kona"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 7,
+            "words": [
+              "គណៈរដ្ឋមន្ត្រី"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ចក្រ",
+        "keys": [
+          "jak"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 2,
+            "words": [
+              "ចក្រ",
+              "រោងចក្រ",
+              "គ្រឿងចក្រ",
+              "អាណាចក្រ",
+              "រាសិចក្រ",
+              "រាសីចក្រ"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ចិត្ត",
+        "keys": [
+          "jit",
+          "jet"
+        ],
+        "cases": [
+          {
+            "kind": "ending",
+            "order": 1,
+            "words": [
+              "ចិត្ត",
+              "ចូលចិត្ត",
+              "ចំណូលចិត្ត",
+              "តាំងចិត្ត",
+              "ទុកចិត្ត"
+            ],
+            "retainedChunkGroups": [
+              [
+                [
+                  "j"
+                ],
+                [
+                  "i",
+                  "e"
+                ],
+                [
+                  "t"
+                ],
+                [
+                  "t"
+                ],
+                [
+                  "or"
+                ]
+              ]
+            ]
+          },
+          {
+            "kind": "scoped",
+            "order": 15,
+            "positions": [
+              "start",
+              "end"
+            ],
+            "words": [
+              "ចិត្តត្រង់",
+              "ចូលចិត្ត",
+              "ចំណូលចិត្ត",
+              "តាំងចិត្ត",
+              "ទុកចិត្ត",
+              "សុខចិត្ត"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ដ្ឋាន",
+        "keys": [
+          "than"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 4,
+            "words": [
+              "អាហារដ្ឋាន",
+              "ឱសថដ្ឋាន"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "end"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ទិន្ន",
+        "keys": [
+          "ten"
+        ],
+        "cases": [
+          {
+            "kind": "syllable",
+            "order": 3,
+            "words": [
+              "ទិន្នផល"
+            ],
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ទ្រព្យ",
+        "keys": [
+          "trop"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 22,
+            "words": [
+              "ទ្រព្យសម្បត្តិ"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ទ្រព្យសម្បត្តិ",
+                "khmer": "សម្បត្តិ",
+                "keys": [
+                  "sambat"
+                ]
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ធម៌",
+        "keys": [
+          "thoa",
+          {
+            "key": "thor",
+            "rankPriority": -1000000
+          }
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 0,
+            "words": [
+              "ធម៌",
+              "គុណធម៌",
+              "មនុស្សធម៌",
+              "យុត្តិធម៌",
+              "អយុត្តិធម៌",
+              "មេត្តាធម៌",
+              "បងធម៌",
+              "ទេសធម៌",
+              "ស្លាធម៌"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "នឹង",
+        "keys": [
+          "neung",
+          "ning"
+        ],
+        "cases": [
+          {
+            "kind": "syllable",
+            "order": 2,
+            "words": [
+              "នឹងន"
+            ],
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "បក្ស",
+        "keys": [
+          "bak"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 20,
+            "words": [
+              "គណបក្ស"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "បង្គន់",
+        "keys": [
+          "bongkun"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 12,
+            "words": [
+              "ក្រដាសបង្គន់"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "end"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "បណ្ឌិត្យ",
+        "keys": [
+          "bondet",
+          "bondit"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 33,
+            "words": [
+              "បណ្ឌិត្យសភា"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "បណ្ឌិត្យសភា",
+                "khmer": "សភា",
+                "keys": [
+                  "sapea",
+                  "saphea",
+                  "saphia",
+                  "sapia"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative",
+        "reusableAsComponent": false
+      },
+      {
+        "khmer": "បន្ទប់",
+        "keys": [
+          "bontup"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 1,
+            "words": [
+              "បន្ទប់",
+              "បន្ទប់រៀន",
+              "បន្ទប់ដេក",
+              "បន្ទប់ទឹក"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start",
+              "standalone"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "បារម្ភ",
+        "keys": [
+          "barom"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 37,
+            "words": [
+              "ព្រួយបារម្ភ"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "ព្រួយបារម្ភ",
+                "khmer": "ព្រួយ",
+                "keys": [
+                  "prury"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ប័ណ្ណ",
+        "keys": [
+          "ban"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 3,
+            "words": [
+              "ប័ណ្ណ",
+              "ខិត្តប័ណ្ណ",
+              "នាមប័ណ្ណ"
+            ],
+            "preserveMapped": true
+          },
+          {
+            "kind": "scoped",
+            "order": 17,
+            "positions": [
+              "start"
+            ],
+            "words": [
+              "ប័ណ្ណប្រកាស",
+              "ប័ណ្ណសារ"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ប្រព័ន្ធ",
+        "keys": [
+          "bropoan",
+          "propoan",
+          {
+            "key": "broporn",
+            "rankPriority": -1000000
+          },
+          {
+            "key": "proporn",
+            "rankPriority": -1000000
+          }
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 8,
+            "words": [
+              "ប្រព័ន្ធព្រះអាទិត្យ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ប្រៃសណីយ៍",
+        "keys": [
+          "braisnei",
+          "praisnei"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 14,
+            "words": [
+              "ប្រអប់ប្រៃសណីយ៍",
+              "លេខប្រៃសណីយ៍"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ផល",
+        "keys": [
+          "pol"
+        ],
+        "cases": [
+          {
+            "kind": "syllable",
+            "order": 5,
+            "words": [
+              "លទ្ធផល"
+            ],
+            "positions": [
+              "end"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ផលិត",
+        "keys": [
+          "palet",
+          "palit",
+          "phalet",
+          "phalit"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 35,
+            "words": [
+              "ផលិតផល"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ផលិតផល",
+                "khmer": "ផល",
+                "keys": [
+                  "phol",
+                  "pol"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ពណ៌",
+        "keys": [
+          "poa",
+          {
+            "key": "por",
+            "rankPriority": -1000000
+          }
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 1,
+            "words": [
+              "ពណ៌",
+              "សុពណ៌",
+              "ផាត់ពណ៌"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ពាក្យ",
+        "keys": [
+          "peak",
+          "piak"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 10,
+            "words": [
+              "ពាក្យពេចន៍",
+              "ពាក្យខ្វែង",
+              "ពាក្យសុំ",
+              "ពាក្យសោ",
+              "មេពាក្យ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start",
+              "end"
+            ],
+            "independentlyMappedSuffixWords": [
+              "ពាក្យខ្វែង"
+            ],
+            "checkedSuffixReadings": [
+              {
+                "word": "ពាក្យសោ",
+                "khmer": "សោ",
+                "keys": [
+                  "sao"
+                ],
+                "originalWordOnly": true
+              }
+            ],
+            "checkedPrefixReadings": [
+              {
+                "word": "មេពាក្យ",
+                "khmer": "មេ",
+                "keys": [
+                  "me"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ពាណិជ្ជ",
+        "keys": [
+          "peanech",
+          "peanej",
+          "peanich",
+          "peanij",
+          "pianech",
+          "pianej",
+          "pianich",
+          "pianij"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 36,
+            "words": [
+              "ពាណិជ្ជកម្ម"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ពាណិជ្ជកម្ម",
+                "khmer": "កម្ម",
+                "keys": [
+                  "kam"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ពិនិត្យ",
+        "keys": [
+          "pinit"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 21,
+            "words": [
+              "ត្រួតពិនិត្យ",
+              "សោតពិនិត្យ"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "សោតពិនិត្យ",
+                "khmer": "សោត",
+                "keys": [
+                  "saot"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ពិភព",
+        "keys": [
+          "piphup",
+          "pipup"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 31,
+            "words": [
+              "ពិភពលោក"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ពិភពលោក",
+                "khmer": "លោក",
+                "keys": [
+                  "lok"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ពិសោធន៍",
+        "keys": [
+          "pisaot",
+          "pesaot"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 15,
+            "words": [
+              "បទពិសោធន៍"
+            ],
+            "preserveMapped": true
+          },
+          {
+            "kind": "scoped",
+            "order": 23,
+            "words": [
+              "ទីពិសោធន៍",
+              "បន្ទប់ពិសោធន៍"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "ទីពិសោធន៍",
+                "khmer": "ទី",
+                "keys": [
+                  "ti"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "បន្ទប់ពិសោធន៍",
+                "khmer": "បន្ទប់",
+                "keys": [
+                  "bontup"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ពេជ្រ",
+        "keys": [
+          "pech"
+        ],
+        "cases": [
+          {
+            "kind": "syllable",
+            "order": 1,
+            "words": [
+              "ពេជ្រ"
+            ],
+            "positions": [
+              "standalone"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ព័ន្ធ",
+        "keys": [
+          "poan",
+          {
+            "key": "porn",
+            "rankPriority": -1000000
+          }
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 4,
+            "words": [
+              "ព័ន្ធ",
+              "ប្រព័ន្ធ",
+              "ពាក់ព័ន្ធ"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ភូមិ",
+        "keys": [
+          "phum",
+          "phoum"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 9,
+            "words": [
+              "មេភូមិ",
+              "មាតុភូមិ"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "មន្ត",
+        "keys": [
+          "mon"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 17,
+            "words": [
+              "រូបមន្ត"
+            ],
+            "preserveMapped": true
+          },
+          {
+            "kind": "scoped",
+            "order": 25,
+            "words": [
+              "ទឹកមន្ត",
+              "វេទមន្ត"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "ទឹកមន្ត",
+                "khmer": "ទឹក",
+                "keys": [
+                  "teuk",
+                  "toeuk"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "វេទមន្ត",
+                "khmer": "វេទ",
+                "keys": [
+                  "vet",
+                  "wet"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "មេឃ",
+        "keys": [
+          "mek"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 13,
+            "words": [
+              "ជើងមេឃ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "end"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ម៉ែត្រ",
+        "keys": [
+          "maet"
+        ],
+        "cases": [
+          {
+            "kind": "ending",
+            "order": 3,
+            "words": [
+              "ម៉ែត្រ",
+              "គីឡូម៉ែត្រ",
+              "សង់ទីម៉ែត្រ",
+              "មិល្លីម៉ែត្រ",
+              "ប៉ារ៉ាម៉ែត្រ"
+            ],
+            "retainedChunkGroups": [
+              [
+                [
+                  "m"
+                ],
+                [
+                  "ae"
+                ],
+                [
+                  "t"
+                ],
+                [
+                  "r"
+                ],
+                [
+                  "o"
+                ]
+              ]
+            ]
+          },
+          {
+            "kind": "scoped",
+            "order": 34,
+            "words": [
+              "ម៉ែត្រការ៉េ"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ម៉ែត្រការ៉េ",
+                "khmer": "ការ៉េ",
+                "keys": [
+                  "kare"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "យន្ត",
+        "keys": [
+          "yon"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 5,
+            "words": [
+              "យន្ត",
+              "គោយន្ត",
+              "ជណ្ដើរយន្ត",
+              "ភាពយន្ត",
+              "យានយន្ត",
+              "រោងភាពយន្ត",
+              "ខ្សែភាពយន្ត"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "រដ្ឋ",
+        "keys": [
+          "roat",
+          {
+            "key": "rort",
+            "rankPriority": -1000000
+          }
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 11,
+            "words": [
+              "រដ្ឋ",
+              "ពលរដ្ឋ",
+              "ប្រជាពលរដ្ឋ"
+            ],
+            "preserveMapped": true
+          },
+          {
+            "kind": "scoped",
+            "order": 6,
+            "words": [
+              "រដ្ឋមន្ត្រី",
+              "គណៈរដ្ឋមន្ត្រី",
+              "រដ្ឋធានី",
+              "សាធារណរដ្ឋ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start",
+              "middle",
+              "end"
+            ],
+            "preserveMappedPrefixWords": [
+              "សាធារណរដ្ឋ"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "លទ្ធ",
+        "keys": [
+          "lert"
+        ],
+        "cases": [
+          {
+            "kind": "syllable",
+            "order": 4,
+            "words": [
+              "លទ្ធផល"
+            ],
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "លាភ",
+        "keys": [
+          "leap",
+          "liap"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 16,
+            "words": [
+              "ភាគលាភ"
+            ],
+            "preserveMapped": true
+          },
+          {
+            "kind": "scoped",
+            "order": 27,
+            "words": [
+              "ធនលាភ",
+              "បុព្វលាភ",
+              "ភោគលាភ"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "ធនលាភ",
+                "khmer": "ធន",
+                "keys": [
+                  "thon"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "បុព្វលាភ",
+                "khmer": "បុព្វ",
+                "keys": [
+                  "bopvo",
+                  "bopwo",
+                  "bupvo",
+                  "bupwo"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "ភោគលាភ",
+                "khmer": "ភោគ",
+                "keys": [
+                  "phok",
+                  "pok"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សង្ឃ",
+        "keys": [
+          "song"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 18,
+            "words": [
+              "ព្រះសង្ឃ"
+            ],
+            "preserveMapped": true
+          },
+          {
+            "kind": "scoped",
+            "order": 26,
+            "words": [
+              "លោកសង្ឃ",
+              "ភិក្ខុសង្ឃ",
+              "អរិយសង្ឃ"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "លោកសង្ឃ",
+                "khmer": "លោក",
+                "keys": [
+                  "lok"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "ភិក្ខុសង្ឃ",
+                "khmer": "ភិក្ខុ",
+                "keys": [
+                  "pekkho",
+                  "pekkhu",
+                  "phekkho",
+                  "phekkhu",
+                  "phikkho",
+                  "phikkhu",
+                  "pikkho",
+                  "pikkhu"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "អរិយសង្ឃ",
+                "khmer": "អរិយ",
+                "keys": [
+                  "areyo",
+                  "ariyo"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សញ្ញា",
+        "keys": [
+          "sanha"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 18,
+            "words": [
+              "សំយោគសញ្ញា",
+              "ខណ្ឌសញ្ញា",
+              "រស្សសញ្ញា"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "ខណ្ឌសញ្ញា",
+                "khmer": "ខណ្ឌ",
+                "keys": [
+                  "khan"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "រស្សសញ្ញា",
+                "khmer": "រស្ស",
+                "keys": [
+                  "roh",
+                  "ros"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សព្ទ",
+        "keys": [
+          "sap"
+        ],
+        "cases": [
+          {
+            "kind": "ending",
+            "order": 0,
+            "retainedReadings": [
+              [
+                "s",
+                "or",
+                "p",
+                "t",
+                "o"
+              ],
+              [
+                "s",
+                "p",
+                "t",
+                "o"
+              ]
+            ]
+          },
+          {
+            "kind": "scoped",
+            "order": 11,
+            "words": [
+              "អក្សរសព្ទ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "end"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សភា",
+        "keys": [
+          "sapea",
+          "saphea",
+          "saphia",
+          "sapia"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 32,
+            "words": [
+              "បណ្ឌិត្យសភា"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "បណ្ឌិត្យសភា",
+                "khmer": "បណ្ឌិត្យ",
+                "keys": [
+                  "bondet",
+                  "bondit"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សមុទ្រ",
+        "keys": [
+          "samot",
+          "samut"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 10,
+            "words": [
+              "មហាសមុទ្រ",
+              "មាត់សមុទ្រ",
+              "ឆ្នេរសមុទ្រ",
+              "ផ្កាយសមុទ្រ",
+              "ឈូងសមុទ្រ"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សម្បត្តិ",
+        "keys": [
+          "sombat",
+          "sambat"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 19,
+            "words": [
+              "ទ្រព្យសម្បត្តិ",
+              "គុណសម្បត្តិ",
+              "លក្ខណសម្បត្តិ"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "គុណសម្បត្តិ",
+                "khmer": "គុណ",
+                "keys": [
+                  "kon",
+                  "kun"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "លក្ខណសម្បត្តិ",
+                "khmer": "លក្ខណ",
+                "keys": [
+                  "lokna"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សាន្ត",
+        "keys": [
+          "san"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 6,
+            "words": [
+              "សាន្ត",
+              "កំសាន្ត",
+              "សុខសាន្ត"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សាស្ត្រ",
+        "keys": [
+          "sah",
+          "sas"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 28,
+            "words": [
+              "គណិតសាស្ត្រ",
+              "វេជ្ជសាស្ត្រ",
+              "សេដ្ឋសាស្ត្រ"
+            ],
+            "positions": [
+              "end"
+            ],
+            "preserveMapped": true,
+            "checkedPrefixReadings": [
+              {
+                "word": "គណិតសាស្ត្រ",
+                "khmer": "គណិត",
+                "keys": [
+                  "kaeknit"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "វេជ្ជសាស្ត្រ",
+                "khmer": "វេជ្ជ",
+                "keys": [
+                  "vechcho",
+                  "vechjo",
+                  "vejcho",
+                  "vejjo",
+                  "wechcho",
+                  "wechjo",
+                  "wejcho",
+                  "wejjo"
+                ],
+                "originalWordOnly": true
+              },
+              {
+                "word": "សេដ្ឋសាស្ត្រ",
+                "khmer": "សេដ្ឋ",
+                "keys": [
+                  "sedtha"
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative",
+        "reusableAsComponent": false
+      },
+      {
+        "khmer": "សិទ្ធិ",
+        "keys": [
+          "sit",
+          "set"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 12,
+            "words": [
+              "កម្មសិទ្ធិ",
+              "ឯកសិទ្ធិ",
+              "អភិសិទ្ធិ"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "សូរ",
+        "keys": [
+          "sur"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 14,
+            "words": [
+              "សូរសំឡេង"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ស្រាន្ត",
+        "keys": [
+          "sran"
+        ],
+        "cases": [
+          {
+            "kind": "terminalRoot",
+            "order": 8,
+            "words": [
+              "ស្រាន្ត",
+              "ស្រាកស្រាន្ត"
+            ],
+            "preserveMapped": true
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ហត្ថ",
+        "keys": [
+          "hat"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 29,
+            "words": [
+              "ហត្ថលេខា",
+              "ចុះហត្ថលេខា"
+            ],
+            "positions": [
+              "start",
+              "middle"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ហត្ថលេខា",
+                "khmer": "លេខា",
+                "keys": [
+                  "lekha"
+                ],
+                "originalWordOnly": true
+              }
+            ],
+            "checkedContextReadings": [
+              {
+                "word": "ចុះហត្ថលេខា",
+                "prefix": "ចុះ",
+                "prefixKeys": [
+                  "joh"
+                ],
+                "suffix": "លេខា",
+                "suffixKeys": [
+                  "lekha"
+                ]
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "អក្សរ",
+        "keys": [
+          "aksor"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 5,
+            "words": [
+              "អក្សរឈរ",
+              "អក្សរសព្ទ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "អាទិត្យ",
+        "keys": [
+          "atit",
+          "atet"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 9,
+            "words": [
+              "ប្រព័ន្ធព្រះអាទិត្យ",
+              "ព្រះអាទិត្យ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "end"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "អាហារ",
+        "keys": [
+          "ahar"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 2,
+            "words": [
+              "អាហារ",
+              "អាហារដ្ឋាន"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start",
+              "standalone"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "អ្នក",
+        "keys": [
+          "neak"
+        ],
+        "cases": [
+          {
+            "kind": "syllable",
+            "order": 0,
+            "words": [
+              "អ្នក",
+              "អ្នកវិទ្យាសាស្ត្រ",
+              "អ្នកជំនួញ",
+              "អ្នកនិពន្ធ",
+              "អ្នកស្រាវជ្រាវ",
+              "អ្នកច្រៀង",
+              "អ្នករាំ",
+              "អ្នកជំងឺ",
+              "អ្នកថតរូប",
+              "អ្នកអាន",
+              "អ្នកភ្លេង",
+              "អ្នកគណិតសាស្ត្រ",
+              "អ្នករចនា",
+              "អ្នកជាប់ពន្ធ",
+              "អ្នកចូលរួម",
+              "អ្នកខ្ចី",
+              "អ្នកទិញ",
+              "អ្នករុករក",
+              "អ្នកតែងភ្លេង",
+              "អ្នកភូមិសាស្ត្រ",
+              "អ្នករាយការណ៍",
+              "អ្នកអភិបាល",
+              "អ្នកកំប្លែង",
+              "អ្នកផ្សាយ",
+              "អ្នកបោសជូត",
+              "អ្នកគ្រូ",
+              "អ្នកលក់",
+              "លោកអ្នក",
+              "អ្នកកាសែត",
+              "អ្នកដំណើរ",
+              "អ្នកទេសចរ",
+              "អ្នកធ្វើការ",
+              "អ្នកគាំទ្រ",
+              "អ្នកស្រី",
+              "អ្នកការទូត",
+              "អ្នកនេសាទ",
+              "អ្នកជំនាញ",
+              "អ្នកចាំទី"
+            ],
+            "positions": [
+              "start",
+              "end",
+              "standalone"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      },
+      {
+        "khmer": "ឱសថ",
+        "keys": [
+          "aosot"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 3,
+            "words": [
+              "ឱសថដ្ឋាន",
+              "ឱសថការី",
+              "ឱសថស្ថាន"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      }
+    ],
+    "pairBeforeSubscript": true,
+    "terminalCancellation": {
+      "mark": "៍",
+      "attachedVowels": [
+        "",
+        "ិ"
+      ]
+    },
+    "simpleMarkedRhymes": [
+      {
+        "ending": "័យ",
+        "series": "o",
+        "keys": [
+          "ey"
+        ],
+        "composable": true,
+        "composableOnsets": [
+          "ជ",
+          "ភ",
+          "ទ",
+          "ន",
+          "វ"
+        ],
+        "originalSpellingOnly": true
+      },
+      {
+        "ending": "័រ",
+        "series": "o",
+        "keys": [
+          "oa",
+          {
+            "key": "or",
+            "rankPriority": -1000000
+          }
+        ],
+        "composable": true
+      },
+      {
+        "ending": "័យ",
+        "series": "a",
+        "keys": [
+          "ai"
+        ],
+        "wholeWord": false,
+        "composable": true,
+        "composableOnsets": [
+          "ក",
+          "ច",
+          "ឆ",
+          "ស",
+          "ហ"
+        ],
+        "originalSpellingOnly": true,
+        "sonorantGovernance": {
+          "onsets": [
+            "ម",
+            "ល"
+          ],
+          "blockedPrefixMarks": [
+            "៉",
+            "៊",
+            "៌",
+            "៍"
+          ]
+        }
+      }
+    ],
+    "exactInputPriorities": {},
+    "wordFinalSilentConsonants": [
+      "រ"
+    ],
+    "finalClusters": [
+      {
+        "khmer": "ត្វ",
+        "series": "a",
+        "inherentKeys": [
+          "a"
+        ],
+        "codaKeys": [
+          "t"
+        ]
+      }
+    ],
+    "silentWordEndings": [
+      {
+        "ending": "រ",
+        "words": [
+          "បបរ"
+        ]
+      },
+      {
+        "ending": "ិ",
+        "words": [
+          "ភូមិ",
+          "ជាតិ"
+        ]
+      },
+      {
+        "ending": "ុ",
+        "words": [
+          "ធាតុ",
+          "ហេតុ"
+        ]
+      },
+      {
+        "ending": "្រ",
+        "words": [
+          "សមុទ្រ",
+          "សូត្រ",
+          "សំបុត្រ",
+          "លីត្រ"
+        ]
+      },
+      {
+        "ending": "្យ",
+        "words": [
+          "ពេទ្យ"
+        ]
+      },
+      {
+        "ending": "្ត",
+        "words": [
+          "មិត្ត",
+          "ខេត្ត"
+        ]
+      }
+    ],
+    "repeatedInitialPresyllable": {
+      "words": [
+        "ពពក",
+        "បបរ"
+      ]
+    },
+    "shortInherentBeforeCoda": [
+      {
+        "coda": "ក",
+        "series": "o",
+        "keys": [
+          "u",
+          "ua",
+          "uo"
+        ]
+      }
+    ],
+    "glottalOnset": {
+      "subscript": "អ",
+      "keys": [
+        "'"
+      ],
+      "series": "a",
+      "inherentKeys": [
+        "ar",
+        "or",
+        {
+          "key": "oa",
+          "rankPriority": -1000000
+        }
+      ],
+      "optionalOnsetKeys": {
+        "ផ": [
+          "p"
+        ]
+      }
+    },
+    "scopedOnsetClusters": [
+      {
+        "khmer": "ហ្វ",
+        "series": "a",
+        "onsetKeys": [
+          "f"
+        ],
+        "words": [
+          "កាហ្វេ"
+        ]
+      }
+    ],
+    "vowelsBeforeCoda": [
+      {
+        "vowel": "ាំ",
+        "coda": "ង",
+        "aSeriesKeys": [
+          "a"
+        ],
+        "oSeriesKeys": [
+          "ea"
+        ]
+      }
+    ],
+    "explicitBantoc": {
+      "vowel": "ា",
+      "aSeriesKeys": [
+        "a"
+      ],
+      "oSeriesVelarKeys": [
+        "ea"
+      ],
+      "oSeriesOtherKeys": [
+        "oa",
+        {
+          "key": "or",
+          "rankPriority": -1000000
+        }
+      ],
+      "oSeriesKeysByFinal": {
+        "ត": [
+          "oa",
+          "or"
+        ]
+      },
+      "velarFinals": [
+        "ក",
+        "ខ",
+        "គ",
+        "ឃ",
+        "ង"
+      ]
+    },
+    "crossSyllableGovernance": {
+      "passiveConsonants": [
+        "ង",
+        "ញ",
+        "ណ",
+        "ន",
+        "ម",
+        "យ",
+        "រ",
+        "ល",
+        "វ",
+        "ឡ"
+      ],
+      "excludedInitials": [
+        "អ"
+      ],
+      "retainedSeriesWords": [
+        "សាលី"
+      ],
+      "nasalFirstSyllableVowels": [
+        "ំ"
+      ]
+    },
+    "reviewedWordFinalCodas": [
+      {
+        "consonant": "ធ",
+        "words": [
+          "ពុធ"
+        ],
+        "keys": [
+          "t"
+        ],
+        "retainMappedKeys": true
+      },
+      {
+        "consonant": "ឃ",
+        "words": [
+          "មេឃ"
+        ],
+        "keys": [
+          "k"
+        ],
+        "retainMappedKeys": true
+      },
+      {
+        "consonant": "ដ",
+        "words": [
+          "កូដ"
+        ],
+        "keys": [
+          "t"
+        ],
+        "retainMappedKeys": true
+      },
+      {
+        "consonant": "ភ",
+        "words": [
+          "លាភ"
+        ],
+        "keys": [
+          "p"
+        ],
+        "retainMappedKeys": true
+      }
+    ],
+    "onsetClusterGovernance": {
+      "dominantConsonants": [
+        "ក",
+        "ខ",
+        "គ",
+        "ឃ",
+        "ច",
+        "ឆ",
+        "ជ",
+        "ឈ",
+        "ដ",
+        "ឋ",
+        "ឌ",
+        "ឍ",
+        "ត",
+        "ថ",
+        "ទ",
+        "ធ",
+        "ប",
+        "ផ",
+        "ព",
+        "ភ",
+        "ស",
+        "ហ",
+        "អ"
+      ],
+      "passiveConsonants": [
+        "ង",
+        "ញ",
+        "ណ",
+        "ន",
+        "ម",
+        "យ",
+        "រ",
+        "ល",
+        "វ",
+        "ឡ"
+      ],
+      "excludedClusters": [
+        "ហ្គ",
+        "ហ្វ"
+      ]
+    },
+    "nasalPairGovernance": {
+      "initials": [
+        "ក",
+        "ច",
+        "ត",
+        "ប",
+        "ស"
+      ],
+      "codas": [
+        "ម",
+        "ន",
+        "ង"
+      ],
+      "onsets": [
+        "ង",
+        "យ",
+        "រ",
+        "ល"
+      ],
+      "vowels": [
+        "ា",
+        "ាំ",
+        "ុះ",
+        "ូ",
+        "ើ",
+        "ែ",
+        "ៃ",
+        "ះ"
+      ],
+      "additionalShapes": [
+        {
+          "coda": "ង",
+          "onset": "វ",
+          "vowel": "ែ",
+          "silentFinals": [
+            "រ"
+          ]
+        },
+        {
+          "coda": "ង",
+          "onset": "វ",
+          "vowel": "ា",
+          "silentFinals": [],
+          "initials": [
+            "ច",
+            "ត",
+            "ស"
+          ],
+          "allowedFinals": [
+            "យ",
+            "ត"
+          ],
+          "allowOpen": true,
+          "allowBantoc": false
+        }
+      ]
+    },
+    "riyaGovernance": {
+      "unit": "រិយា",
+      "controllerSeries": "a",
+      "targetSeries": "a"
+    },
+    "openLaaGovernance": {
+      "unit": "លា",
+      "controllerSeries": "a",
+      "targetSeries": "a"
+    },
+    "localWrittenClusterGovernance": {
+      "pairs": [
+        "ក្រ",
+        "ក្ល",
+        "ខ្ម",
+        "ខ្ល",
+        "ច្ន",
+        "ច្រ",
+        "ឆ្ន",
+        "ឆ្ល",
+        "ត្រ",
+        "ថ្ង",
+        "ថ្ន",
+        "ថ្ល",
+        "ថ្វ",
+        "ប្រ",
+        "ផ្ល",
+        "ស្ន",
+        "ស្រ",
+        "ស្ល",
+        "ស្វ"
+      ],
+      "targetSeries": "a"
+    },
+    "initialSamaaGovernance": {
+      "prefix": "សមា",
+      "targetSeries": "a"
+    },
+    "nasalBoundaries": {
+      "written": [
+        {
+          "id": "ntr",
+          "initials": [
+            "ក",
+            "ត",
+            "ម"
+          ],
+          "clusters": [
+            "ន្ត្រ"
+          ]
+        },
+        {
+          "id": "ndr",
+          "initials": [
+            "ក",
+            "ប"
+          ],
+          "clusters": [
+            "ន្ទ្រ"
+          ]
+        },
+        {
+          "id": "nhR",
+          "initials": [
+            "ក",
+            "ប"
+          ],
+          "clusters": [
+            "ញ្ច្រ",
+            "ញ្ជ្រ"
+          ]
+        }
+      ],
+      "unwritten": [
+        {
+          "id": "stop",
+          "initials": [
+            "ក",
+            "ច",
+            "ដ",
+            "ត",
+            "ប",
+            "ស"
+          ],
+          "clusters": [
+            "ង្ក",
+            "ង្គ",
+            "ញ្ច",
+            "ញ្ជ",
+            "ណ្ដ",
+            "ន្ត",
+            "ន្ទ",
+            "ម្ប",
+            "ម្ព"
+          ]
+        },
+        {
+          "id": "aspirated",
+          "initials": [
+            "ក",
+            "ច",
+            "ដ",
+            "ត",
+            "ប",
+            "ស"
+          ],
+          "clusters": [
+            "ង្ហ",
+            "ង្ខ",
+            "ញ្ឆ",
+            "ន្ថ",
+            "ន្ស",
+            "ម្ស"
+          ],
+          "finals": [
+            "ក",
+            "ត",
+            "ប",
+            "ន",
+            "ល",
+            "យ"
+          ]
+        }
+      ]
+    },
+    "writtenNhBoundary": {
+      "firstVowels": [
+        "ិ",
+        "ុ"
+      ],
+      "cluster": "ញ្ច"
+    },
+    "terminalCombinedVowels": [
+      {
+        "khmer": "ឹះ",
+        "aSeriesKeys": [
+          "euh",
+          "oeuh"
+        ],
+        "oSeriesKeys": [
+          "euh",
+          "oeuh"
+        ]
+      },
+      {
+        "khmer": "ែះ",
+        "aSeriesKeys": [
+          "eh",
+          "aeh"
+        ],
+        "oSeriesKeys": [
+          "eh"
+        ]
+      },
+      {
+        "khmer": "ូះ",
+        "aSeriesKeys": [
+          "oh"
+        ],
+        "oSeriesKeys": [
+          "uh",
+          "ouh"
+        ]
+      },
+      {
+        "khmer": "ឺះ",
+        "aSeriesKeys": [
+          "euh"
+        ],
+        "oSeriesKeys": [
+          "euh"
+        ]
+      },
+      {
+        "khmer": "ីះ",
+        "aSeriesKeys": [],
+        "oSeriesKeys": [
+          "ih"
+        ],
+        "clusterGovernance": false
+      }
+    ],
+    "unwrittenNasalRBoundary": {
+      "initials": [
+        "ក",
+        "ច",
+        "ប"
+      ],
+      "clusters": [
+        "ន្ត្រ",
+        "ញ្ច្រ",
+        "ញ្ជ្រ",
+        "ង្ក្រ",
+        "ង្គ្រ"
+      ]
+    },
+    "writtenVelarRBoundary": {
+      "initials": [
+        "ច",
+        "ស"
+      ],
+      "clusters": [
+        "ង្ក្រ",
+        "ង្គ្រ"
+      ]
+    },
+    "writtenNasalGlottalBoundary": {
+      "initials": [
+        "ក",
+        "ច",
+        "ត",
+        "ប",
+        "ស"
+      ],
+      "clusters": [
+        "ង្អ",
+        "ម្អ"
+      ]
+    },
+    "weakRSecondVowelGovernance": [
+      {
+        "firstClusters": [
+          "ក្រ",
+          "ប្រ",
+          "ស្រ"
+        ],
+        "target": "មា",
+        "targetSeries": "a"
+      },
+      {
+        "firstClusters": [
+          "ក្រ",
+          "ប្រ"
+        ],
+        "target": "ញា",
+        "targetSeries": "a"
+      },
+      {
+        "firstClusters": [
+          "ច្រ",
+          "ប្រ",
+          "ស្រ"
+        ],
+        "target": "មូ",
+        "targetSeries": "a",
+        "allowedFinals": [
+          "ញ",
+          "ល",
+          "ម",
+          "រ"
+        ]
+      },
+      {
+        "firstClusters": [
+          "ត្រ",
+          "ប្រ",
+          "ស្រ"
+        ],
+        "target": "មោ",
+        "targetSeries": "a",
+        "allowedFinals": [
+          "ង",
+          "ច",
+          "ល",
+          "ទ",
+          "យ"
+        ]
+      },
+      {
+        "firstClusters": [
+          "ក្រ",
+          "ច្រ",
+          "ស្រ"
+        ],
+        "target": "វា",
+        "targetSeries": "a",
+        "allowedFinals": [
+          "ញ",
+          "ត",
+          "ន",
+          "ម",
+          "ប"
+        ],
+        "allowOpen": true,
+        "allowBantoc": true
+      }
+    ],
+    "explicitGlottalBantoc": {
+      "vowel": "ា",
+      "mark": "់"
+    },
+    "terminalPlainASign": {
+      "mark": "ៈ",
+      "series": "a",
+      "keys": [
+        "a",
+        "ak"
+      ],
+      "excludedOnsets": [
+        "អ"
+      ]
+    },
+    "terminalWrittenSameOSign": {
+      "mark": "ៈ",
+      "series": "o",
+      "keys": [
+        "eak"
+      ]
+    },
+    "terminalNasalCompoundBoundary": {
+      "initials": [
+        "ក",
+        "ប"
+      ],
+      "clusters": [
+        "ង្ក",
+        "ញ្ច",
+        "ម្ព",
+        "ន្ថ"
+      ]
+    },
+    "independentCoengY": {
+      "bases": [
+        "ឲ",
+        "ឱ"
+      ],
+      "subscript": "យ",
+      "keys": [
+        "oy"
+      ]
+    },
+    "compactOrdinaryABoundaryPriority": {
+      "rankPriority": -1
+    },
+    "checkedAamNgBoundary": {
+      "words": [
+        "វាំងនន",
+        "បាំងភក់"
+      ]
+    },
+    "savedInputMatchPriorities": [
+      {
+        "input": "poh",
+        "khmer": "ប៉ុស្តិ៍",
+        "rankPriority": -2
+      }
+    ],
+    "initialCarrierNasal": {
+      "frames": [
+        {
+          "nasal": "ន",
+          "subscripts": [
+            "ស",
+            "ល",
+            "ទ"
+          ]
+        },
+        {
+          "nasal": "ណ",
+          "subscripts": [
+            "ដ"
+          ]
+        },
+        {
+          "nasal": "ង",
+          "subscripts": [
+            "ក"
+          ]
+        },
+        {
+          "nasal": "ម",
+          "subscripts": [
+            "ព"
+          ]
+        }
+      ],
+      "keys": [
+        "o"
+      ]
+    },
+    "defaultComponentParts": [
+      {
+        "khmer": "ក្រដាស",
+        "startingWords": [
+          "ក្រដាសបង្គន់",
+          "ក្រដាសជូតដៃ"
+        ]
+      },
+      {
+        "khmer": "ខុស"
+      },
+      {
+        "khmer": "ច្បាស់",
+        "startingWords": [
+          "ច្បាស់លាស់"
+        ]
+      },
+      {
+        "khmer": "ម្ចាស់",
+        "startingWords": [
+          "ម្ចាស់ផ្ទះ",
+          "ម្ចាស់បំណុល"
+        ]
+      }
+    ],
+    "shorthands": [
+      {
+        "khmer": "ខ្ញុំ",
+        "keys": [
+          "nh"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 0,
+            "words": [
+              "ខ្ញុំ"
+            ],
+            "positions": [
+              "standalone"
+            ],
+            "preserveMapped": true
+          }
+        ]
+      }
+    ]
+  },
+  "pronunciationSyllables": [
+    {
+      "word": "កម្ម",
+      "readAs": "កាំ",
+      "originalSpellingOnly": false
+    },
+    {
+      "word": "សាស្ត្រ",
+      "readAs": "សាស",
+      "originalSpellingOnly": true
+    }
+  ]
+}

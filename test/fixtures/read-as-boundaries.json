@@ -1,0 +1,114 @@
+{
+  "movedParts": [
+    {
+      "khmer": "កម្ម",
+      "keys": [
+        "kam"
+      ],
+      "cases": [
+        {
+          "kind": "syllable",
+          "order": 0
+        }
+      ],
+      "readingType": "alternative"
+    },
+    {
+      "khmer": "សាស្ត្រ",
+      "keys": [
+        "sah",
+        "sas"
+      ],
+      "cases": [
+        {
+          "kind": "syllable",
+          "order": 1,
+          "originalSpellingOnly": true
+        },
+        {
+          "kind": "scoped",
+          "order": 28,
+          "words": [
+            "គណិតសាស្ត្រ",
+            "វេជ្ជសាស្ត្រ",
+            "សេដ្ឋសាស្ត្រ"
+          ],
+          "positions": [
+            "end"
+          ],
+          "preserveMapped": true,
+          "checkedPrefixReadings": [
+            {
+              "word": "គណិតសាស្ត្រ",
+              "khmer": "គណិត",
+              "keys": [
+                "kaeknit"
+              ],
+              "originalWordOnly": true
+            },
+            {
+              "word": "វេជ្ជសាស្ត្រ",
+              "khmer": "វេជ្ជ",
+              "keys": [
+                "vechcho",
+                "vechjo",
+                "vejcho",
+                "vejjo",
+                "wechcho",
+                "wechjo",
+                "wejcho",
+                "wejjo"
+              ],
+              "originalWordOnly": true
+            },
+            {
+              "word": "សេដ្ឋសាស្ត្រ",
+              "khmer": "សេដ្ឋ",
+              "keys": [
+                "sedtha"
+              ],
+              "originalWordOnly": true
+            }
+          ]
+        }
+      ],
+      "readingType": "alternative"
+    }
+  ],
+  "defaults": [
+    {
+      "word": "កម្ម",
+      "readAs": "កាំ",
+      "originalSpellingOnly": false
+    },
+    {
+      "word": "សាស្ត្រ",
+      "readAs": "សាស",
+      "originalSpellingOnly": true
+    }
+  ],
+  "examples": [
+    [
+      "kamkor",
+      "កម្មករ"
+    ],
+    [
+      "kamsit",
+      "កម្មសិទ្ធិ"
+    ],
+    [
+      "kaeknitsah",
+      "គណិតសាស្ត្រ"
+    ],
+    [
+      "ekosah",
+      "អេកូសាស្ត្រ"
+    ]
+  ],
+  "standalone": [
+    [
+      "sakkam",
+      "សកម្ម"
+    ]
+  ]
+}

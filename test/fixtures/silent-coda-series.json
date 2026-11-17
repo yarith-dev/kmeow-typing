@@ -1,0 +1,320 @@
+{
+  "cases": [
+    {
+      "word": "ទស្សនា",
+      "inputs": [
+        "tuhna",
+        "tusna"
+      ],
+      "removed": [
+        "tohnea",
+        "tohnia",
+        "tosnea",
+        "tosnia",
+        "tohna",
+        "tosna"
+      ]
+    },
+    {
+      "word": "ទស្សនាវដ្ដី",
+      "inputs": [
+        "tuhnavddei",
+        "tuhnavddey",
+        "tusnavddei",
+        "tusnavddey"
+      ],
+      "removed": [
+        "tohneavddei",
+        "tohneavddey",
+        "tohniavddei",
+        "tohniavddey",
+        "tosneavddei",
+        "tosneavddey",
+        "tosniavddei",
+        "tosniavddey",
+        "tohnavddei",
+        "tohnavddey",
+        "tosnavddei",
+        "tosnavddey"
+      ]
+    },
+    {
+      "word": "កស្សនា",
+      "inputs": [
+        "kohna",
+        "kosna"
+      ],
+      "removed": [
+        "kohnea",
+        "kohnia",
+        "kosnea",
+        "kosnia"
+      ]
+    },
+    {
+      "word": "ទស្សនៈ",
+      "inputs": [
+        "tuhna",
+        "tuhnak",
+        "tusna",
+        "tusnak"
+      ],
+      "removed": [
+        "tohna",
+        "tohnak",
+        "tosna",
+        "tosnak"
+      ]
+    },
+    {
+      "word": "កស្សនៈ",
+      "inputs": [
+        "kohna",
+        "kohnak",
+        "kosna",
+        "kosnak"
+      ],
+      "removed": []
+    },
+    {
+      "word": "ទស្សន៍",
+      "inputs": [
+        "tuh",
+        "tus"
+      ],
+      "removed": [
+        "toh",
+        "tos"
+      ]
+    },
+    {
+      "word": "ទូរទស្សន៍",
+      "inputs": [
+        "tourotuh",
+        "tourotus",
+        "turotuh",
+        "turotus"
+      ],
+      "removed": [
+        "tourotssa",
+        "turotssa"
+      ]
+    },
+    {
+      "word": "ស្ថានីយទូរទស្សន៍",
+      "inputs": [
+        "sthaniytourotuh",
+        "sthaniytourotus",
+        "sthaniyturotuh",
+        "sthaniyturotus"
+      ],
+      "removed": [
+        "sthaniytourotssa",
+        "sthaniyturotssa"
+      ]
+    }
+  ],
+  "unrelated": [
+    {
+      "word": "ទស្សន",
+      "inputs": [
+        "tuhno",
+        "tusno"
+      ],
+      "removed": [
+        "tohno",
+        "tosno"
+      ]
+    },
+    {
+      "word": "ទស្សនី",
+      "inputs": [
+        "tuhni",
+        "tusni"
+      ],
+      "removed": [
+        "tohni",
+        "tosni"
+      ]
+    },
+    {
+      "word": "ទស្សនាំ",
+      "inputs": [
+        "tuhnoam",
+        "tuhnorm",
+        "tusnoam",
+        "tusnorm"
+      ],
+      "removed": [
+        "tohnorm",
+        "tosnorm"
+      ]
+    },
+    {
+      "word": "ទស្សនកិច្ច",
+      "inputs": [
+        "tuhnokech",
+        "tuhnokejjar",
+        "tuhnokejjoa",
+        "tuhnokejjor",
+        "tuhnokich",
+        "tuhnokijjar",
+        "tuhnokijjoa",
+        "tuhnokijjor",
+        "tusnokech",
+        "tusnokejjar",
+        "tusnokejjoa",
+        "tusnokejjor",
+        "tusnokich",
+        "tusnokijjar",
+        "tusnokijjoa",
+        "tusnokijjor"
+      ],
+      "removed": [
+        "tohnokech",
+        "tohnokejja",
+        "tohnokich",
+        "tohnokijja",
+        "tosnokech",
+        "tosnokejja",
+        "tosnokich",
+        "tosnokijja"
+      ]
+    },
+    {
+      "word": "ទស្សនាម៍",
+      "inputs": [
+        "tohnea",
+        "tohnia",
+        "tosnea",
+        "tosnia"
+      ]
+    },
+    {
+      "word": "ទស្សន៉ា",
+      "inputs": []
+    },
+    {
+      "word": "ទស្សន៊ា",
+      "inputs": []
+    },
+    {
+      "word": "ទស្ស្នា",
+      "inputs": [
+        "tossnea",
+        "tossnia"
+      ]
+    },
+    {
+      "word": "ទស្នា",
+      "inputs": [
+        "tohnea",
+        "tohnia",
+        "tosnea",
+        "tosnia"
+      ]
+    },
+    {
+      "word": "ទក្ខនា",
+      "inputs": [
+        "toknea",
+        "toknia"
+      ]
+    },
+    {
+      "word": "ទស្សមា",
+      "inputs": [
+        "tuhmea",
+        "tuhmia",
+        "tusmea",
+        "tusmia"
+      ],
+      "removed": [
+        "tohmea",
+        "tohmia",
+        "tosmea",
+        "tosmia"
+      ]
+    },
+    {
+      "word": "ទស្សលា",
+      "inputs": [
+        "tuhlea",
+        "tuhlia",
+        "tuslea",
+        "tuslia"
+      ],
+      "removed": [
+        "tohlea",
+        "tohlia",
+        "toslea",
+        "toslia"
+      ]
+    },
+    {
+      "word": "នៈ",
+      "inputs": []
+    },
+    {
+      "word": "ទស្សនៈម",
+      "inputs": []
+    },
+    {
+      "word": "ទស្សនៈម៍",
+      "inputs": []
+    },
+    {
+      "word": "ទស្សន៉ៈ",
+      "inputs": []
+    },
+    {
+      "word": "ទស្សមៈ",
+      "inputs": []
+    },
+    {
+      "word": "សន្ទស្សន៍",
+      "inputs": [
+        "sarntoh",
+        "sarntos",
+        "soantoh",
+        "soantos",
+        "sorntoh",
+        "sorntos"
+      ]
+    },
+    {
+      "word": "សិស្ស",
+      "inputs": [
+        "serh",
+        "sers",
+        "soeuh",
+        "soeus"
+      ]
+    },
+    {
+      "word": "មនុស្ស",
+      "inputs": [
+        "monoh",
+        "monos",
+        "monuh",
+        "monus"
+      ]
+    },
+    {
+      "word": "និស្សិត",
+      "inputs": [
+        "nesset",
+        "nessit",
+        "nisset",
+        "nissit"
+      ]
+    },
+    {
+      "word": "ឧស្សាហ៍",
+      "inputs": [
+        "ossa",
+        "ussa"
+      ]
+    }
+  ]
+}

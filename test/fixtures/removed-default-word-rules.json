@@ -1,0 +1,212 @@
+{
+  "examples": [
+    {
+      "part": "ការ",
+      "word": "ការងារ",
+      "input": "karngea",
+      "retiredInput": "kangea"
+    },
+    {
+      "part": "កុមារ",
+      "word": "កុមារភាព",
+      "input": "komearpeap",
+      "retiredInput": "komapeap"
+    },
+    {
+      "part": "ក្ដារ",
+      "word": "ក្ដារខៀន",
+      "input": "kdarkhean",
+      "retiredInput": "kdakhean"
+    },
+    {
+      "part": "ខ្ញី",
+      "word": "នំខ្ញី",
+      "input": "nomkhnhi",
+      "retiredInput": "nomkhnhei"
+    },
+    {
+      "part": "គង",
+      "word": "គងវង់",
+      "input": "kongovong",
+      "retiredInput": "kongvong"
+    },
+    {
+      "part": "គន្លឹះ",
+      "word": "គន្លឹះទ្វារ",
+      "input": "konlereahtvea",
+      "retiredInput": "konleuhtvea"
+    },
+    {
+      "part": "គ្រូ",
+      "word": "គ្រូបង្រៀន",
+      "input": "krupngrean",
+      "retiredInput": "krubongrien"
+    },
+    {
+      "part": "ជន",
+      "word": "ជនបទ",
+      "input": "jonobot",
+      "retiredInput": "jonbot"
+    },
+    {
+      "part": "ជាតិ",
+      "word": "ជីជាតិ",
+      "input": "jijeate",
+      "retiredInput": "jijeat"
+    },
+    {
+      "part": "ជើង",
+      "word": "ជើងអក្សរ",
+      "input": "jerngaksor",
+      "retiredInput": "jerngarksor"
+    },
+    {
+      "part": "តារា",
+      "word": "តារាភាពយន្ត",
+      "input": "tarapeapyon",
+      "retiredInput": "tarapeapoynta"
+    },
+    {
+      "part": "ធាតុ",
+      "word": "រូបធាតុ",
+      "input": "ruptheato",
+      "retiredInput": "ruptheat"
+    },
+    {
+      "part": "បញ្ចុក",
+      "word": "នំបញ្ចុក",
+      "input": "nompnhjok",
+      "retiredInput": "nombonhjok"
+    },
+    {
+      "part": "ប្រាកដ",
+      "word": "ពិតប្រាកដ",
+      "input": "petbrakod",
+      "retiredInput": "petprakod"
+    },
+    {
+      "part": "ប្រាណ",
+      "word": "ហាត់ប្រាណ",
+      "input": "hatbran",
+      "retiredInput": "hatpran"
+    },
+    {
+      "part": "ប្រាំ",
+      "word": "ដប់ប្រាំ",
+      "input": "dopbram",
+      "retiredInput": "doppram"
+    },
+    {
+      "part": "ប្រែ",
+      "word": "បកប្រែ",
+      "input": "bokbrae",
+      "retiredInput": "bokprae"
+    },
+    {
+      "part": "ពុម្ព",
+      "word": "ពុម្ពអក្សរ",
+      "input": "pomaksor",
+      "retiredInput": "pomarksor"
+    },
+    {
+      "part": "ពេទ្យ",
+      "word": "ទន្តពេទ្យ",
+      "input": "tontarpetyo",
+      "retiredInput": "tontarpet"
+    },
+    {
+      "part": "មន្ត្រី",
+      "word": "គណៈរដ្ឋមន្ត្រី",
+      "input": "konaroatmontri"
+    },
+    {
+      "part": "មិត្ត",
+      "word": "មិត្តភាព",
+      "input": "mettarpeap",
+      "retiredInput": "metpeap"
+    },
+    {
+      "part": "ម៉ាស៊ីន",
+      "word": "ម៉ាស៊ីនថតកុន",
+      "input": "masinothotkon",
+      "retiredInput": "masinthotkon"
+    },
+    {
+      "part": "លក់",
+      "word": "លក់ដុំ",
+      "input": "lokdom",
+      "retiredInput": "lukdom"
+    },
+    {
+      "part": "លីត្រ",
+      "word": "មីលីលីត្រ",
+      "input": "mililitro",
+      "retiredInput": "mililit"
+    },
+    {
+      "part": "វាល",
+      "word": "វាលភក់",
+      "input": "vealopuk",
+      "retiredInput": "vealpuk"
+    },
+    {
+      "part": "សង្រែក",
+      "word": "ស្បែកជើងសង្រែក",
+      "input": "sbaekjerngosngrek",
+      "retiredInput": "sbaekjerngsongraek"
+    },
+    {
+      "part": "សត្វ",
+      "word": "សត្វព្រៃ",
+      "input": "sartvoprai",
+      "retiredInput": "satprai"
+    },
+    {
+      "part": "សាមី",
+      "word": "សាមីចិ",
+      "input": "samije",
+      "retiredInput": "sameije"
+    },
+    {
+      "part": "សារ",
+      "word": "ដោយសារតែ",
+      "input": "daoysartae",
+      "retiredInput": "daoysatae"
+    },
+    {
+      "part": "សាលា",
+      "word": "សាលាក្តី",
+      "input": "saleaktei",
+      "retiredInput": "salaktei"
+    },
+    {
+      "part": "សិលា",
+      "word": "សិលាគ្រឹះ",
+      "input": "seleakreuh",
+      "retiredInput": "selakreuh"
+    },
+    {
+      "part": "សួរ",
+      "word": "សួរនាំ",
+      "input": "surrnoam"
+    },
+    {
+      "part": "សេរី",
+      "word": "សេរីភាព",
+      "input": "seripeap",
+      "retiredInput": "sereipeap"
+    },
+    {
+      "part": "សំបុត្រ",
+      "word": "ខ្នងសំបុត្រ",
+      "input": "khnongsombotro",
+      "retiredInput": "khnongsombot"
+    },
+    {
+      "part": "ហេតុ",
+      "word": "កើតហេតុ",
+      "input": "kertheto",
+      "retiredInput": "kerthet"
+    }
+  ]
+}

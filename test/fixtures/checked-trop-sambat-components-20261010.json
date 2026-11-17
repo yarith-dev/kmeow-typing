@@ -1,0 +1,359 @@
+{
+  "rows": [
+    {
+      "word": "ទ្រព្យសម្បត្តិ"
+    }
+  ],
+  "newPairs": [
+    [
+      "tropsambat",
+      "ទ្រព្យសម្បត្តិ"
+    ]
+  ],
+  "compatibility": [
+    [
+      "tropyosambat",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "tropyosmbortte",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "tropyosmbortti",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "tropyosombat",
+      "ទ្រព្យសម្បត្តិ"
+    ]
+  ],
+  "negativePairs": [
+    [
+      "tropsombat",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "troapsambat",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "troapsombat",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "trop",
+      "ទ្រព្យ"
+    ],
+    [
+      "santepheap",
+      "សន្តិភាព"
+    ],
+    [
+      "banjol",
+      "ប័ណ្ណចូល"
+    ],
+    [
+      "banjenh",
+      "ប័ណ្ណចេញ"
+    ],
+    [
+      "bantenh",
+      "ប័ណ្ណទិញ"
+    ],
+    [
+      "bantinh",
+      "ប័ណ្ណទិញ"
+    ],
+    [
+      "bantut",
+      "ប័ណ្ណទូត"
+    ],
+    [
+      "bantout",
+      "ប័ណ្ណទូត"
+    ]
+  ],
+  "guardReadings": [
+    {
+      "word": "កទ្រព្យសម្បត្តិ",
+      "inputs": [
+        "katropyosmbatte",
+        "katropyosmbatti"
+      ]
+    },
+    {
+      "word": "កទ្រព្យសម្បត្តិក",
+      "inputs": [
+        "katropyosmbattek",
+        "katropyosmbattik"
+      ]
+    },
+    {
+      "word": "ចាស់",
+      "inputs": [
+        "jah",
+        "jas"
+      ]
+    },
+    {
+      "word": "ចា៎ស",
+      "inputs": []
+    },
+    {
+      "word": "ទ្រព្យ",
+      "inputs": [
+        "tropyo"
+      ]
+    },
+    {
+      "word": "ទ្រព្យកណ្ដាល",
+      "inputs": [
+        "tropyokndal"
+      ]
+    },
+    {
+      "word": "ទ្រព្យកម្ម",
+      "inputs": [
+        "tropyokam"
+      ]
+    },
+    {
+      "word": "ទ្រព្យដើម",
+      "inputs": [
+        "tropyoderm"
+      ]
+    },
+    {
+      "word": "ទ្រព្យធន",
+      "inputs": [
+        "tropyothon"
+      ]
+    },
+    {
+      "word": "ទ្រព្យមរតក",
+      "inputs": [
+        "tropyomorotok"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិក",
+      "inputs": [
+        "tropyosmbattek",
+        "tropyosmbattik"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិក៍",
+      "inputs": [
+        "tropyosmbatte",
+        "tropyosmbatti"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិា",
+      "inputs": [
+        "tropyosmbattea",
+        "tropyosmbattia"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិ៍",
+      "inputs": []
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិៗ",
+      "inputs": []
+    },
+    {
+      "word": "និមិត្តរូប",
+      "inputs": [
+        "nemettaroup",
+        "nemettarup",
+        "nemittaroup",
+        "nemittarup",
+        "nimettaroup",
+        "nimettarup",
+        "nimittaroup",
+        "nimittarup"
+      ]
+    },
+    {
+      "word": "និយម",
+      "inputs": [
+        "neyom",
+        "niyom"
+      ]
+    },
+    {
+      "word": "នេះ",
+      "inputs": [
+        "neh",
+        "nes"
+      ]
+    },
+    {
+      "word": "ប័ណ្ណចូល",
+      "inputs": []
+    },
+    {
+      "word": "ប័ណ្ណចេញ",
+      "inputs": []
+    },
+    {
+      "word": "ប័ណ្ណទិញ",
+      "inputs": []
+    },
+    {
+      "word": "ប័ណ្ណទូត",
+      "inputs": []
+    },
+    {
+      "word": "ប្រវត្តិសាស្ត្រ",
+      "inputs": [
+        "brovttesah",
+        "brovttesas",
+        "brovttisah",
+        "brovttisas",
+        "provttesah",
+        "provttesas",
+        "provttisah",
+        "provttisas"
+      ]
+    },
+    {
+      "word": "ព្យាយាម",
+      "inputs": [
+        "pyeayeam",
+        "pyeayiam",
+        "pyiayeam",
+        "pyiayiam"
+      ]
+    },
+    {
+      "word": "ភោគទ្រព្យ",
+      "inputs": [
+        "phoktropyo",
+        "poktropyo"
+      ]
+    },
+    {
+      "word": "មិត្តភាព",
+      "inputs": [
+        "mettapeap",
+        "mettapheap",
+        "mettaphiap",
+        "mettapiap",
+        "mittapeap",
+        "mittapheap",
+        "mittaphiap",
+        "mittapiap"
+      ]
+    },
+    {
+      "word": "រាជទ្រព្យ",
+      "inputs": [
+        "reachtropyo",
+        "reajtropyo",
+        "riachtropyo",
+        "riajtropyo"
+      ]
+    },
+    {
+      "word": "លទ្ធ",
+      "inputs": [
+        "lottho"
+      ]
+    },
+    {
+      "word": "ល្អ",
+      "inputs": [
+        "l'ar",
+        "l'or"
+      ]
+    },
+    {
+      "word": "វិទ្យា",
+      "inputs": [
+        "vetyea",
+        "vetyia",
+        "vityea",
+        "vityia",
+        "wetyea",
+        "wetyia",
+        "wityea",
+        "wityia"
+      ]
+    },
+    {
+      "word": "សន្តិ",
+      "inputs": [
+        "sonte",
+        "sonti"
+      ]
+    },
+    {
+      "word": "សន្តិភាព",
+      "inputs": [
+        "sontepeap",
+        "sontepheap",
+        "sontephiap",
+        "sontepiap",
+        "sontipeap",
+        "sontipheap",
+        "sontiphiap",
+        "sontipiap"
+      ]
+    },
+    {
+      "word": "សម្បត្តិ",
+      "inputs": [
+        "sambatte",
+        "sambatti"
+      ]
+    },
+    {
+      "word": "សុទ្ធ",
+      "inputs": [
+        "sot",
+        "sottho",
+        "sut",
+        "suttho"
+      ]
+    },
+    {
+      "word": "ស្ពាន",
+      "inputs": [
+        "spean",
+        "spian"
+      ]
+    },
+    {
+      "word": "អង្ករ",
+      "inputs": [
+        "ongkor"
+      ]
+    },
+    {
+      "word": "អាន",
+      "inputs": [
+        "an"
+      ]
+    }
+  ],
+  "savedAliasControls": [
+    [
+      "troap",
+      "ទ្រព្យ",
+      13285,
+      0
+    ],
+    [
+      "troapsombat",
+      "ទ្រព្យសម្បត្តិ",
+      13286,
+      0
+    ]
+  ],
+  "rankPriority": 0
+}

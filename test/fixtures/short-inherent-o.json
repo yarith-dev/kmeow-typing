@@ -1,0 +1,29 @@
+{
+  "readings": [
+    ["រលត់", ["rolot"], ["rolut"]],
+    ["រត់", ["rot"], ["rut"]],
+    ["គត់", ["kot"], ["kut"]],
+    ["ពត់", ["pot"], ["put"]],
+    ["សំពត់", ["sompot", "sumpot"], ["somput", "sumput"]],
+    ["រំពត់", ["rompot", "rumpot"], ["romput", "rumput"]],
+    ["ផ្គត់ផ្គង់", ["phkotphkong", "pkotpkong"], ["phkutphkung", "pkutpkung"]],
+    ["ផ្នត់គំនិត", ["phnotkomnet", "pnotkumnit"], ["phnutkomnet", "pnutkumnit"]],
+    ["គង់", ["kong"], ["kung"]],
+    ["យល់", ["yol"], ["yul"]],
+    ["ទន់", ["ton"], ["tun"]],
+    ["ខ្យល់", ["khyol"], ["khyul"]],
+    ["យប់", ["yop"], ["yup"]],
+    ["គ្រប់", ["krop"], ["krup"]],
+    ["រង់ចាំ", ["rongjam"], ["rungjam"]],
+    ["រវល់", ["rovol"], ["rovul"]],
+    ["បន្ទប់", ["bontop", "bontup"], []]
+  ],
+  "unchanged": [
+    ["កត់", ["kot"], ["kut"]],
+    ["កាត់", ["kat"], ["kot"]],
+    ["គាត់", ["koat", "kort"], ["kot"]],
+    ["លក់", ["luk", "luak", "luok"], ["lok"]],
+    ["លុប", ["lop", "lup"], []],
+    ["មក", ["mok"], ["muk"]]
+  ]
+}

@@ -1,0 +1,439 @@
+{
+  "date": "2026-11-15",
+  "selection": "Owner-selected ោះ series split: A-series oh/os, O-series uh/us. Use the existing effective syllable-series rules, including supported clusters and register marks. Saved whole-input aliases and other vowel combinations retain independent choices.",
+  "cases": [
+    {
+      "word": "ចន្លោះ",
+      "yes": [
+        "jonluh",
+        "jonlus"
+      ],
+      "no": [
+        "janluh",
+        "janlus",
+        "jonloh",
+        "jonlos"
+      ]
+    },
+    {
+      "word": "កោះ",
+      "yes": [
+        "koh",
+        "kos"
+      ],
+      "no": [
+        "kuh",
+        "kus"
+      ]
+    },
+    {
+      "word": "គោះ",
+      "yes": [
+        "kuh",
+        "kus"
+      ],
+      "no": [
+        "koh",
+        "kos"
+      ]
+    },
+    {
+      "word": "តោះ",
+      "yes": [
+        "toh",
+        "tos"
+      ],
+      "no": [
+        "tuh",
+        "tus"
+      ]
+    },
+    {
+      "word": "ទោះ",
+      "yes": [
+        "tuh",
+        "tus"
+      ],
+      "no": [
+        "toh",
+        "tos"
+      ]
+    },
+    {
+      "word": "បោះ",
+      "yes": [
+        "boh",
+        "bos"
+      ],
+      "no": [
+        "buh",
+        "bus"
+      ]
+    },
+    {
+      "word": "ពោះ",
+      "yes": [
+        "puh",
+        "pus"
+      ],
+      "no": [
+        "poh",
+        "pos"
+      ]
+    },
+    {
+      "word": "ហោះ",
+      "yes": [
+        "hoh",
+        "hos"
+      ],
+      "no": [
+        "huh",
+        "hus"
+      ]
+    },
+    {
+      "word": "នោះ",
+      "yes": [
+        "nuh",
+        "nus"
+      ],
+      "no": [
+        "noh",
+        "nos"
+      ]
+    },
+    {
+      "word": "ទោះបីជា",
+      "yes": [
+        "tuhbeichea",
+        "tusbeichea"
+      ],
+      "no": [
+        "tohbeichea",
+        "tosbeichea"
+      ]
+    },
+    {
+      "word": "ក្រោះ",
+      "yes": [
+        "kroh",
+        "kros"
+      ],
+      "no": [
+        "kruh",
+        "krus"
+      ]
+    },
+    {
+      "word": "គ្រោះ",
+      "yes": [
+        "kruh",
+        "krus"
+      ],
+      "no": [
+        "kroh",
+        "kros"
+      ]
+    },
+    {
+      "word": "ព្រោះ",
+      "yes": [
+        "pruh",
+        "prus"
+      ],
+      "no": [
+        "proh",
+        "pros"
+      ]
+    },
+    {
+      "word": "ម៉ោះ",
+      "yes": [
+        "moh",
+        "mos"
+      ],
+      "no": [
+        "muh",
+        "mus"
+      ]
+    },
+    {
+      "word": "ហ៊ោះ",
+      "yes": [
+        "huh",
+        "hus"
+      ],
+      "no": [
+        "hoh",
+        "hos"
+      ]
+    },
+    {
+      "word": "កឹ",
+      "yes": [
+        "ker",
+        "koeu"
+      ],
+      "no": [
+        "keu"
+      ]
+    },
+    {
+      "word": "គឹ",
+      "yes": [
+        "ker",
+        "koeu"
+      ],
+      "no": [
+        "keu"
+      ]
+    },
+    {
+      "word": "ទឹក",
+      "yes": [
+        "terk",
+        "toeuk"
+      ],
+      "no": [
+        "teuk"
+      ]
+    },
+    {
+      "word": "ព្រឹក",
+      "yes": [
+        "prerk",
+        "proeuk"
+      ],
+      "no": [
+        "preuk"
+      ]
+    },
+    {
+      "word": "ក",
+      "yes": [
+        "kor"
+      ],
+      "no": [
+        "ka",
+        "ko"
+      ]
+    },
+    {
+      "word": "គ",
+      "yes": [
+        "ko"
+      ],
+      "no": [
+        "ka",
+        "kor"
+      ]
+    },
+    {
+      "word": "កកាយ",
+      "yes": [
+        "korkay"
+      ],
+      "no": [
+        "kakay",
+        "kokay"
+      ]
+    },
+    {
+      "word": "កកិត",
+      "yes": [
+        "korket",
+        "korkit"
+      ],
+      "no": [
+        "kaket",
+        "kakit"
+      ]
+    },
+    {
+      "word": "កកូរ",
+      "yes": [
+        "korko"
+      ],
+      "no": [
+        "kako"
+      ]
+    },
+    {
+      "word": "ដរាបណា",
+      "yes": [
+        "dorreapna",
+        "dorriapna",
+        "dareapna",
+        "dariapna"
+      ],
+      "no": [
+        "daraapna",
+        "dariaapna"
+      ]
+    },
+    {
+      "word": "ស្ដី",
+      "yes": [
+        "sdei",
+        "sdey"
+      ],
+      "no": [
+        "stei",
+        "stey"
+      ]
+    },
+    {
+      "word": "សួស្ដី",
+      "yes": [
+        "sursdei",
+        "sursdey"
+      ],
+      "no": [
+        "surstei",
+        "surstey"
+      ]
+    }
+  ],
+  "unrelated": [
+    {
+      "word": "អត់ទោស",
+      "yes": [
+        "ottoh",
+        "ottos"
+      ],
+      "no": [
+        "ottuh"
+      ]
+    },
+    {
+      "word": "កុះ",
+      "yes": [
+        "koh"
+      ],
+      "no": [
+        "kos",
+        "kuh"
+      ]
+    },
+    {
+      "word": "គុះ",
+      "yes": [
+        "kuh"
+      ],
+      "no": [
+        "kos",
+        "koh"
+      ]
+    },
+    {
+      "word": "កេះ",
+      "yes": [
+        "keh",
+        "kes"
+      ],
+      "no": [
+        "kos"
+      ]
+    },
+    {
+      "word": "កឺ",
+      "yes": [
+        "keu"
+      ],
+      "no": [
+        "ker"
+      ]
+    },
+    {
+      "word": "គឺ",
+      "yes": [
+        "keu"
+      ],
+      "no": [
+        "ker"
+      ]
+    },
+    {
+      "word": "គន្លឹះ",
+      "yes": [
+        "konleuh",
+        "konloeuh"
+      ],
+      "no": [
+        "konlerh"
+      ]
+    },
+    {
+      "word": "កា",
+      "yes": [
+        "ka"
+      ],
+      "no": [
+        "kor"
+      ]
+    },
+    {
+      "word": "គា",
+      "yes": [
+        "kea",
+        "kia"
+      ],
+      "no": [
+        "ko"
+      ]
+    },
+    {
+      "word": "កក់",
+      "yes": [
+        "kok"
+      ],
+      "no": [
+        "kork"
+      ]
+    },
+    {
+      "word": "តី",
+      "yes": [
+        "tei",
+        "tey"
+      ],
+      "no": [
+        "dei",
+        "dey"
+      ]
+    },
+    {
+      "word": "ស្តា",
+      "yes": [
+        "sta"
+      ],
+      "no": [
+        "sda"
+      ]
+    }
+  ],
+  "intendedFirstChoices": {
+    "toh": "តោះ",
+    "tos": "តោះ",
+    "tuh": "ទោះ",
+    "tus": "ទោះ"
+  },
+  "currentAdmissionReadings": {
+    "តោះ": [
+      "toh",
+      "tos"
+    ],
+    "ត្រឹមតែ": [
+      "trermtae",
+      "troeumtae"
+    ],
+    "អបអរសាទរ": [
+      "orbororsator"
+    ],
+    "ខកចិត្ត": [
+      "khokjettor",
+      "khokjittor"
+    ]
+  }
+}

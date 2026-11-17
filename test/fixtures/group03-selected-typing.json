@@ -1,0 +1,156 @@
+{
+  "savedInputPolicy": {
+    "input": "poh",
+    "khmer": "ប៉ុស្តិ៍",
+    "rankPriority": -2
+  },
+  "unitWords": [
+    "សួរនាំ",
+    "សួរ",
+    "នាំ",
+    "សួរនាំរ",
+    "អសួរនាំ",
+    "សួរនាំ៍",
+    "សួរនា"
+  ],
+  "unitYes": [
+    [
+      "surnorm",
+      "សួរនាំ"
+    ],
+    [
+      "sur",
+      "សួរ"
+    ],
+    [
+      "norm",
+      "នាំ"
+    ],
+    [
+      "surrnorm",
+      "សួរនាំ"
+    ],
+    [
+      "surnorm",
+      "សួរនាំរ"
+    ],
+    [
+      "surnea",
+      "សួរនា"
+    ]
+  ],
+  "unitRemoved": [
+    [
+      "surrr",
+      "សួរនាំ"
+    ]
+  ],
+  "unitScopeNo": [
+    [
+      "surnorm",
+      "អសួរនាំ"
+    ],
+    [
+      "surnorm",
+      "សួរនាំ៍"
+    ]
+  ],
+  "unitPrefix": [
+    "surn",
+    "សួរនាំ",
+    "surrnorm"
+  ],
+  "rankControlDataset": {
+    "schemaVersion": 2,
+    "mappings": [
+      {
+        "id": 72001,
+        "romanized": "poh",
+        "khmer": "ប៉ុស្តិ៍",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 72002,
+        "romanized": "poh",
+        "khmer": "ពោះ",
+        "rank": 50,
+        "status": "approved"
+      },
+      {
+        "id": 72003,
+        "romanized": "poha",
+        "khmer": "ក",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 72004,
+        "romanized": "a",
+        "khmer": "អ",
+        "rank": 0,
+        "status": "approved"
+      }
+    ],
+    "words": [
+      {
+        "id": 71001,
+        "khmer": "ប៉ុស្តិ៍",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 71002,
+        "khmer": "ពោះ",
+        "rank": 50,
+        "status": "approved"
+      },
+      {
+        "id": 71003,
+        "khmer": "អ",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 71004,
+        "khmer": "អប៉ុស្តិ៍",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 71005,
+        "khmer": "ក",
+        "rank": 0,
+        "status": "approved"
+      }
+    ],
+    "structures": [
+      {
+        "wordId": 71004,
+        "componentIds": [
+          71003,
+          71001
+        ]
+      }
+    ]
+  },
+  "unitCountAlternatives": [
+    [
+      "surnorm",
+      "សួរនាំរ",
+      "surrnorm"
+    ],
+    [
+      "surnea",
+      "សួរនា",
+      "surrnea"
+    ]
+  ],
+  "unitCorrectionOnly": [
+    [
+      "surrrnorm",
+      "សួរនាំ",
+      "surrnorm"
+    ]
+  ]
+}

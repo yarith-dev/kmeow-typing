@@ -1,0 +1,222 @@
+{
+  "cases": [
+    {
+      "khmer": "ទិន្ន",
+      "keys": [
+        "ten"
+      ],
+      "sourceCase": {
+        "kind": "scoped",
+        "order": 7,
+        "words": [
+          "ទិន្នផល"
+        ],
+        "preserveMapped": false,
+        "positions": [
+          "start"
+        ]
+      }
+    },
+    {
+      "khmer": "នឹង",
+      "keys": [
+        "neung",
+        "ning"
+      ],
+      "sourceCase": {
+        "kind": "scoped",
+        "order": 6,
+        "words": [
+          "នឹងន"
+        ],
+        "preserveMapped": false,
+        "positions": [
+          "start"
+        ]
+      }
+    },
+    {
+      "khmer": "ផល",
+      "keys": [
+        "pol"
+      ],
+      "sourceCase": {
+        "kind": "scoped",
+        "order": 9,
+        "words": [
+          "លទ្ធផល"
+        ],
+        "preserveMapped": false,
+        "positions": [
+          "end"
+        ]
+      }
+    },
+    {
+      "khmer": "ពេជ្រ",
+      "keys": [
+        "pech"
+      ],
+      "sourceCase": {
+        "kind": "scoped",
+        "order": 2,
+        "words": [
+          "ពេជ្រ"
+        ],
+        "positions": [
+          "standalone"
+        ]
+      }
+    },
+    {
+      "khmer": "លទ្ធ",
+      "keys": [
+        "lert"
+      ],
+      "sourceCase": {
+        "kind": "scoped",
+        "order": 8,
+        "words": [
+          "លទ្ធផល"
+        ],
+        "preserveMapped": false,
+        "positions": [
+          "start"
+        ]
+      }
+    },
+    {
+      "khmer": "អ្នក",
+      "keys": [
+        "neak"
+      ],
+      "sourceCase": {
+        "kind": "scoped",
+        "order": 1,
+        "words": [
+          "អ្នក",
+          "អ្នកវិទ្យាសាស្ត្រ",
+          "អ្នកជំនួញ",
+          "អ្នកនិពន្ធ",
+          "អ្នកស្រាវជ្រាវ",
+          "អ្នកច្រៀង",
+          "អ្នករាំ",
+          "អ្នកជំងឺ",
+          "អ្នកថតរូប",
+          "អ្នកអាន",
+          "អ្នកភ្លេង",
+          "អ្នកគណិតសាស្ត្រ",
+          "អ្នករចនា",
+          "អ្នកជាប់ពន្ធ",
+          "អ្នកចូលរួម",
+          "អ្នកខ្ចី",
+          "អ្នកទិញ",
+          "អ្នករុករក",
+          "អ្នកតែងភ្លេង",
+          "អ្នកភូមិសាស្ត្រ",
+          "អ្នករាយការណ៍",
+          "អ្នកអភិបាល",
+          "អ្នកកំប្លែង",
+          "អ្នកផ្សាយ",
+          "អ្នកបោសជូត",
+          "អ្នកគ្រូ",
+          "អ្នកលក់",
+          "លោកអ្នក",
+          "អ្នកកាសែត",
+          "អ្នកដំណើរ",
+          "អ្នកទេសចរ",
+          "អ្នកធ្វើការ",
+          "អ្នកគាំទ្រ",
+          "អ្នកស្រី",
+          "អ្នកការទូត",
+          "អ្នកនេសាទ",
+          "អ្នកជំនាញ",
+          "អ្នកចាំទី"
+        ],
+        "positions": [
+          "start",
+          "end",
+          "standalone"
+        ]
+      }
+    }
+  ],
+  "retiredCases": [
+    {
+      "khmer": "សាមី",
+      "keys": [
+        "samei",
+        "samey"
+      ],
+      "sourceCase": {
+        "kind": "prefix",
+        "order": 1,
+        "words": [
+          "សាមីចិ"
+        ]
+      }
+    },
+    {
+      "khmer": "សាលា",
+      "keys": [
+        "sala"
+      ],
+      "sourceCase": {
+        "kind": "prefix",
+        "order": 2,
+        "words": [
+          "សាលាក្រុង",
+          "សាលាស្រុក",
+          "សាលាក្តី"
+        ]
+      }
+    },
+    {
+      "khmer": "សិលា",
+      "keys": [
+        "sila",
+        "sela"
+      ],
+      "sourceCase": {
+        "kind": "prefix",
+        "order": 3,
+        "words": [
+          "សិលាគ្រឹះ",
+          "សិលាប្រាសាទ",
+          "សិលាម័យ"
+        ]
+      }
+    },
+    {
+      "khmer": "សួរ",
+      "keys": [
+        "sur"
+      ],
+      "sourceCase": {
+        "kind": "scoped",
+        "order": 10,
+        "words": [
+          "សួរនាំ"
+        ],
+        "preserveMapped": false,
+        "positions": [
+          "start"
+        ]
+      }
+    },
+    {
+      "khmer": "សេរី",
+      "keys": [
+        "serei",
+        "serey"
+      ],
+      "sourceCase": {
+        "kind": "prefix",
+        "order": 0,
+        "words": [
+          "សេរីភាព"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,696 @@
+{
+  "rows": [
+    {
+      "word": "កិច្ចព្រមព្រៀង"
+    },
+    {
+      "word": "សាធារណរដ្ឋ"
+    },
+    {
+      "word": "លក្ខខណ្ឌ"
+    },
+    {
+      "word": "គណបក្ស"
+    },
+    {
+      "word": "ព្រះអាទិត្យ"
+    },
+    {
+      "word": "បទពិសោធន៍"
+    },
+    {
+      "word": "ត្រួតពិនិត្យ"
+    }
+  ],
+  "newPairs": [
+    [
+      "kechprompreang",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "kechpromprieng",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "kichprompreang",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "kichpromprieng",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "sathearonoroat",
+      "សាធារណរដ្ឋ"
+    ],
+    [
+      "sathiaronoroat",
+      "សាធារណរដ្ឋ"
+    ],
+    [
+      "laekkhan",
+      "លក្ខខណ្ឌ"
+    ],
+    [
+      "konbak",
+      "គណបក្ស"
+    ],
+    [
+      "preahatit",
+      "ព្រះអាទិត្យ"
+    ],
+    [
+      "preahatet",
+      "ព្រះអាទិត្យ"
+    ],
+    [
+      "botpisaot",
+      "បទពិសោធន៍"
+    ],
+    [
+      "botpesaot",
+      "បទពិសោធន៍"
+    ],
+    [
+      "trurtpinit",
+      "ត្រួតពិនិត្យ"
+    ]
+  ],
+  "compatibility": [
+    [
+      "kejjorprompreang",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "kejjorpromprieng",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "kijjorprompreang",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "kijjorpromprieng",
+      "កិច្ចព្រមព្រៀង"
+    ],
+    [
+      "sathearonordthor",
+      "សាធារណរដ្ឋ"
+    ],
+    [
+      "sathiaronordthor",
+      "សាធារណរដ្ឋ"
+    ],
+    [
+      "laekkhorndo",
+      "លក្ខខណ្ឌ"
+    ],
+    [
+      "konopksor",
+      "គណបក្ស"
+    ],
+    [
+      "preahatetyo",
+      "ព្រះអាទិត្យ"
+    ],
+    [
+      "preahatityo",
+      "ព្រះអាទិត្យ"
+    ],
+    [
+      "botpesaoth",
+      "បទពិសោធន៍"
+    ],
+    [
+      "botpisaoth",
+      "បទពិសោធន៍"
+    ],
+    [
+      "trurtpenetyo",
+      "ត្រួតពិនិត្យ"
+    ],
+    [
+      "trurtpenityo",
+      "ត្រួតពិនិត្យ"
+    ],
+    [
+      "trurtpinetyo",
+      "ត្រួតពិនិត្យ"
+    ],
+    [
+      "trurtpinityo",
+      "ត្រួតពិនិត្យ"
+    ]
+  ],
+  "guardReadings": [
+    {
+      "word": "កកិច្ចព្រមព្រៀង",
+      "inputs": [
+        "kakejjaprompreang",
+        "kakejjapromprieng",
+        "kakijjaprompreang",
+        "kakijjapromprieng"
+      ]
+    },
+    {
+      "word": "កគណបក្ស",
+      "inputs": [
+        "kakonopksa"
+      ]
+    },
+    {
+      "word": "កត្រួតពិនិត្យ",
+      "inputs": [
+        "kotrurtpenetyo",
+        "kotrurtpenityo",
+        "kotrurtpinetyo",
+        "kotrurtpinityo"
+      ]
+    },
+    {
+      "word": "កថាខណ្ឌ",
+      "inputs": [
+        "kathakhan",
+        "kathakndo"
+      ]
+    },
+    {
+      "word": "កបទពិសោធន៍",
+      "inputs": [
+        "kabotpesaoth",
+        "kabotpisaoth"
+      ]
+    },
+    {
+      "word": "កព្រះអាទិត្យ",
+      "inputs": [
+        "kapreahatetyo",
+        "kapreahatityo"
+      ]
+    },
+    {
+      "word": "កលក្ខខណ្ឌ",
+      "inputs": [
+        "korlaekkhorndo"
+      ]
+    },
+    {
+      "word": "កសាធារណរដ្ឋ",
+      "inputs": [
+        "kasathearonordtha",
+        "kasathiaronordtha"
+      ]
+    },
+    {
+      "word": "កិច្ច",
+      "inputs": [
+        "kech",
+        "kejja",
+        "kich",
+        "kijja"
+      ]
+    },
+    {
+      "word": "កិច្ចព្រមព្រៀងក",
+      "inputs": [
+        "kejjaprompreangok",
+        "kejjaprompriengok",
+        "kijjaprompreangok",
+        "kijjaprompriengok"
+      ]
+    },
+    {
+      "word": "កិច្ចព្រមព្រៀងា",
+      "inputs": [
+        "kejjaprompreangea",
+        "kejjaprompreangia",
+        "kejjaprompriengea",
+        "kejjaprompriengia",
+        "kijjaprompreangea",
+        "kijjaprompreangia",
+        "kijjaprompriengea",
+        "kijjaprompriengia"
+      ]
+    },
+    {
+      "word": "កិច្ចព្រមព្រៀង៍",
+      "inputs": [
+        "kejjapromprea",
+        "kejjapromprie",
+        "kijjapromprea",
+        "kijjapromprie"
+      ]
+    },
+    {
+      "word": "កិច្ចព្រមព្រៀង៍៍",
+      "inputs": []
+    },
+    {
+      "word": "កិច្ចព្រមព្រៀងៗ",
+      "inputs": []
+    },
+    {
+      "word": "កិច្ចសន្យា",
+      "inputs": [
+        "kejjosnyea",
+        "kejjosnyia",
+        "kijjosnyea",
+        "kijjosnyia"
+      ]
+    },
+    {
+      "word": "ខណ្ឌ",
+      "inputs": [
+        "khando"
+      ]
+    },
+    {
+      "word": "ខណ្ឌប័ណ្ណ",
+      "inputs": []
+    },
+    {
+      "word": "ខណ្ឌភាគ",
+      "inputs": [
+        "khandopeak",
+        "khandopheak",
+        "khandophiak",
+        "khandopiak"
+      ]
+    },
+    {
+      "word": "ខណ្ឌសញ្ញា",
+      "inputs": [
+        "khandosnhnhea",
+        "khandosnhnhia",
+        "khandosnhnyea",
+        "khandosnhnyia",
+        "khandosnynhea",
+        "khandosnynhia",
+        "khandosnynyea",
+        "khandosnynyia"
+      ]
+    },
+    {
+      "word": "គណបក្សក",
+      "inputs": [
+        "konopksok"
+      ]
+    },
+    {
+      "word": "គណបក្សា",
+      "inputs": [
+        "konopksa"
+      ]
+    },
+    {
+      "word": "គណបក្ស៍",
+      "inputs": []
+    },
+    {
+      "word": "គណបក្ស៍៍",
+      "inputs": []
+    },
+    {
+      "word": "គណបក្សៗ",
+      "inputs": []
+    },
+    {
+      "word": "គណៈរដ្ឋមន្ត្រី",
+      "inputs": [
+        "konaroatmontrei",
+        "konaroatmontrey"
+      ]
+    },
+    {
+      "word": "ចិត្តសាស្ត្រ",
+      "inputs": [
+        "jettasah",
+        "jettasas",
+        "jittasah",
+        "jittasas"
+      ]
+    },
+    {
+      "word": "ត្រួតពិនិត្យក",
+      "inputs": [
+        "trurtpenetyok",
+        "trurtpenityok",
+        "trurtpinetyok",
+        "trurtpinityok"
+      ]
+    },
+    {
+      "word": "ត្រួតពិនិត្យា",
+      "inputs": [
+        "trurtpenetyea",
+        "trurtpenetyia",
+        "trurtpenityea",
+        "trurtpenityia",
+        "trurtpinetyea",
+        "trurtpinetyia",
+        "trurtpinityea",
+        "trurtpinityia"
+      ]
+    },
+    {
+      "word": "ត្រួតពិនិត្យ៍",
+      "inputs": []
+    },
+    {
+      "word": "ត្រួតពិនិត្យ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "ត្រួតពិនិត្យៗ",
+      "inputs": []
+    },
+    {
+      "word": "ថ្ងៃអាទិត្យ",
+      "inputs": [
+        "thngaiatetyo",
+        "thngaiatityo"
+      ]
+    },
+    {
+      "word": "ទីពិសោធន៍",
+      "inputs": [
+        "tipesaoth",
+        "tipisaoth"
+      ]
+    },
+    {
+      "word": "និយមន័យ",
+      "inputs": [
+        "neyomney",
+        "niyomney"
+      ]
+    },
+    {
+      "word": "បក្ស",
+      "inputs": [
+        "baksa"
+      ]
+    },
+    {
+      "word": "បក្សពួក",
+      "inputs": [
+        "baksapurk"
+      ]
+    },
+    {
+      "word": "បក្សព័ន្ធ",
+      "inputs": []
+    },
+    {
+      "word": "បក្សី",
+      "inputs": [
+        "boksei",
+        "boksey"
+      ]
+    },
+    {
+      "word": "បទពិសោធន៍ក",
+      "inputs": []
+    },
+    {
+      "word": "បទពិសោធន៍ា",
+      "inputs": []
+    },
+    {
+      "word": "បទពិសោធន៍៍",
+      "inputs": []
+    },
+    {
+      "word": "បទពិសោធន៍ៗ",
+      "inputs": []
+    },
+    {
+      "word": "បន្ទប់ពិសោធន៍",
+      "inputs": [
+        "bantuppesaoth",
+        "bantuppisaoth"
+      ]
+    },
+    {
+      "word": "ប័ណ្ណឥណទាន",
+      "inputs": []
+    },
+    {
+      "word": "ប្រជាពលរដ្ឋ",
+      "inputs": [
+        "brocheapolordtha",
+        "brocheapolroat",
+        "brochiapolordtha",
+        "brochiapolroat",
+        "brojeapolordtha",
+        "brojeapolroat",
+        "brojiapolordtha",
+        "brojiapolroat",
+        "procheapolordtha",
+        "procheapolroat",
+        "prochiapolordtha",
+        "prochiapolroat",
+        "projeapolordtha",
+        "projeapolroat",
+        "projiapolordtha",
+        "projiapolroat"
+      ]
+    },
+    {
+      "word": "ប្រព័ន្ធព្រះអាទិត្យ",
+      "inputs": [
+        "bropoanpreahatet",
+        "bropoanpreahatit",
+        "propoanpreahatet",
+        "propoanpreahatit"
+      ]
+    },
+    {
+      "word": "ពលរដ្ឋ",
+      "inputs": [
+        "polordtha",
+        "polroat"
+      ]
+    },
+    {
+      "word": "ពាក្យខ្វែង",
+      "inputs": [
+        "peakyokhvaeng",
+        "peakyokhveng",
+        "peakyokhwaeng",
+        "peakyokhweng",
+        "piakyokhvaeng",
+        "piakyokhveng",
+        "piakyokhwaeng",
+        "piakyokhweng"
+      ]
+    },
+    {
+      "word": "ពាក្យពេចន៍",
+      "inputs": [
+        "peakpech",
+        "peakyopech",
+        "piakpech",
+        "piakyopech"
+      ]
+    },
+    {
+      "word": "ពាក្យសុំ",
+      "inputs": [
+        "peakyosom",
+        "piakyosom"
+      ]
+    },
+    {
+      "word": "ពិនិត្យ",
+      "inputs": [
+        "penetyo",
+        "penityo",
+        "pinetyo",
+        "pinityo"
+      ]
+    },
+    {
+      "word": "ពិនិត្យពិនិស្ច័យ",
+      "inputs": []
+    },
+    {
+      "word": "ពិភពលោក",
+      "inputs": [
+        "pephoplok",
+        "pepoplok",
+        "piphoplok",
+        "pipoplok"
+      ]
+    },
+    {
+      "word": "ពិសោធ",
+      "inputs": [
+        "pesaoth",
+        "pisaoth"
+      ]
+    },
+    {
+      "word": "ពិសោធន៍",
+      "inputs": [
+        "pesaoth",
+        "pisaoth"
+      ]
+    },
+    {
+      "word": "ព្រះអាទិត្យក",
+      "inputs": [
+        "preahatetyok",
+        "preahatityok"
+      ]
+    },
+    {
+      "word": "ព្រះអាទិត្យា",
+      "inputs": [
+        "preahatetyea",
+        "preahatetyia",
+        "preahatityea",
+        "preahatityia"
+      ]
+    },
+    {
+      "word": "ព្រះអាទិត្យ៍",
+      "inputs": []
+    },
+    {
+      "word": "ព្រះអាទិត្យ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "ព្រះអាទិត្យៗ",
+      "inputs": []
+    },
+    {
+      "word": "មជ្ឈិមបក្ស",
+      "inputs": [
+        "mochchemopksa",
+        "mochchimopksa",
+        "mojchemopksa",
+        "mojchimopksa"
+      ]
+    },
+    {
+      "word": "រដ្ឋ",
+      "inputs": [
+        "roat",
+        "rodtha"
+      ]
+    },
+    {
+      "word": "រដ្ឋធានី",
+      "inputs": [
+        "roattheani",
+        "roatthiani",
+        "rodthatheani",
+        "rodthathiani"
+      ]
+    },
+    {
+      "word": "រដ្ឋមន្ត្រី",
+      "inputs": [
+        "roatmontrei",
+        "roatmontrey",
+        "rodthomntri"
+      ]
+    },
+    {
+      "word": "រដ្ឋាភិបាល",
+      "inputs": [
+        "rodthapebal",
+        "rodthaphebal",
+        "rodthaphibal",
+        "rodthapibal"
+      ]
+    },
+    {
+      "word": "លក្ខខណ្ឌក",
+      "inputs": [
+        "lokkhandok"
+      ]
+    },
+    {
+      "word": "លក្ខខណ្ឌា",
+      "inputs": [
+        "laekkhondea",
+        "laekkhondia"
+      ]
+    },
+    {
+      "word": "លក្ខខណ្ឌ៍",
+      "inputs": []
+    },
+    {
+      "word": "លក្ខខណ្ឌ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "លក្ខខណ្ឌៗ",
+      "inputs": []
+    },
+    {
+      "word": "សម្រេចចិត្ត",
+      "inputs": [
+        "somrechjetta",
+        "somrechjitta"
+      ]
+    },
+    {
+      "word": "សាធារណរដ្ឋក",
+      "inputs": [
+        "sathearonordthok",
+        "sathiaronordthok"
+      ]
+    },
+    {
+      "word": "សាធារណរដ្ឋា",
+      "inputs": [
+        "sathearonordtha",
+        "sathiaronordtha"
+      ]
+    },
+    {
+      "word": "សាធារណរដ្ឋ៍",
+      "inputs": []
+    },
+    {
+      "word": "សាធារណរដ្ឋ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "សាធារណរដ្ឋៗ",
+      "inputs": []
+    },
+    {
+      "word": "សួនកម្សាន្ត",
+      "inputs": [
+        "surnokmsanta"
+      ]
+    },
+    {
+      "word": "សោតពិនិត្យ",
+      "inputs": [
+        "saotpenetyo",
+        "saotpenityo",
+        "saotpinetyo",
+        "saotpinityo"
+      ]
+    },
+    {
+      "word": "ស្ម័គ្រចិត្ត",
+      "inputs": []
+    },
+    {
+      "word": "អាទិត្យ",
+      "inputs": [
+        "atetyo",
+        "atityo"
+      ]
+    }
+  ],
+  "rankPriority": 0
+}

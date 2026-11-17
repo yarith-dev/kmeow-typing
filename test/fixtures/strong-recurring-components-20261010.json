@@ -1,0 +1,524 @@
+{
+  "newPairs": [
+    [
+      "hatlekha",
+      "ហត្ថលេខា"
+    ],
+    [
+      "johhatlekha",
+      "ចុះហត្ថលេខា"
+    ],
+    [
+      "mekapal",
+      "មេកប៉ាល់"
+    ],
+    [
+      "piphuplok",
+      "ពិភពលោក"
+    ],
+    [
+      "pipuplok",
+      "ពិភពលោក"
+    ]
+  ],
+  "compatibility": [
+    [
+      "mettorpeap",
+      "មិត្តភាព"
+    ],
+    [
+      "mettorpheap",
+      "មិត្តភាព"
+    ],
+    [
+      "mettorphiap",
+      "មិត្តភាព"
+    ],
+    [
+      "mettorpiap",
+      "មិត្តភាព"
+    ],
+    [
+      "mittorpeap",
+      "មិត្តភាព"
+    ],
+    [
+      "mittorpheap",
+      "មិត្តភាព"
+    ],
+    [
+      "mittorphiap",
+      "មិត្តភាព"
+    ],
+    [
+      "mittorpiap",
+      "មិត្តភាព"
+    ],
+    [
+      "hortthorlekha",
+      "ហត្ថលេខា"
+    ],
+    [
+      "johhtthorlekha",
+      "ចុះហត្ថលេខា"
+    ],
+    [
+      "chonobot",
+      "ជនបទ"
+    ],
+    [
+      "jonobot",
+      "ជនបទ"
+    ],
+    [
+      "chonoborteh",
+      "ជនបរទេស"
+    ],
+    [
+      "chonobortes",
+      "ជនបរទេស"
+    ],
+    [
+      "jonoborteh",
+      "ជនបរទេស"
+    ],
+    [
+      "jonobortes",
+      "ជនបរទេស"
+    ],
+    [
+      "mekpal",
+      "មេកប៉ាល់"
+    ],
+    [
+      "pephoplok",
+      "ពិភពលោក"
+    ],
+    [
+      "pepoplok",
+      "ពិភពលោក"
+    ],
+    [
+      "piphoplok",
+      "ពិភពលោក"
+    ],
+    [
+      "pipoplok",
+      "ពិភពលោក"
+    ],
+    [
+      "mettarpeap",
+      "មិត្តភាព"
+    ]
+  ],
+  "rows": [
+    {
+      "word": "មិត្តភាព"
+    },
+    {
+      "word": "ហត្ថលេខា"
+    },
+    {
+      "word": "ចុះហត្ថលេខា"
+    },
+    {
+      "word": "ជនបទ"
+    },
+    {
+      "word": "ជនបរទេស"
+    },
+    {
+      "word": "មេកប៉ាល់"
+    },
+    {
+      "word": "ពិភពលោក"
+    }
+  ],
+  "guardReadings": [
+    {
+      "word": "កបាល"
+    },
+    {
+      "word": "កប៉ាល់"
+    },
+    {
+      "word": "កប៉ាល់ចំឡង"
+    },
+    {
+      "word": "កប៉ាល់ជំនួញ"
+    },
+    {
+      "word": "កប៉ាល់ផ្ទុកទំនិញ"
+    },
+    {
+      "word": "កប៉ាល់ភ្លើង"
+    },
+    {
+      "word": "កប៉ាល់សមុទ្រ"
+    },
+    {
+      "word": "កប៉ាល់ហោះ"
+    },
+    {
+      "word": "គណិតសាស្ត្រ"
+    },
+    {
+      "word": "គប់មិត្ត"
+    },
+    {
+      "word": "ចុះហត្ថលេខាខ្មែរ"
+    },
+    {
+      "word": "ចុះហត្ថលេខា់"
+    },
+    {
+      "word": "ចុះហត្ថលេខា៍"
+    },
+    {
+      "word": "ចុះហត្ថលេខាៗ"
+    },
+    {
+      "word": "ជន"
+    },
+    {
+      "word": "ជនកាយ"
+    },
+    {
+      "word": "ជនជាតិ"
+    },
+    {
+      "word": "ជនបទខ្មែរ"
+    },
+    {
+      "word": "ជនបទ់"
+    },
+    {
+      "word": "ជនបទ៍"
+    },
+    {
+      "word": "ជនបទៗ"
+    },
+    {
+      "word": "ជនបរទេសខ្មែរ"
+    },
+    {
+      "word": "ជនបរទេស់"
+    },
+    {
+      "word": "ជនបរទេស៍"
+    },
+    {
+      "word": "ជនបរទេសៗ"
+    },
+    {
+      "word": "ជនភាគតិច"
+    },
+    {
+      "word": "ជនរួមជាតិ"
+    },
+    {
+      "word": "ជនស៊ីវិល"
+    },
+    {
+      "word": "ញាតិមិត្ត"
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិ"
+    },
+    {
+      "word": "និមិត្ត"
+    },
+    {
+      "word": "និមិត្តភាព"
+    },
+    {
+      "word": "និមិត្តរូប"
+    },
+    {
+      "word": "និយម"
+    },
+    {
+      "word": "នេះ"
+    },
+    {
+      "word": "ប្រភព"
+    },
+    {
+      "word": "ផែកប៉ាល់"
+    },
+    {
+      "word": "ពិភព"
+    },
+    {
+      "word": "ពិភពនាគ"
+    },
+    {
+      "word": "ពិភពលោកខ្មែរ"
+    },
+    {
+      "word": "ពិភពលោក់"
+    },
+    {
+      "word": "ពិភពលោក៍"
+    },
+    {
+      "word": "ពិភពលោកៗ"
+    },
+    {
+      "word": "ពុទ្ធមន្ត"
+    },
+    {
+      "word": "មិត្ត"
+    },
+    {
+      "word": "មិត្តជិតខាង"
+    },
+    {
+      "word": "មិត្តភាពខ្មែរ"
+    },
+    {
+      "word": "មិត្តភាព់"
+    },
+    {
+      "word": "មិត្តភាព៍"
+    },
+    {
+      "word": "មិត្តភាពៗ"
+    },
+    {
+      "word": "មិត្តរួមជាតិ"
+    },
+    {
+      "word": "មេ"
+    },
+    {
+      "word": "មេកប៉ាល់ខ្មែរ"
+    },
+    {
+      "word": "មេកប៉ាល់់"
+    },
+    {
+      "word": "មេកប៉ាល់៍"
+    },
+    {
+      "word": "មេកប៉ាល់ៗ"
+    },
+    {
+      "word": "មេចុះហត្ថលេខា"
+    },
+    {
+      "word": "មេជនបទ"
+    },
+    {
+      "word": "មេជនបរទេស"
+    },
+    {
+      "word": "មេពិភពលោក"
+    },
+    {
+      "word": "មេមិត្តភាព"
+    },
+    {
+      "word": "មេមេកប៉ាល់"
+    },
+    {
+      "word": "មេហត្ថលេខា"
+    },
+    {
+      "word": "រាជពិភព"
+    },
+    {
+      "word": "រាជហត្ថលេខា"
+    },
+    {
+      "word": "សញ្ញាប័ណ្ណ"
+    },
+    {
+      "word": "សម្រេចចិត្ត"
+    },
+    {
+      "word": "ហត្ថ"
+    },
+    {
+      "word": "ហត្ថកម្ម"
+    },
+    {
+      "word": "ហត្ថករ"
+    },
+    {
+      "word": "ហត្ថលេខាខ្មែរ"
+    },
+    {
+      "word": "ហត្ថលេខា់"
+    },
+    {
+      "word": "ហត្ថលេខា៍"
+    },
+    {
+      "word": "ហត្ថលេខាៗ"
+    },
+    {
+      "word": "ហត្ថលេខី"
+    },
+    {
+      "word": "ហត្ថសាទរ"
+    },
+    {
+      "word": "ហត្ថាចារ្យ"
+    },
+    {
+      "word": "អង្គរ"
+    },
+    {
+      "word": "អនាគត"
+    },
+    {
+      "word": "អន្តរពិភព"
+    },
+    {
+      "word": "អាន"
+    }
+  ],
+  "negativePairs": [
+    [
+      "mehkapal",
+      "មេកប៉ាល់"
+    ],
+    [
+      "johhatthalekha",
+      "ចុះហត្ថលេខា"
+    ],
+    [
+      "piphup",
+      "ពិភពលោក"
+    ],
+    [
+      "hatlekhi",
+      "ហត្ថលេខី"
+    ],
+    [
+      "hatlekha",
+      "ហត្ថ"
+    ],
+    [
+      "mitpheap",
+      "និមិត្តភាព"
+    ]
+  ],
+  "repetitionControls": [
+    {
+      "word": "មិត្តភាពៗ",
+      "rejectedDoubledInputs": [
+        "metpeapmetpeap",
+        "metpheapmetpheap",
+        "metphiapmetphiap",
+        "metpiapmetpiap",
+        "mitpeapmitpeap",
+        "mitpheapmitpheap",
+        "mitphiapmitphiap",
+        "mitpiapmitpiap"
+      ]
+    },
+    {
+      "word": "ហត្ថលេខាៗ",
+      "rejectedDoubledInputs": [
+        "hatlekhahatlekha"
+      ]
+    },
+    {
+      "word": "ចុះហត្ថលេខាៗ",
+      "rejectedDoubledInputs": [
+        "johhatlekhajohhatlekha"
+      ]
+    },
+    {
+      "word": "ជនបទៗ",
+      "rejectedDoubledInputs": [
+        "chonbotchonbot",
+        "jonbotjonbot"
+      ]
+    },
+    {
+      "word": "ជនបរទេសៗ",
+      "rejectedDoubledInputs": [
+        "chonbortehchonborteh",
+        "chonborteschonbortes",
+        "jonbortehjonborteh",
+        "jonbortesjonbortes"
+      ]
+    },
+    {
+      "word": "មេកប៉ាល់ៗ",
+      "rejectedDoubledInputs": [
+        "mekapalmekapal"
+      ]
+    },
+    {
+      "word": "ពិភពលោកៗ",
+      "rejectedDoubledInputs": [
+        "piphuplokpiphuplok",
+        "pipuplokpipuplok"
+      ]
+    }
+  ],
+  "retiredGenerated": {
+    "newPairs": [
+      [
+        "metpeap",
+        "មិត្តភាព"
+      ],
+      [
+        "metpheap",
+        "មិត្តភាព"
+      ],
+      [
+        "metphiap",
+        "មិត្តភាព"
+      ],
+      [
+        "metpiap",
+        "មិត្តភាព"
+      ],
+      [
+        "mitpeap",
+        "មិត្តភាព"
+      ],
+      [
+        "mitpheap",
+        "មិត្តភាព"
+      ],
+      [
+        "mitphiap",
+        "មិត្តភាព"
+      ],
+      [
+        "mitpiap",
+        "មិត្តភាព"
+      ],
+      [
+        "chonbot",
+        "ជនបទ"
+      ],
+      [
+        "jonbot",
+        "ជនបទ"
+      ],
+      [
+        "chonborteh",
+        "ជនបរទេស"
+      ],
+      [
+        "chonbortes",
+        "ជនបរទេស"
+      ],
+      [
+        "jonborteh",
+        "ជនបរទេស"
+      ],
+      [
+        "jonbortes",
+        "ជនបរទេស"
+      ]
+    ]
+  }
+}

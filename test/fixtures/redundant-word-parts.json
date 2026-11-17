@@ -1,0 +1,138 @@
+{
+  "formerParts": [
+    {
+      "index": 7,
+      "part": {
+        "khmer": "ក្រដាស",
+        "keys": [
+          "krodah",
+          "krodas"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 17,
+            "words": [
+              "ក្រដាសបង្គន់",
+              "ក្រដាសជូតដៃ"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      }
+    },
+    {
+      "index": 10,
+      "part": {
+        "khmer": "ខុស",
+        "keys": [
+          "khoh",
+          "khos",
+          "khuh",
+          "khus"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 62,
+            "words": [
+              "ទទួលខុសត្រូវ"
+            ],
+            "positions": [
+              "middle"
+            ],
+            "preserveMapped": true,
+            "checkedContextReadings": [
+              {
+                "word": "ទទួលខុសត្រូវ",
+                "prefix": "ទទួល",
+                "prefixKeys": [
+                  "toturl"
+                ],
+                "suffix": "ត្រូវ",
+                "suffixKeys": [
+                  "trov"
+                ]
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      }
+    },
+    {
+      "index": 19,
+      "part": {
+        "khmer": "ច្បាស់",
+        "keys": [
+          "jbah",
+          "jbas"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 68,
+            "words": [
+              "ច្បាស់លាស់"
+            ],
+            "positions": [
+              "start"
+            ],
+            "preserveMapped": true,
+            "checkedSuffixReadings": [
+              {
+                "word": "ច្បាស់លាស់",
+                "khmer": "លាស់",
+                "keys": [
+                  "loah",
+                  "loas",
+                  {
+                    "key": "lorh",
+                    "rankPriority": -1000000
+                  },
+                  {
+                    "key": "lors",
+                    "rankPriority": -1000000
+                  }
+                ],
+                "originalWordOnly": true
+              }
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      }
+    },
+    {
+      "index": 62,
+      "part": {
+        "khmer": "ម្ចាស់",
+        "keys": [
+          "mjah",
+          "mjas"
+        ],
+        "cases": [
+          {
+            "kind": "scoped",
+            "order": 1,
+            "words": [
+              "ម្ចាស់",
+              "ម្ចាស់ផ្ទះ",
+              "ម្ចាស់បំណុល"
+            ],
+            "preserveMapped": true,
+            "positions": [
+              "start",
+              "standalone"
+            ]
+          }
+        ],
+        "readingType": "alternative"
+      }
+    }
+  ]
+}

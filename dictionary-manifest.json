@@ -1,0 +1,25 @@
+{
+  "pairId": "2c4c5e7a35ace31c23851e6e59796935a4029c95aa91bb0b55f432ace7089095",
+  "datasetHash": "bee3edcb1aa51ce683711d1372e96d514af60d2618b78dbf670226023206086e",
+  "snapshotId": "2a294e7f5d18dd9849ffe0cd188e20b10e1b0bcacd7180f6cc1fa9895b1d45a5",
+  "khmer": "f134e039d066b928e2d5b4412b58e2a329a006166fde5674fada57aefa45d14d",
+  "english": "64d1e69c4ebf279be25266c9b856bda734e23c52d830d60596096a5df2a2a373",
+  "wasm": "2a49dd7d74eabdc56637cdf1dea2d239aca78f4a367109b5556008119b04610a",
+  "export": {
+    "typingOnly": true,
+    "perEntrySources": false,
+    "researchProvenance": false,
+    "referenceExcerpts": false,
+    "partsOfSpeech": true
+  },
+  "licensing": {
+    "engine": "MIT",
+    "typingData": "MIT",
+    "inflectionRules": "MIT",
+    "engineLicense": "LICENSE",
+    "typingDataLicense": "compiled-data/LICENSE",
+    "ruleDataLicense": "data/LICENSE",
+    "scope": "DICTIONARY-LICENSE.md",
+    "runtimeLibraryNotices": "NOTICES.txt"
+  }
+}

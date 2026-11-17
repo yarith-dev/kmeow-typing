@@ -1,0 +1,785 @@
+{
+  "rows": [
+    {
+      "word": "ទ្រព្យសម្បត្តិ"
+    },
+    {
+      "word": "ប្រអប់ប្រៃសណីយ៍"
+    },
+    {
+      "word": "ពុម្ពអក្សរ"
+    },
+    {
+      "word": "លេខប្រៃសណីយ៍"
+    },
+    {
+      "word": "សំយោគសញ្ញា"
+    }
+  ],
+  "newPairs": [
+    [
+      "tropyosambat",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "tropyosombat",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "brooppraisnei",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "prooppraisnei",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "lekpraisnei",
+      "លេខប្រៃសណីយ៍"
+    ],
+    [
+      "somyoksanha",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanha",
+      "សំយោគសញ្ញា"
+    ]
+  ],
+  "compatibility": [
+    [
+      "tropyosmbortte",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "tropyosmbortti",
+      "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "broopbraisnei",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "broopbraisney",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "broopbreysnei",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "broopbreysney",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "proopbraisnei",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "proopbraisney",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "proopbreysnei",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "proopbreysney",
+      "ប្រអប់ប្រៃសណីយ៍"
+    ],
+    [
+      "pompoorksor",
+      "ពុម្ពអក្សរ"
+    ],
+    [
+      "pumpoorksor",
+      "ពុម្ពអក្សរ"
+    ],
+    [
+      "lekbraisnei",
+      "លេខប្រៃសណីយ៍"
+    ],
+    [
+      "lekbraisney",
+      "លេខប្រៃសណីយ៍"
+    ],
+    [
+      "lekbreysnei",
+      "លេខប្រៃសណីយ៍"
+    ],
+    [
+      "lekbreysney",
+      "លេខប្រៃសណីយ៍"
+    ],
+    [
+      "somyoksanhnhea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "somyoksanhnhia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "somyoksanhnyea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "somyoksanhnyia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "somyoksanynhea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "somyoksanynhia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "somyoksanynyea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "somyoksanynyia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanhnhea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanhnhia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanhnyea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanhnyia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanynhea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanynhia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanynyea",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "sumyoksanynyia",
+      "សំយោគសញ្ញា"
+    ],
+    [
+      "pompoarksor",
+      "ពុម្ពអក្សរ"
+    ]
+  ],
+  "guardReadings": [
+    {
+      "word": "កទ្រព្យសម្បត្តិ",
+      "inputs": [
+        "katropyosmbatte",
+        "katropyosmbatti"
+      ]
+    },
+    {
+      "word": "កប្រអប់ប្រៃសណីយ៍",
+      "inputs": [
+        "kabroopbraisnei",
+        "kabroopbraisney",
+        "kabroopbreysnei",
+        "kabroopbreysney"
+      ]
+    },
+    {
+      "word": "កពុម្ពអក្សរ",
+      "inputs": []
+    },
+    {
+      "word": "កលេខប្រៃសណីយ៍",
+      "inputs": [
+        "kalekbraisnei",
+        "kalekbraisney",
+        "kalekbreysnei",
+        "kalekbreysney"
+      ]
+    },
+    {
+      "word": "កសំយោគសញ្ញា",
+      "inputs": [
+        "kasomyokosnhnhea",
+        "kasomyokosnhnhia",
+        "kasomyokosnhnyea",
+        "kasomyokosnhnyia",
+        "kasomyokosnynhea",
+        "kasomyokosnynhia",
+        "kasomyokosnynyea",
+        "kasomyokosnynyia",
+        "kasumyokosnhnhea",
+        "kasumyokosnhnhia",
+        "kasumyokosnhnyea",
+        "kasumyokosnhnyia",
+        "kasumyokosnynhea",
+        "kasumyokosnynhia",
+        "kasumyokosnynyea",
+        "kasumyokosnynyia"
+      ]
+    },
+    {
+      "word": "ការិយាល័យប្រៃសណីយ៍",
+      "inputs": []
+    },
+    {
+      "word": "គុណសម្បត្តិ",
+      "inputs": [
+        "konosmbatte",
+        "konosmbatti",
+        "kunosmbatte",
+        "kunosmbatti"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្ត",
+      "inputs": [
+        "tropyosmbatta"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិក",
+      "inputs": [
+        "tropyosmbattek",
+        "tropyosmbattik"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិា",
+      "inputs": [
+        "tropyosmbattea",
+        "tropyosmbattia"
+      ]
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិ៍",
+      "inputs": []
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិៗ",
+      "inputs": []
+    },
+    {
+      "word": "និពន្ធ",
+      "inputs": [
+        "nepntho",
+        "nipntho"
+      ]
+    },
+    {
+      "word": "បោះពុម្ព",
+      "inputs": [
+        "bohpom",
+        "bohpum"
+      ]
+    },
+    {
+      "word": "ប្រពន្ធ",
+      "inputs": [
+        "bropntho",
+        "propntho"
+      ]
+    },
+    {
+      "word": "ប្រអប់ប្រៃសណីយ",
+      "inputs": [
+        "broopbraisneiy",
+        "broopbraisneyy",
+        "proopbraisneiy",
+        "proopbraisneyy"
+      ]
+    },
+    {
+      "word": "ប្រអប់ប្រៃសណីយ៍ក",
+      "inputs": []
+    },
+    {
+      "word": "ប្រអប់ប្រៃសណីយ៍ា",
+      "inputs": []
+    },
+    {
+      "word": "ប្រអប់ប្រៃសណីយ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "ប្រអប់ប្រៃសណីយ៍ៗ",
+      "inputs": []
+    },
+    {
+      "word": "ប្រៃសណីយ៍",
+      "inputs": [
+        "braisnei",
+        "braisney",
+        "breysnei",
+        "breysney",
+        "praisnei",
+        "praisney",
+        "preysnei",
+        "preysney"
+      ]
+    },
+    {
+      "word": "ពន្ធ",
+      "inputs": [
+        "pontho"
+      ]
+    },
+    {
+      "word": "ពន្ធគយ",
+      "inputs": [
+        "ponthokoy"
+      ]
+    },
+    {
+      "word": "ពន្ធដារ",
+      "inputs": [
+        "ponthoda"
+      ]
+    },
+    {
+      "word": "ពាណិជ្ជសញ្ញា",
+      "inputs": [
+        "peanechchosanhnhea",
+        "peanechchosanhnhia",
+        "peanechchosanhnyea",
+        "peanechchosanhnyia",
+        "peanechchosanynhea",
+        "peanechchosanynhia",
+        "peanechchosanynyea",
+        "peanechchosanynyia",
+        "peanechjosanhnhea",
+        "peanechjosanhnhia",
+        "peanechjosanhnyea",
+        "peanechjosanhnyia",
+        "peanechjosanynhea",
+        "peanechjosanynhia",
+        "peanechjosanynyea",
+        "peanechjosanynyia",
+        "peanejchosanhnhea",
+        "peanejchosanhnhia",
+        "peanejchosanhnyea",
+        "peanejchosanhnyia",
+        "peanejchosanynhea",
+        "peanejchosanynhia",
+        "peanejchosanynyea",
+        "peanejchosanynyia",
+        "peanejjosanhnhea",
+        "peanejjosanhnhia",
+        "peanejjosanhnyea",
+        "peanejjosanhnyia",
+        "peanejjosanynhea",
+        "peanejjosanynhia",
+        "peanejjosanynyea",
+        "peanejjosanynyia",
+        "peanichchosanhnhea",
+        "peanichchosanhnhia",
+        "peanichchosanhnyea",
+        "peanichchosanhnyia",
+        "peanichchosanynhea",
+        "peanichchosanynhia",
+        "peanichchosanynyea",
+        "peanichchosanynyia",
+        "peanichjosanhnhea",
+        "peanichjosanhnhia",
+        "peanichjosanhnyea",
+        "peanichjosanhnyia",
+        "peanichjosanynhea",
+        "peanichjosanynhia",
+        "peanichjosanynyea",
+        "peanichjosanynyia",
+        "peanijchosanhnhea",
+        "peanijchosanhnhia",
+        "peanijchosanhnyea",
+        "peanijchosanhnyia",
+        "peanijchosanynhea",
+        "peanijchosanynhia",
+        "peanijchosanynyea",
+        "peanijchosanynyia",
+        "peanijjosanhnhea",
+        "peanijjosanhnhia",
+        "peanijjosanhnyea",
+        "peanijjosanhnyia",
+        "peanijjosanynhea",
+        "peanijjosanynhia",
+        "peanijjosanynyea",
+        "peanijjosanynyia",
+        "peanechchosanhnhea",
+        "peanechchosanhnhia",
+        "peanechchosanhnyea",
+        "peanechchosanhnyia",
+        "peanechchosanynhea",
+        "peanechchosanynhia",
+        "peanechchosanynyea",
+        "peanechchosanynyia",
+        "peanechjosanhnhea",
+        "peanechjosanhnhia",
+        "peanechjosanhnyea",
+        "peanechjosanhnyia",
+        "peanechjosanynhea",
+        "peanechjosanynhia",
+        "peanechjosanynyea",
+        "peanechjosanynyia",
+        "peanejchosanhnhea",
+        "peanejchosanhnhia",
+        "peanejchosanhnyea",
+        "peanejchosanhnyia",
+        "peanejchosanynhea",
+        "peanejchosanynhia",
+        "peanejchosanynyea",
+        "peanejchosanynyia",
+        "peanejjosanhnhea",
+        "peanejjosanhnhia",
+        "peanejjosanhnyea",
+        "peanejjosanhnyia",
+        "peanejjosanynhea",
+        "peanejjosanynhia",
+        "peanejjosanynyea",
+        "peanejjosanynyia",
+        "peanichchosanhnhea",
+        "peanichchosanhnhia",
+        "peanichchosanhnyea",
+        "peanichchosanhnyia",
+        "peanichchosanynhea",
+        "peanichchosanynhia",
+        "peanichchosanynyea",
+        "peanichchosanynyia",
+        "peanichjosanhnhea",
+        "peanichjosanhnhia",
+        "peanichjosanhnyea",
+        "peanichjosanhnyia",
+        "peanichjosanynhea",
+        "peanichjosanynhia",
+        "peanichjosanynyea",
+        "peanichjosanynyia",
+        "peanijchosanhnhea",
+        "peanijchosanhnhia",
+        "peanijchosanhnyea",
+        "peanijchosanhnyia",
+        "peanijchosanynhea",
+        "peanijchosanynhia",
+        "peanijchosanynyea",
+        "peanijchosanynyia",
+        "peanijjosanhnhea",
+        "peanijjosanhnhia",
+        "peanijjosanhnyea",
+        "peanijjosanhnyia",
+        "peanijjosanynhea",
+        "peanijjosanynhia",
+        "peanijjosanynyea",
+        "peanijjosanynyia"
+      ]
+    },
+    {
+      "word": "ពិម្ព",
+      "inputs": [
+        "pem",
+        "pim"
+      ]
+    },
+    {
+      "word": "ពុម្ព",
+      "inputs": [
+        "pom",
+        "pum"
+      ]
+    },
+    {
+      "word": "ពុម្ពក្បាច់",
+      "inputs": [
+        "pompokbach",
+        "pumpokbach"
+      ]
+    },
+    {
+      "word": "ពុម្ពអក្ស",
+      "inputs": []
+    },
+    {
+      "word": "ពុម្ពអក្សរក",
+      "inputs": []
+    },
+    {
+      "word": "ពុម្ពអក្សរា",
+      "inputs": []
+    },
+    {
+      "word": "ពុម្ពអក្សរ៍",
+      "inputs": []
+    },
+    {
+      "word": "ពុម្ពអក្សរ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "ពុម្ពអក្សរៗ",
+      "inputs": []
+    },
+    {
+      "word": "មន្ទីរប្រៃសណីយ៍",
+      "inputs": [
+        "montirbraisnei",
+        "montirbraisney",
+        "montirbreysnei",
+        "montirbreysney"
+      ]
+    },
+    {
+      "word": "ម៉ាស៊ីនបោះពុម្ព",
+      "inputs": [
+        "masinbohpom",
+        "masinbohpum"
+      ]
+    },
+    {
+      "word": "រស្សសញ្ញា",
+      "inputs": [
+        "rohsanhnhea",
+        "rohsanhnhia",
+        "rohsanhnyea",
+        "rohsanhnyia",
+        "rohsanynhea",
+        "rohsanynhia",
+        "rohsanynyea",
+        "rohsanynyia",
+        "rossanhnhea",
+        "rossanhnhia",
+        "rossanhnyea",
+        "rossanhnyia",
+        "rossanynhea",
+        "rossanynhia",
+        "rossanynyea",
+        "rossanynyia"
+      ]
+    },
+    {
+      "word": "រោងពុម្ព",
+      "inputs": [
+        "rongpom",
+        "rongpum"
+      ]
+    },
+    {
+      "word": "លក្ខណសម្បត្តិ",
+      "inputs": [
+        "loknosmbatte",
+        "loknosmbatti"
+      ]
+    },
+    {
+      "word": "លេខប្រៃសណីយ",
+      "inputs": [
+        "lekbraisneiy",
+        "lekbraisneyy"
+      ]
+    },
+    {
+      "word": "លេខប្រៃសណីយ៍ក",
+      "inputs": []
+    },
+    {
+      "word": "លេខប្រៃសណីយ៍ា",
+      "inputs": []
+    },
+    {
+      "word": "លេខប្រៃសណីយ៍៍",
+      "inputs": []
+    },
+    {
+      "word": "លេខប្រៃសណីយ៍ៗ",
+      "inputs": []
+    },
+    {
+      "word": "វាក្យសម្ពន្ធ",
+      "inputs": [
+        "veakyosmpontho",
+        "viakyosmpontho",
+        "weakyosmpontho",
+        "wiakyosmpontho"
+      ]
+    },
+    {
+      "word": "សញ្ញា",
+      "inputs": [
+        "sanhnhea",
+        "sanhnhia",
+        "sanhnyea",
+        "sanhnyia",
+        "sanynhea",
+        "sanynhia",
+        "sanynyea",
+        "sanynyia"
+      ]
+    },
+    {
+      "word": "សញ្ញាបត្រ",
+      "inputs": [
+        "sanhnheaptro",
+        "sanhnhiaptro",
+        "sanhnyeaptro",
+        "sanhnyiaptro",
+        "sanynheaptro",
+        "sanynhiaptro",
+        "sanynyeaptro",
+        "sanynyiaptro"
+      ]
+    },
+    {
+      "word": "សម្បត្តិ",
+      "inputs": [
+        "sambatte",
+        "sambatti"
+      ]
+    },
+    {
+      "word": "សីល",
+      "inputs": [
+        "seil",
+        "seyl"
+      ]
+    },
+    {
+      "word": "សីលធម៌",
+      "inputs": []
+    },
+    {
+      "word": "សីលវន្ត",
+      "inputs": [
+        "seilovnta",
+        "seylovnta"
+      ]
+    },
+    {
+      "word": "សីលាចារ",
+      "inputs": [
+        "seilaja",
+        "seylaja"
+      ]
+    },
+    {
+      "word": "សុខសម្បត្តិ",
+      "inputs": [
+        "sokhosmbatte",
+        "sokhosmbatti",
+        "sukhosmbatte",
+        "sukhosmbatti"
+      ]
+    },
+    {
+      "word": "សំយោគសញ្ញ",
+      "inputs": [
+        "somyokosnhnho",
+        "somyokosnhnyo",
+        "somyokosnynho",
+        "somyokosnynyo",
+        "sumyokosnhnho",
+        "sumyokosnhnyo",
+        "sumyokosnynho",
+        "sumyokosnynyo"
+      ]
+    },
+    {
+      "word": "សំយោគសញ្ញាក",
+      "inputs": [
+        "somyoksanhnheak",
+        "somyoksanhnhiak",
+        "somyoksanhnyeak",
+        "somyoksanhnyiak",
+        "somyoksanynheak",
+        "somyoksanynhiak",
+        "somyoksanynyeak",
+        "somyoksanynyiak",
+        "sumyoksanhnheak",
+        "sumyoksanhnhiak",
+        "sumyoksanhnyeak",
+        "sumyoksanhnyiak",
+        "sumyoksanynheak",
+        "sumyoksanynhiak",
+        "sumyoksanynyeak",
+        "sumyoksanynyiak"
+      ]
+    },
+    {
+      "word": "សំយោគសញ្ញាា",
+      "inputs": [
+        "somyoksanhnheaea",
+        "somyoksanhnheaia",
+        "somyoksanhnhiaea",
+        "somyoksanhnhiaia",
+        "somyoksanhnyeaea",
+        "somyoksanhnyeaia",
+        "somyoksanhnyiaea",
+        "somyoksanhnyiaia",
+        "somyoksanynheaea",
+        "somyoksanynheaia",
+        "somyoksanynhiaea",
+        "somyoksanynhiaia",
+        "somyoksanynyeaea",
+        "somyoksanynyeaia",
+        "somyoksanynyiaea",
+        "somyoksanynyiaia",
+        "sumyoksanhnheaea",
+        "sumyoksanhnheaia",
+        "sumyoksanhnhiaea",
+        "sumyoksanhnhiaia",
+        "sumyoksanhnyeaea",
+        "sumyoksanhnyeaia",
+        "sumyoksanhnyiaea",
+        "sumyoksanhnyiaia",
+        "sumyoksanynheaea",
+        "sumyoksanynheaia",
+        "sumyoksanynhiaea",
+        "sumyoksanynhiaia",
+        "sumyoksanynyeaea",
+        "sumyoksanynyeaia",
+        "sumyoksanynyiaea",
+        "sumyoksanynyiaia"
+      ]
+    },
+    {
+      "word": "សំយោគសញ្ញា៍",
+      "inputs": []
+    },
+    {
+      "word": "សំយោគសញ្ញា៍៍",
+      "inputs": []
+    },
+    {
+      "word": "សំយោគសញ្ញាៗ",
+      "inputs": []
+    },
+    {
+      "word": "អ្នកជាប់ពន្ធ",
+      "inputs": []
+    }
+  ],
+  "rankPriority": 0,
+  "retiredGenerated": {
+    "newPairs": [
+      [
+        "pomorksor",
+        "ពុម្ពអក្សរ"
+      ],
+      [
+        "pumorksor",
+        "ពុម្ពអក្សរ"
+      ]
+    ]
+  }
+}

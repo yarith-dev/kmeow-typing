@@ -1,0 +1,618 @@
+{
+  "dataset": {
+    "schemaVersion": 2,
+    "mappings": [
+      {
+        "id": 7,
+        "romanized": "sur",
+        "khmer": "សួ",
+        "rank": 2,
+        "status": "approved"
+      },
+      {
+        "id": 9,
+        "romanized": "sur",
+        "khmer": "សូរ",
+        "rank": 2,
+        "status": "approved"
+      },
+      {
+        "id": 2,
+        "romanized": "sur",
+        "khmer": "សួរ",
+        "rank": 1,
+        "status": "approved"
+      },
+      {
+        "id": 3,
+        "romanized": "sur sdey",
+        "khmer": "សួស្តី",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 20,
+        "romanized": "ke",
+        "khmer": "គេ",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 21,
+        "romanized": "sl",
+        "khmer": "ស្រឡាញ់",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 22,
+        "romanized": "sl",
+        "khmer": "ស្រលាញ់",
+        "rank": 2,
+        "status": "approved"
+      },
+      {
+        "id": 23,
+        "romanized": "khom",
+        "khmer": "ខំ",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 24,
+        "romanized": "merl ot see",
+        "khmer": "មើលអត់ឃើញ",
+        "rank": 0,
+        "status": "approved"
+      }
+    ],
+    "words": [
+      {
+        "id": 101,
+        "khmer": "សួរ",
+        "rank": 2,
+        "status": "approved"
+      },
+      {
+        "id": 102,
+        "khmer": "សួស្តី",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 103,
+        "khmer": "សួរ",
+        "rank": 1,
+        "status": "approved"
+      },
+      {
+        "id": 104,
+        "khmer": "នៅ",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 105,
+        "khmer": "កូន",
+        "rank": 0,
+        "status": "approved"
+      },
+      {
+        "id": 106,
+        "khmer": "សួ",
+        "rank": 0,
+        "status": "approved"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "input": "sur",
+      "normalizedInput": "sur",
+      "ids": [
+        2,
+        7,
+        9
+      ]
+    },
+    {
+      "input": " SUR ",
+      "normalizedInput": "sur",
+      "ids": [
+        2,
+        7,
+        9
+      ]
+    },
+    {
+      "input": "sur sdey",
+      "normalizedInput": "sur sdey",
+      "ids": [
+        3
+      ]
+    },
+    {
+      "input": " \tSUR  \nSDEY ",
+      "normalizedInput": "sur sdey",
+      "ids": [
+        3
+      ]
+    },
+    {
+      "input": "sur sdey",
+      "normalizedInput": "sur sdey",
+      "ids": [
+        3
+      ]
+    },
+    {
+      "input": "sur unknown",
+      "normalizedInput": "sur unknown",
+      "ids": []
+    },
+    {
+      "input": "su",
+      "normalizedInput": "su",
+      "ids": []
+    },
+    {
+      "input": "សួ",
+      "normalizedInput": "សួ",
+      "ids": []
+    },
+    {
+      "input": "",
+      "normalizedInput": "",
+      "ids": []
+    },
+    {
+      "input": " \t\n",
+      "normalizedInput": "",
+      "ids": []
+    },
+    {
+      "input": "khom sl ke",
+      "normalizedInput": "khom sl ke",
+      "ids": [
+        null,
+        null
+      ],
+      "candidates": [
+        {
+          "mappingId": null,
+          "mappingIds": [
+            23,
+            21,
+            20
+          ],
+          "khmer": "ខំស្រឡាញ់គេ",
+          "rank": 0
+        },
+        {
+          "mappingId": null,
+          "mappingIds": [
+            23,
+            22,
+            20
+          ],
+          "khmer": "ខំស្រលាញ់គេ",
+          "rank": 2
+        }
+      ]
+    },
+    {
+      "input": " KHOM SL\t ke ",
+      "normalizedInput": "khom sl ke",
+      "ids": [
+        null,
+        null
+      ],
+      "candidates": [
+        {
+          "mappingId": null,
+          "mappingIds": [
+            23,
+            21,
+            20
+          ],
+          "khmer": "ខំស្រឡាញ់គេ",
+          "rank": 0
+        },
+        {
+          "mappingId": null,
+          "mappingIds": [
+            23,
+            22,
+            20
+          ],
+          "khmer": "ខំស្រលាញ់គេ",
+          "rank": 2
+        }
+      ]
+    },
+    {
+      "input": "ke merl ot see",
+      "normalizedInput": "ke merl ot see",
+      "ids": [
+        null
+      ],
+      "candidates": [
+        {
+          "mappingId": null,
+          "mappingIds": [
+            20,
+            24
+          ],
+          "khmer": "គេមើលអត់ឃើញ",
+          "rank": 0
+        }
+      ]
+    },
+    {
+      "input": "ke see",
+      "normalizedInput": "ke see",
+      "ids": [],
+      "candidates": []
+    },
+    {
+      "input": "ke unknown sl",
+      "normalizedInput": "ke unknown sl",
+      "ids": [],
+      "candidates": []
+    },
+    {
+      "input": "khomslke",
+      "normalizedInput": "khomslke",
+      "ids": [],
+      "candidates": []
+    }
+  ],
+  "suggestions": [
+    {
+      "input": "s",
+      "normalizedInput": "s",
+      "candidates": [
+        {
+          "mappingId": 21,
+          "khmer": "ស្រឡាញ់",
+          "rank": 0,
+          "completion": "sl"
+        },
+        {
+          "mappingId": 3,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "sur sdey"
+        },
+        {
+          "mappingId": 2,
+          "khmer": "សួរ",
+          "rank": 1,
+          "completion": "sur"
+        },
+        {
+          "mappingId": 22,
+          "khmer": "ស្រលាញ់",
+          "rank": 2,
+          "completion": "sl"
+        },
+        {
+          "mappingId": 7,
+          "khmer": "សួ",
+          "rank": 2,
+          "completion": "sur"
+        },
+        {
+          "mappingId": 9,
+          "khmer": "សូរ",
+          "rank": 2,
+          "completion": "sur"
+        }
+      ]
+    },
+    {
+      "input": "su",
+      "normalizedInput": "su",
+      "candidates": [
+        {
+          "mappingId": 3,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "sur sdey"
+        },
+        {
+          "mappingId": 2,
+          "khmer": "សួរ",
+          "rank": 1,
+          "completion": "sur"
+        },
+        {
+          "mappingId": 7,
+          "khmer": "សួ",
+          "rank": 2,
+          "completion": "sur"
+        },
+        {
+          "mappingId": 9,
+          "khmer": "សូរ",
+          "rank": 2,
+          "completion": "sur"
+        }
+      ]
+    },
+    {
+      "input": "sur",
+      "normalizedInput": "sur",
+      "candidates": [
+        {
+          "mappingId": 2,
+          "khmer": "សួរ",
+          "rank": 1
+        },
+        {
+          "mappingId": 7,
+          "khmer": "សួ",
+          "rank": 2
+        },
+        {
+          "mappingId": 9,
+          "khmer": "សូរ",
+          "rank": 2
+        },
+        {
+          "mappingId": 3,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "sur sdey"
+        }
+      ]
+    },
+    {
+      "input": "sur ",
+      "normalizedInput": "sur",
+      "candidates": [
+        {
+          "mappingId": 2,
+          "khmer": "សួរ",
+          "rank": 1
+        },
+        {
+          "mappingId": 7,
+          "khmer": "សួ",
+          "rank": 2
+        },
+        {
+          "mappingId": 9,
+          "khmer": "សូរ",
+          "rank": 2
+        },
+        {
+          "mappingId": 3,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "sur sdey"
+        }
+      ]
+    },
+    {
+      "input": "sur s",
+      "normalizedInput": "sur s",
+      "candidates": [
+        {
+          "mappingId": 3,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "sur sdey"
+        }
+      ]
+    },
+    {
+      "input": " SUR SD",
+      "normalizedInput": "sur sd",
+      "candidates": [
+        {
+          "mappingId": 3,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "sur sdey"
+        }
+      ]
+    },
+    {
+      "input": "sur sdey",
+      "normalizedInput": "sur sdey",
+      "candidates": [
+        {
+          "mappingId": 3,
+          "khmer": "សួស្តី",
+          "rank": 0
+        }
+      ]
+    },
+    {
+      "input": "su ",
+      "normalizedInput": "su",
+      "candidates": []
+    },
+    {
+      "input": "su ",
+      "normalizedInput": "su",
+      "candidates": []
+    },
+    {
+      "input": "sx",
+      "normalizedInput": "sx",
+      "candidates": []
+    },
+    {
+      "input": "nov na",
+      "normalizedInput": "nov na",
+      "candidates": []
+    },
+    {
+      "input": "",
+      "normalizedInput": "",
+      "candidates": []
+    },
+    {
+      "input": " \t\n",
+      "normalizedInput": "",
+      "candidates": []
+    },
+    {
+      "input": "សួ",
+      "normalizedInput": "សួ",
+      "candidates": [
+        {
+          "mappingId": 106,
+          "khmer": "សួ",
+          "rank": 0,
+          "completion": "សួ"
+        },
+        {
+          "mappingId": 102,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "សួស្តី"
+        },
+        {
+          "mappingId": 103,
+          "khmer": "សួរ",
+          "rank": 1,
+          "completion": "សួរ"
+        }
+      ],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "khom sl ke",
+      "normalizedInput": "khom sl ke",
+      "candidates": [
+        {
+          "mappingId": null,
+          "mappingIds": [
+            23,
+            21,
+            20
+          ],
+          "khmer": "ខំស្រឡាញ់គេ",
+          "rank": 0
+        },
+        {
+          "mappingId": null,
+          "mappingIds": [
+            23,
+            22,
+            20
+          ],
+          "khmer": "ខំស្រលាញ់គេ",
+          "rank": 2
+        }
+      ]
+    },
+    {
+      "input": "ke m",
+      "normalizedInput": "ke m",
+      "candidates": []
+    },
+    {
+      "input": "ស",
+      "normalizedInput": "ស",
+      "candidates": [
+        {
+          "mappingId": 106,
+          "khmer": "សួ",
+          "rank": 0,
+          "completion": "សួ"
+        },
+        {
+          "mappingId": 102,
+          "khmer": "សួស្តី",
+          "rank": 0,
+          "completion": "សួស្តី"
+        },
+        {
+          "mappingId": 103,
+          "khmer": "សួរ",
+          "rank": 1,
+          "completion": "សួរ"
+        }
+      ],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "សួរ",
+      "normalizedInput": "សួរ",
+      "candidates": [
+        {
+          "mappingId": 103,
+          "khmer": "សួរ",
+          "rank": 1,
+          "completion": "សួរ"
+        }
+      ],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "ន",
+      "normalizedInput": "ន",
+      "candidates": [
+        {
+          "mappingId": 104,
+          "khmer": "នៅ",
+          "rank": 0,
+          "completion": "នៅ"
+        }
+      ],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "នៅ",
+      "normalizedInput": "នៅ",
+      "candidates": [
+        {
+          "mappingId": 104,
+          "khmer": "នៅ",
+          "rank": 0,
+          "completion": "នៅ"
+        }
+      ],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "សួ ",
+      "normalizedInput": "សួ",
+      "candidates": [],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "ខ",
+      "normalizedInput": "ខ",
+      "candidates": [],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "ក",
+      "normalizedInput": "ក",
+      "candidates": [
+        {
+          "mappingId": 105,
+          "khmer": "កូន",
+          "rank": 0,
+          "completion": "កូន"
+        }
+      ],
+      "kind": "khmer-completion"
+    },
+    {
+      "input": "សួ ក",
+      "normalizedInput": "សួ ក",
+      "candidates": []
+    },
+    {
+      "input": "surស",
+      "normalizedInput": "surស",
+      "candidates": []
+    }
+  ]
+}

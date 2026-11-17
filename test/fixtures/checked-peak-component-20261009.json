@@ -1,0 +1,407 @@
+{
+  "rows": [
+    {
+      "word": "ពាក្យខ្វែង"
+    },
+    {
+      "word": "ពាក្យសុំ"
+    }
+  ],
+  "newPairs": [
+    [
+      "peakkhvaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "peakkhwaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "piakkhvaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "piakkhwaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "peaksom",
+      "ពាក្យសុំ"
+    ],
+    [
+      "piaksom",
+      "ពាក្យសុំ"
+    ]
+  ],
+  "compatibility": [
+    [
+      "peakyokhvaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "peakyokhveng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "peakyokhwaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "peakyokhweng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "piakyokhvaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "piakyokhveng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "piakyokhwaeng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "piakyokhweng",
+      "ពាក្យខ្វែង"
+    ],
+    [
+      "peakyosom",
+      "ពាក្យសុំ"
+    ],
+    [
+      "piakyosom",
+      "ពាក្យសុំ"
+    ]
+  ],
+  "guardReadings": [
+    {
+      "word": "កញ្ញា",
+      "inputs": [
+        "kanhnhea",
+        "kanhnhia",
+        "kanhnyea",
+        "kanhnyia",
+        "kanynhea",
+        "kanynhia",
+        "kanynyea",
+        "kanynyia"
+      ]
+    },
+    {
+      "word": "កពាក្យខ្វែង",
+      "inputs": [
+        "kapeakyokhvaeng",
+        "kapeakyokhveng",
+        "kapeakyokhwaeng",
+        "kapeakyokhweng",
+        "kapiakyokhvaeng",
+        "kapiakyokhveng",
+        "kapiakyokhwaeng",
+        "kapiakyokhweng"
+      ]
+    },
+    {
+      "word": "កពាក្យសុំ",
+      "inputs": [
+        "kapeakyosom",
+        "kapiakyosom"
+      ]
+    },
+    {
+      "word": "កិច្ចព្រមព្រៀង",
+      "inputs": [
+        "kechprompreang",
+        "kechpromprieng",
+        "kejjaprompreang",
+        "kejjapromprieng",
+        "kichprompreang",
+        "kichpromprieng",
+        "kijjaprompreang",
+        "kijjapromprieng"
+      ]
+    },
+    {
+      "word": "គណបក្ស",
+      "inputs": [
+        "konbak",
+        "konopksa"
+      ]
+    },
+    {
+      "word": "ត្រួតពិនិត្យ",
+      "inputs": [
+        "trurtpenetyo",
+        "trurtpenityo",
+        "trurtpinetyo",
+        "trurtpinit",
+        "trurtpinityo"
+      ]
+    },
+    {
+      "word": "ថ្នាក់ពាក្យ",
+      "inputs": [
+        "thnakpeakyo",
+        "thnakpiakyo"
+      ]
+    },
+    {
+      "word": "ទឹកកក",
+      "inputs": [
+        "teukkok",
+        "toeukkok"
+      ]
+    },
+    {
+      "word": "បក្សី",
+      "inputs": [
+        "boksei",
+        "boksey"
+      ]
+    },
+    {
+      "word": "បទពិសោធន៍",
+      "inputs": [
+        "botpesaot",
+        "botpesaoth",
+        "botpisaot",
+        "botpisaoth"
+      ]
+    },
+    {
+      "word": "ពាក្យ",
+      "inputs": [
+        "peakyo",
+        "piakyo"
+      ]
+    },
+    {
+      "word": "ពាក្យកម្ចី",
+      "inputs": [
+        "peakyokmjei",
+        "peakyokmjey",
+        "piakyokmjei",
+        "piakyokmjey"
+      ]
+    },
+    {
+      "word": "ពាក្យក្លាយ",
+      "inputs": [
+        "peakyoklay",
+        "piakyoklay"
+      ]
+    },
+    {
+      "word": "ពាក្យខ្វែងក",
+      "inputs": [
+        "peakyokhvaengok",
+        "peakyokhvengok",
+        "peakyokhwaengok",
+        "peakyokhwengok",
+        "piakyokhvaengok",
+        "piakyokhvengok",
+        "piakyokhwaengok",
+        "piakyokhwengok"
+      ]
+    },
+    {
+      "word": "ពាក្យខ្វែងា",
+      "inputs": [
+        "peakyokhvaengea",
+        "peakyokhvaengia",
+        "peakyokhvengea",
+        "peakyokhvengia",
+        "peakyokhwaengea",
+        "peakyokhwaengia",
+        "peakyokhwengea",
+        "peakyokhwengia",
+        "piakyokhvaengea",
+        "piakyokhvaengia",
+        "piakyokhvengea",
+        "piakyokhvengia",
+        "piakyokhwaengea",
+        "piakyokhwaengia",
+        "piakyokhwengea",
+        "piakyokhwengia"
+      ]
+    },
+    {
+      "word": "ពាក្យខ្វែង៍",
+      "inputs": [
+        "peakyokhvae",
+        "peakyokhve",
+        "peakyokhwae",
+        "peakyokhwe",
+        "piakyokhvae",
+        "piakyokhve",
+        "piakyokhwae",
+        "piakyokhwe"
+      ]
+    },
+    {
+      "word": "ពាក្យខ្វែងៗ",
+      "inputs": []
+    },
+    {
+      "word": "ពាក្យពេចន៍",
+      "inputs": [
+        "peakpech",
+        "peakyopech",
+        "piakpech",
+        "piakyopech"
+      ]
+    },
+    {
+      "word": "ពាក្យយោង",
+      "inputs": [
+        "peakyoyong",
+        "piakyoyong"
+      ]
+    },
+    {
+      "word": "ពាក្យសុំក",
+      "inputs": [
+        "peakyosomk",
+        "piakyosomk"
+      ]
+    },
+    {
+      "word": "ពាក្យសុំា",
+      "inputs": [
+        "peakyosooma",
+        "peakyosouma",
+        "peakyosuoma",
+        "peakyosuuma",
+        "piakyosooma",
+        "piakyosouma",
+        "piakyosuoma",
+        "piakyosuuma"
+      ]
+    },
+    {
+      "word": "ពាក្យសុំ៍",
+      "inputs": []
+    },
+    {
+      "word": "ពាក្យសុំៗ",
+      "inputs": []
+    },
+    {
+      "word": "ពាក្យឫស",
+      "inputs": [
+        "peakyoreuh",
+        "peakyoreus",
+        "peakyoroeuh",
+        "peakyoroeus",
+        "piakyoreuh",
+        "piakyoreus",
+        "piakyoroeuh",
+        "piakyoroeus"
+      ]
+    },
+    {
+      "word": "ពាក្យាខ្វែង",
+      "inputs": [
+        "peakyeakhvaeng",
+        "peakyeakhveng",
+        "peakyeakhwaeng",
+        "peakyeakhweng",
+        "peakyiakhvaeng",
+        "peakyiakhveng",
+        "peakyiakhwaeng",
+        "peakyiakhweng",
+        "piakyeakhvaeng",
+        "piakyeakhveng",
+        "piakyeakhwaeng",
+        "piakyeakhweng",
+        "piakyiakhvaeng",
+        "piakyiakhveng",
+        "piakyiakhwaeng",
+        "piakyiakhweng"
+      ]
+    },
+    {
+      "word": "ពាក្យាសុំ",
+      "inputs": [
+        "peakyeasom",
+        "peakyiasom",
+        "piakyeasom",
+        "piakyiasom"
+      ]
+    },
+    {
+      "word": "ពាក្យ៍ខ្វែង",
+      "inputs": []
+    },
+    {
+      "word": "ពាក្យ៍សុំ",
+      "inputs": []
+    },
+    {
+      "word": "ព្រះអាទិត្យ",
+      "inputs": [
+        "preahatet",
+        "preahatetyo",
+        "preahatit",
+        "preahatityo"
+      ]
+    },
+    {
+      "word": "មេពាក្យ",
+      "inputs": [
+        "mepeakyo",
+        "mepiakyo"
+      ]
+    },
+    {
+      "word": "លក្ខខណ្ឌ",
+      "inputs": [
+        "laekkhan",
+        "lokkhando"
+      ]
+    },
+    {
+      "word": "សញ្ញា",
+      "inputs": [
+        "sanhnhea",
+        "sanhnhia",
+        "sanhnyea",
+        "sanhnyia",
+        "sanynhea",
+        "sanynhia",
+        "sanynyea",
+        "sanynyia"
+      ]
+    },
+    {
+      "word": "សន្យា",
+      "inputs": [
+        "sonya"
+      ]
+    },
+    {
+      "word": "សាធារណរដ្ឋ",
+      "inputs": [
+        "sathearonordtha",
+        "sathearonoroat",
+        "sathiaronordtha",
+        "sathiaronoroat"
+      ]
+    },
+    {
+      "word": "អាទិត្យ",
+      "inputs": [
+        "atetyo",
+        "atityo"
+      ]
+    },
+    {
+      "word": "ឯកសារ",
+      "inputs": [
+        "aekasa"
+      ]
+    }
+  ],
+  "rankPriority": 0
+}

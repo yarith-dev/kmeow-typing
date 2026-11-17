@@ -1,0 +1,1897 @@
+{
+  "rows": [
+    {
+      "word": "ពាក្យសោ"
+    },
+    {
+      "word": "មេពាក្យ"
+    },
+    {
+      "word": "ពេទ្យធ្មេញ"
+    },
+    {
+      "word": "ពេទ្យសត្វ"
+    },
+    {
+      "word": "ពេទ្យស្ថាន"
+    },
+    {
+      "word": "គ្រូពេទ្យ"
+    },
+    {
+      "word": "សារភាព"
+    },
+    {
+      "word": "សារមន្ទីរ"
+    },
+    {
+      "word": "បណ្ឌិត្យសភា"
+    },
+    {
+      "word": "សោតពិនិត្យ"
+    },
+    {
+      "word": "បណ្ឌិត្យសភា"
+    },
+    {
+      "word": "កុមារភាព"
+    },
+    {
+      "word": "សួនកុមារ"
+    },
+    {
+      "word": "គងវង់"
+    },
+    {
+      "word": "ម៉ែត្រការ៉េ"
+    },
+    {
+      "word": "បកប្រែ"
+    },
+    {
+      "word": "ដប់ប្រាំ"
+    },
+    {
+      "word": "ដប់ប្រាំបួន"
+    },
+    {
+      "word": "ទទួលខុសត្រូវ"
+    },
+    {
+      "word": "ផលិតផល"
+    },
+    {
+      "word": "ពាណិជ្ជកម្ម"
+    },
+    {
+      "word": "ហាត់ប្រាណ"
+    },
+    {
+      "word": "ពិតប្រាកដ"
+    },
+    {
+      "word": "ព្រួយបារម្ភ"
+    },
+    {
+      "word": "ច្បាស់លាស់"
+    }
+  ],
+  "proposedPairs": [
+    [
+      "bokbrae",
+      "បកប្រែ"
+    ],
+    [
+      "bondetsapea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetsaphea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetsaphia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetsapia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsapea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsaphea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsaphia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsapia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "dopbram",
+      "ដប់ប្រាំ"
+    ],
+    [
+      "dopbramburn",
+      "ដប់ប្រាំបួន"
+    ],
+    [
+      "hatbran",
+      "ហាត់ប្រាណ"
+    ],
+    [
+      "jbahloah",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "jbahloas",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "jbasloah",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "jbasloas",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "maetkare",
+      "ម៉ែត្រការ៉េ"
+    ],
+    [
+      "mepeak",
+      "មេពាក្យ"
+    ],
+    [
+      "mepiak",
+      "មេពាក្យ"
+    ],
+    [
+      "paletphol",
+      "ផលិតផល"
+    ],
+    [
+      "paletpol",
+      "ផលិតផល"
+    ],
+    [
+      "palitphol",
+      "ផលិតផល"
+    ],
+    [
+      "palitpol",
+      "ផលិតផល"
+    ],
+    [
+      "peaksao",
+      "ពាក្យសោ"
+    ],
+    [
+      "peanechkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanejkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanichkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanijkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "petbrakod",
+      "ពិតប្រាកដ"
+    ],
+    [
+      "phaletphol",
+      "ផលិតផល"
+    ],
+    [
+      "phaletpol",
+      "ផលិតផល"
+    ],
+    [
+      "phalitphol",
+      "ផលិតផល"
+    ],
+    [
+      "phalitpol",
+      "ផលិតផល"
+    ],
+    [
+      "piaksao",
+      "ពាក្យសោ"
+    ],
+    [
+      "pianechkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianejkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianichkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianijkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pitbrakod",
+      "ពិតប្រាកដ"
+    ],
+    [
+      "prurybarom",
+      "ព្រួយបារម្ភ"
+    ],
+    [
+      "saotpinit",
+      "សោតពិនិត្យ"
+    ],
+    [
+      "toturlkhohtrov",
+      "ទទួលខុសត្រូវ"
+    ],
+    [
+      "toturlkhostrov",
+      "ទទួលខុសត្រូវ"
+    ],
+    [
+      "toturlkhuhtrov",
+      "ទទួលខុសត្រូវ"
+    ],
+    [
+      "toturlkhustrov",
+      "ទទួលខុសត្រូវ"
+    ]
+  ],
+  "newPairs": [
+    [
+      "bokprae",
+      "បកប្រែ"
+    ],
+    [
+      "bondetsapea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetsaphea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetsaphia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetsapia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsapea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsaphea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsaphia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bonditsapia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "doppram",
+      "ដប់ប្រាំ"
+    ],
+    [
+      "doppramburn",
+      "ដប់ប្រាំបួន"
+    ],
+    [
+      "hatpran",
+      "ហាត់ប្រាណ"
+    ],
+    [
+      "jbahloah",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "jbahloas",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "komapeap",
+      "កុមារភាព"
+    ],
+    [
+      "komapheap",
+      "កុមារភាព"
+    ],
+    [
+      "komaphiap",
+      "កុមារភាព"
+    ],
+    [
+      "komapiap",
+      "កុមារភាព"
+    ],
+    [
+      "kongvung",
+      "គងវង់"
+    ],
+    [
+      "kongwung",
+      "គងវង់"
+    ],
+    [
+      "kroupet",
+      "គ្រូពេទ្យ"
+    ],
+    [
+      "krupet",
+      "គ្រូពេទ្យ"
+    ],
+    [
+      "kumapeap",
+      "កុមារភាព"
+    ],
+    [
+      "kumapheap",
+      "កុមារភាព"
+    ],
+    [
+      "kumaphiap",
+      "កុមារភាព"
+    ],
+    [
+      "kumapiap",
+      "កុមារភាព"
+    ],
+    [
+      "maetkare",
+      "ម៉ែត្រការ៉េ"
+    ],
+    [
+      "mepeak",
+      "មេពាក្យ"
+    ],
+    [
+      "mepiak",
+      "មេពាក្យ"
+    ],
+    [
+      "paletphol",
+      "ផលិតផល"
+    ],
+    [
+      "paletpol",
+      "ផលិតផល"
+    ],
+    [
+      "palitphol",
+      "ផលិតផល"
+    ],
+    [
+      "palitpol",
+      "ផលិតផល"
+    ],
+    [
+      "peaksao",
+      "ពាក្យសោ"
+    ],
+    [
+      "peanechkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanejkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanichkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanijkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "petprakod",
+      "ពិតប្រាកដ"
+    ],
+    [
+      "petsat",
+      "ពេទ្យសត្វ"
+    ],
+    [
+      "petsthan",
+      "ពេទ្យស្ថាន"
+    ],
+    [
+      "petthmenh",
+      "ពេទ្យធ្មេញ"
+    ],
+    [
+      "phaletphol",
+      "ផលិតផល"
+    ],
+    [
+      "phaletpol",
+      "ផលិតផល"
+    ],
+    [
+      "phalitphol",
+      "ផលិតផល"
+    ],
+    [
+      "phalitpol",
+      "ផលិតផល"
+    ],
+    [
+      "piaksao",
+      "ពាក្យសោ"
+    ],
+    [
+      "pianechkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianejkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianichkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianijkam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pitprakod",
+      "ពិតប្រាកដ"
+    ],
+    [
+      "prurybarom",
+      "ព្រួយបារម្ភ"
+    ],
+    [
+      "samonti",
+      "សារមន្ទីរ"
+    ],
+    [
+      "saotpinit",
+      "សោតពិនិត្យ"
+    ],
+    [
+      "sapeap",
+      "សារភាព"
+    ],
+    [
+      "sapheap",
+      "សារភាព"
+    ],
+    [
+      "saphiap",
+      "សារភាព"
+    ],
+    [
+      "sapiap",
+      "សារភាព"
+    ],
+    [
+      "surnkoma",
+      "សួនកុមារ"
+    ],
+    [
+      "surnkuma",
+      "សួនកុមារ"
+    ],
+    [
+      "toturlkhohtrov",
+      "ទទួលខុសត្រូវ"
+    ],
+    [
+      "toturlkhuhtrov",
+      "ទទួលខុសត្រូវ"
+    ]
+  ],
+  "compatibility": [
+    [
+      "bokbrae",
+      "បកប្រែ"
+    ],
+    [
+      "bondetyospea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetyosphea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetyosphia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondetyospia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondityospea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondityosphea",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondityosphia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "bondityospia",
+      "បណ្ឌិត្យសភា"
+    ],
+    [
+      "dopbram",
+      "ដប់ប្រាំ"
+    ],
+    [
+      "dopbramburn",
+      "ដប់ប្រាំបួន"
+    ],
+    [
+      "hatbran",
+      "ហាត់ប្រាណ"
+    ],
+    [
+      "jbasloah",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "jbasloas",
+      "ច្បាស់លាស់"
+    ],
+    [
+      "komearpeap",
+      "កុមារភាព"
+    ],
+    [
+      "komearpheap",
+      "កុមារភាព"
+    ],
+    [
+      "komearphiap",
+      "កុមារភាព"
+    ],
+    [
+      "komearpiap",
+      "កុមារភាព"
+    ],
+    [
+      "komiarpeap",
+      "កុមារភាព"
+    ],
+    [
+      "komiarpheap",
+      "កុមារភាព"
+    ],
+    [
+      "komiarphiap",
+      "កុមារភាព"
+    ],
+    [
+      "komiarpiap",
+      "កុមារភាព"
+    ],
+    [
+      "kongovong",
+      "គងវង់"
+    ],
+    [
+      "kongowong",
+      "គងវង់"
+    ],
+    [
+      "kroupetyo",
+      "គ្រូពេទ្យ"
+    ],
+    [
+      "krupetyo",
+      "គ្រូពេទ្យ"
+    ],
+    [
+      "kumearpeap",
+      "កុមារភាព"
+    ],
+    [
+      "kumearpheap",
+      "កុមារភាព"
+    ],
+    [
+      "kumearphiap",
+      "កុមារភាព"
+    ],
+    [
+      "kumearpiap",
+      "កុមារភាព"
+    ],
+    [
+      "kumiarpeap",
+      "កុមារភាព"
+    ],
+    [
+      "kumiarpheap",
+      "កុមារភាព"
+    ],
+    [
+      "kumiarphiap",
+      "កុមារភាព"
+    ],
+    [
+      "kumiarpiap",
+      "កុមារភាព"
+    ],
+    [
+      "maetrokare",
+      "ម៉ែត្រការ៉េ"
+    ],
+    [
+      "mepeakyo",
+      "មេពាក្យ"
+    ],
+    [
+      "mepiakyo",
+      "មេពាក្យ"
+    ],
+    [
+      "porletorphol",
+      "ផលិតផល"
+    ],
+    [
+      "porletorpol",
+      "ផលិតផល"
+    ],
+    [
+      "porlitorphol",
+      "ផលិតផល"
+    ],
+    [
+      "porlitorpol",
+      "ផលិតផល"
+    ],
+    [
+      "peakyosao",
+      "ពាក្យសោ"
+    ],
+    [
+      "peanechchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanechjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanejchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanejjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanichchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanichjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanijchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "peanijjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "petbrakod",
+      "ពិតប្រាកដ"
+    ],
+    [
+      "petyosthan",
+      "ពេទ្យស្ថាន"
+    ],
+    [
+      "petyostvo",
+      "ពេទ្យសត្វ"
+    ],
+    [
+      "petyostwo",
+      "ពេទ្យសត្វ"
+    ],
+    [
+      "petyothmenh",
+      "ពេទ្យធ្មេញ"
+    ],
+    [
+      "phorletorphol",
+      "ផលិតផល"
+    ],
+    [
+      "phorletorpol",
+      "ផលិតផល"
+    ],
+    [
+      "phorlitorphol",
+      "ផលិតផល"
+    ],
+    [
+      "phorlitorpol",
+      "ផលិតផល"
+    ],
+    [
+      "piakyosao",
+      "ពាក្យសោ"
+    ],
+    [
+      "pianechchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianechjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianejchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianejjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianichchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianichjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianijchokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pianijjokam",
+      "ពាណិជ្ជកម្ម"
+    ],
+    [
+      "pitbrakod",
+      "ពិតប្រាកដ"
+    ],
+    [
+      "prurybarmpho",
+      "ព្រួយបារម្ភ"
+    ],
+    [
+      "prurybarmpo",
+      "ព្រួយបារម្ភ"
+    ],
+    [
+      "saotpenetyo",
+      "សោតពិនិត្យ"
+    ],
+    [
+      "saotpenityo",
+      "សោតពិនិត្យ"
+    ],
+    [
+      "saotpinetyo",
+      "សោតពិនិត្យ"
+    ],
+    [
+      "saotpinityo",
+      "សោតពិនិត្យ"
+    ],
+    [
+      "saromnti",
+      "សារមន្ទីរ"
+    ],
+    [
+      "sarpeap",
+      "សារភាព"
+    ],
+    [
+      "sarpheap",
+      "សារភាព"
+    ],
+    [
+      "sarphiap",
+      "សារភាព"
+    ],
+    [
+      "sarpiap",
+      "សារភាព"
+    ],
+    [
+      "surnkomea",
+      "សួនកុមារ"
+    ],
+    [
+      "surnkomia",
+      "សួនកុមារ"
+    ],
+    [
+      "surnkumea",
+      "សួនកុមារ"
+    ],
+    [
+      "surnkumia",
+      "សួនកុមារ"
+    ],
+    [
+      "toturlkhostrov",
+      "ទទួលខុសត្រូវ"
+    ],
+    [
+      "toturlkhustrov",
+      "ទទួលខុសត្រូវ"
+    ],
+    [
+      "petyohtvo",
+      "ពេទ្យសត្វ"
+    ]
+  ],
+  "guardReadings": [
+    {
+      "word": "កន្លែងពិនិត្យ"
+    },
+    {
+      "word": "កុមារ"
+    },
+    {
+      "word": "កុមារភាពខ្មែរ"
+    },
+    {
+      "word": "កុមារភាព់"
+    },
+    {
+      "word": "កុមារភាព៍"
+    },
+    {
+      "word": "កុមារភាពៗ"
+    },
+    {
+      "word": "កុមារី"
+    },
+    {
+      "word": "កែប្រែ"
+    },
+    {
+      "word": "កំណែប្រែ"
+    },
+    {
+      "word": "ខុស"
+    },
+    {
+      "word": "ខុសគ្នា"
+    },
+    {
+      "word": "ខុសត្រូវ"
+    },
+    {
+      "word": "ខុសពេល"
+    },
+    {
+      "word": "ខ្លួនប្រាណ"
+    },
+    {
+      "word": "គង"
+    },
+    {
+      "word": "គងឈ្មោល"
+    },
+    {
+      "word": "គងញី"
+    },
+    {
+      "word": "គងពាទ្យ"
+    },
+    {
+      "word": "គងវង់ខ្មែរ"
+    },
+    {
+      "word": "គងវង់់"
+    },
+    {
+      "word": "គងវង់៍"
+    },
+    {
+      "word": "គងវង់ៗ"
+    },
+    {
+      "word": "គងស្គរ"
+    },
+    {
+      "word": "គង់"
+    },
+    {
+      "word": "គណិតសាស្ត្រ"
+    },
+    {
+      "word": "គិតខុស"
+    },
+    {
+      "word": "គីឡូម៉ែត្រ"
+    },
+    {
+      "word": "គ្រូពេទ្យខ្មែរ"
+    },
+    {
+      "word": "គ្រូពេទ្យ់"
+    },
+    {
+      "word": "គ្រូពេទ្យ៍"
+    },
+    {
+      "word": "គ្រូពេទ្យៗ"
+    },
+    {
+      "word": "គ្រួសារ"
+    },
+    {
+      "word": "ចិញ្ចឹមប្រាណ"
+    },
+    {
+      "word": "ច្បាស់"
+    },
+    {
+      "word": "ច្បាស់ក្រឡែត"
+    },
+    {
+      "word": "ច្បាស់ជា"
+    },
+    {
+      "word": "ច្បាស់ជាក់ស្ដែង"
+    },
+    {
+      "word": "ច្បាស់ប្រាកដ"
+    },
+    {
+      "word": "ច្បាស់លាស់ខ្មែរ"
+    },
+    {
+      "word": "ច្បាស់លាស់់"
+    },
+    {
+      "word": "ច្បាស់លាស់៍"
+    },
+    {
+      "word": "ច្បាស់លាស់ៗ"
+    },
+    {
+      "word": "ជាក់ច្បាស់"
+    },
+    {
+      "word": "ជាក់ប្រាកដ"
+    },
+    {
+      "word": "ដប់ប្រាំខ្មែរ"
+    },
+    {
+      "word": "ដប់ប្រាំបួនខ្មែរ"
+    },
+    {
+      "word": "ដប់ប្រាំបួន់"
+    },
+    {
+      "word": "ដប់ប្រាំបួន៍"
+    },
+    {
+      "word": "ដប់ប្រាំបួនៗ"
+    },
+    {
+      "word": "ដប់ប្រាំ់"
+    },
+    {
+      "word": "ដប់ប្រាំ៍"
+    },
+    {
+      "word": "ដប់ប្រាំៗ"
+    },
+    {
+      "word": "ត្រួតពិនិត្យ"
+    },
+    {
+      "word": "ថតបង្កក"
+    },
+    {
+      "word": "ថប់បារម្ភ"
+    },
+    {
+      "word": "ទទួលខុស"
+    },
+    {
+      "word": "ទទួលខុសត្រូវខ្មែរ"
+    },
+    {
+      "word": "ទទួលខុសត្រូវ់"
+    },
+    {
+      "word": "ទទួលខុសត្រូវ៍"
+    },
+    {
+      "word": "ទទួលខុសត្រូវៗ"
+    },
+    {
+      "word": "ទឹកអម្ពិល"
+    },
+    {
+      "word": "ទ្រព្យសម្បត្តិ"
+    },
+    {
+      "word": "នាយពាណិជ្ជ"
+    },
+    {
+      "word": "នាំសារ"
+    },
+    {
+      "word": "និយម"
+    },
+    {
+      "word": "នេះ"
+    },
+    {
+      "word": "បកប្រែខ្មែរ"
+    },
+    {
+      "word": "បកប្រែ់"
+    },
+    {
+      "word": "បកប្រែ៍"
+    },
+    {
+      "word": "បកប្រែៗ"
+    },
+    {
+      "word": "បណ្ឌិត្យ"
+    },
+    {
+      "word": "បណ្ឌិត្យសភាខ្មែរ"
+    },
+    {
+      "word": "បណ្ឌិត្យសភា់"
+    },
+    {
+      "word": "បណ្ឌិត្យសភា៍"
+    },
+    {
+      "word": "បណ្ឌិត្យសភាៗ"
+    },
+    {
+      "word": "បារម្ភ"
+    },
+    {
+      "word": "បារម្ភនឹង"
+    },
+    {
+      "word": "ប័ណ្ណសារ"
+    },
+    {
+      "word": "ប្រាកដ"
+    },
+    {
+      "word": "ប្រាកដខ្លួន"
+    },
+    {
+      "word": "ប្រាកដជា"
+    },
+    {
+      "word": "ប្រាកដប្រជា"
+    },
+    {
+      "word": "ប្រាណ"
+    },
+    {
+      "word": "ប្រាំ"
+    },
+    {
+      "word": "ប្រាំង"
+    },
+    {
+      "word": "ប្រាំបួន"
+    },
+    {
+      "word": "ប្រាំពីរ"
+    },
+    {
+      "word": "ប្រាំមួយ"
+    },
+    {
+      "word": "ប្រឹងប្រែង"
+    },
+    {
+      "word": "ប្រែ"
+    },
+    {
+      "word": "ប្រែប្រាណ"
+    },
+    {
+      "word": "ប្រែភាសា"
+    },
+    {
+      "word": "ផលិត"
+    },
+    {
+      "word": "ផលិតកម្ម"
+    },
+    {
+      "word": "ផលិតករ"
+    },
+    {
+      "word": "ផលិតផលខ្មែរ"
+    },
+    {
+      "word": "ផលិតផល់"
+    },
+    {
+      "word": "ផលិតផល៍"
+    },
+    {
+      "word": "ផលិតផលៗ"
+    },
+    {
+      "word": "ផលិតភាព"
+    },
+    {
+      "word": "ពាក្យ"
+    },
+    {
+      "word": "ពាក្យខ្វែង"
+    },
+    {
+      "word": "ពាក្យពេចន៍"
+    },
+    {
+      "word": "ពាក្យសុំ"
+    },
+    {
+      "word": "ពាក្យសោខ្មែរ"
+    },
+    {
+      "word": "ពាក្យសោ់"
+    },
+    {
+      "word": "ពាក្យសោ៍"
+    },
+    {
+      "word": "ពាក្យសោៗ"
+    },
+    {
+      "word": "ពាណិជ្ជ"
+    },
+    {
+      "word": "ពាណិជ្ជកម្មខ្មែរ"
+    },
+    {
+      "word": "ពាណិជ្ជកម្ម់"
+    },
+    {
+      "word": "ពាណិជ្ជកម្ម៍"
+    },
+    {
+      "word": "ពាណិជ្ជកម្មៗ"
+    },
+    {
+      "word": "ពាណិជ្ជករ"
+    },
+    {
+      "word": "ពាណិជ្ជការ"
+    },
+    {
+      "word": "ពាណិជ្ជសញ្ញា"
+    },
+    {
+      "word": "ពាណិជ្ជសមាគម"
+    },
+    {
+      "word": "ពាណិជ្ជសាស្ត្រ"
+    },
+    {
+      "word": "ពិតប្រាកដខ្មែរ"
+    },
+    {
+      "word": "ពិតប្រាកដ់"
+    },
+    {
+      "word": "ពិតប្រាកដ៍"
+    },
+    {
+      "word": "ពិតប្រាកដៗ"
+    },
+    {
+      "word": "ពិនិត្យ"
+    },
+    {
+      "word": "ពិនិត្យពិនិស្ច័យ"
+    },
+    {
+      "word": "ពិនិត្យមើល"
+    },
+    {
+      "word": "ពុទ្ធមន្ត"
+    },
+    {
+      "word": "ពុទ្ធសាសនបណ្ឌិត្យ"
+    },
+    {
+      "word": "ពេទ្យ"
+    },
+    {
+      "word": "ពេទ្យធ្មេញខ្មែរ"
+    },
+    {
+      "word": "ពេទ្យធ្មេញ់"
+    },
+    {
+      "word": "ពេទ្យធ្មេញ៍"
+    },
+    {
+      "word": "ពេទ្យធ្មេញៗ"
+    },
+    {
+      "word": "ពេទ្យសត្វខ្មែរ"
+    },
+    {
+      "word": "ពេទ្យសត្វ់"
+    },
+    {
+      "word": "ពេទ្យសត្វ៍"
+    },
+    {
+      "word": "ពេទ្យសត្វៗ"
+    },
+    {
+      "word": "ពេទ្យស្ថានខ្មែរ"
+    },
+    {
+      "word": "ពេទ្យស្ថាន់"
+    },
+    {
+      "word": "ពេទ្យស្ថាន៍"
+    },
+    {
+      "word": "ពេទ្យស្ថានៗ"
+    },
+    {
+      "word": "ព្រួយបារម្ភខ្មែរ"
+    },
+    {
+      "word": "ព្រួយបារម្ភ់"
+    },
+    {
+      "word": "ព្រួយបារម្ភ៍"
+    },
+    {
+      "word": "ព្រួយបារម្ភៗ"
+    },
+    {
+      "word": "ភិក្ខុសង្ឃ"
+    },
+    {
+      "word": "ភ្លឺច្បាស់"
+    },
+    {
+      "word": "មន្ត្រីសភា"
+    },
+    {
+      "word": "មន្ទីរកុមារកំព្រា"
+    },
+    {
+      "word": "មន្ទីរចិញ្ចឹមកុមារ"
+    },
+    {
+      "word": "មន្ទីរពេទ្យ"
+    },
+    {
+      "word": "មិល្លីម៉ែត្រ"
+    },
+    {
+      "word": "មេ"
+    },
+    {
+      "word": "មេកុមារភាព"
+    },
+    {
+      "word": "មេគងវង់"
+    },
+    {
+      "word": "មេគ្រូពេទ្យ"
+    },
+    {
+      "word": "មេច្បាស់លាស់"
+    },
+    {
+      "word": "មេដប់ប្រាំ"
+    },
+    {
+      "word": "មេដប់ប្រាំបួន"
+    },
+    {
+      "word": "មេទទួលខុសត្រូវ"
+    },
+    {
+      "word": "មេបកប្រែ"
+    },
+    {
+      "word": "មេបណ្ឌិត្យសភា"
+    },
+    {
+      "word": "មេផលិតផល"
+    },
+    {
+      "word": "មេពាក្យខ្មែរ"
+    },
+    {
+      "word": "មេពាក្យសោ"
+    },
+    {
+      "word": "មេពាក្យ់"
+    },
+    {
+      "word": "មេពាក្យ៍"
+    },
+    {
+      "word": "មេពាក្យៗ"
+    },
+    {
+      "word": "មេពាណិជ្ជកម្ម"
+    },
+    {
+      "word": "មេពិតប្រាកដ"
+    },
+    {
+      "word": "មេពេទ្យធ្មេញ"
+    },
+    {
+      "word": "មេពេទ្យសត្វ"
+    },
+    {
+      "word": "មេពេទ្យស្ថាន"
+    },
+    {
+      "word": "មេព្រួយបារម្ភ"
+    },
+    {
+      "word": "មេមេពាក្យ"
+    },
+    {
+      "word": "មេម៉ែត្រការ៉េ"
+    },
+    {
+      "word": "មេសារភាព"
+    },
+    {
+      "word": "មេសារមន្ទីរ"
+    },
+    {
+      "word": "មេសួនកុមារ"
+    },
+    {
+      "word": "មេសោតពិនិត្យ"
+    },
+    {
+      "word": "មេហាត់ប្រាណ"
+    },
+    {
+      "word": "ម៉ែត្រ"
+    },
+    {
+      "word": "ម៉ែត្រការ៉េខ្មែរ"
+    },
+    {
+      "word": "ម៉ែត្រការ៉េ់"
+    },
+    {
+      "word": "ម៉ែត្រការ៉េ៍"
+    },
+    {
+      "word": "ម៉ែត្រការ៉េៗ"
+    },
+    {
+      "word": "ម៉ែត្រគីប"
+    },
+    {
+      "word": "ម៉ែត្របត់"
+    },
+    {
+      "word": "ម្ភៃប្រាំ"
+    },
+    {
+      "word": "យល់សប្តិ"
+    },
+    {
+      "word": "រក្សាប្រាណ"
+    },
+    {
+      "word": "រាជបណ្ឌិត្យស្ថាន"
+    },
+    {
+      "word": "សញ្ញាប័ណ្ណ"
+    },
+    {
+      "word": "សភា"
+    },
+    {
+      "word": "សភាជាតិ"
+    },
+    {
+      "word": "សភាមន្ទីរ"
+    },
+    {
+      "word": "សម្រេចចិត្ត"
+    },
+    {
+      "word": "សរសេរខុស"
+    },
+    {
+      "word": "សរសៃកញ្ចក់"
+    },
+    {
+      "word": "សាខាពាណិជ្ជ"
+    },
+    {
+      "word": "សារ"
+    },
+    {
+      "word": "សារជាតិ"
+    },
+    {
+      "word": "សារធាតុ"
+    },
+    {
+      "word": "សារភាពខ្មែរ"
+    },
+    {
+      "word": "សារភាព់"
+    },
+    {
+      "word": "សារភាព៍"
+    },
+    {
+      "word": "សារភាពៗ"
+    },
+    {
+      "word": "សារមន្ទីរខ្មែរ"
+    },
+    {
+      "word": "សារមន្ទីរ់"
+    },
+    {
+      "word": "សារមន្ទីរ៍"
+    },
+    {
+      "word": "សារមន្ទីរៗ"
+    },
+    {
+      "word": "សារាយ"
+    },
+    {
+      "word": "សារុង"
+    },
+    {
+      "word": "សួនកុមារខ្មែរ"
+    },
+    {
+      "word": "សួនកុមារ់"
+    },
+    {
+      "word": "សួនកុមារ៍"
+    },
+    {
+      "word": "សួនកុមារៗ"
+    },
+    {
+      "word": "សេចក្តីបារម្ភ"
+    },
+    {
+      "word": "សេចក្តីប្រាកដ"
+    },
+    {
+      "word": "សេចក្តីប្រែ"
+    },
+    {
+      "word": "សោតពិនិត្យខ្មែរ"
+    },
+    {
+      "word": "សោតពិនិត្យ់"
+    },
+    {
+      "word": "សោតពិនិត្យ៍"
+    },
+    {
+      "word": "សោតពិនិត្យៗ"
+    },
+    {
+      "word": "សំបុត្រពេទ្យ"
+    },
+    {
+      "word": "ហាត់ប្រាណខ្មែរ"
+    },
+    {
+      "word": "ហាត់ប្រាណ់"
+    },
+    {
+      "word": "ហាត់ប្រាណ៍"
+    },
+    {
+      "word": "ហាត់ប្រាណៗ"
+    },
+    {
+      "word": "អង្គរ"
+    },
+    {
+      "word": "អាន"
+    }
+  ],
+  "negativePairs": [
+    [
+      "mehpeak",
+      "មេពាក្យ"
+    ],
+    [
+      "mehpiak",
+      "មេពាក្យ"
+    ],
+    [
+      "maetkarei",
+      "ម៉ែត្រការ៉េ"
+    ],
+    [
+      "peanechkampeanechkam",
+      "ពាណិជ្ជកម្មៗ"
+    ],
+    [
+      "savedcomponentlekha",
+      "ហត្ថលេខា"
+    ],
+    [
+      "tropsombat",
+      "ទ្រព្យសម្បត្តិ"
+    ]
+  ],
+  "repetitionControls": [
+    {
+      "word": "ពាក្យសោៗ",
+      "rejectedDoubledInputs": [
+        "peaksaopeaksao",
+        "piaksaopiaksao"
+      ]
+    },
+    {
+      "word": "មេពាក្យៗ",
+      "rejectedDoubledInputs": [
+        "mepeakmepeak",
+        "mepiakmepiak"
+      ]
+    },
+    {
+      "word": "ពេទ្យធ្មេញៗ",
+      "rejectedDoubledInputs": [
+        "petthmenhpetthmenh"
+      ]
+    },
+    {
+      "word": "ពេទ្យសត្វៗ",
+      "rejectedDoubledInputs": [
+        "petsatpetsat"
+      ]
+    },
+    {
+      "word": "ពេទ្យស្ថានៗ",
+      "rejectedDoubledInputs": [
+        "petsthanpetsthan"
+      ]
+    },
+    {
+      "word": "គ្រូពេទ្យៗ",
+      "rejectedDoubledInputs": [
+        "kroupetkroupet",
+        "krupetkrupet"
+      ]
+    },
+    {
+      "word": "សារភាពៗ",
+      "rejectedDoubledInputs": [
+        "sapeapsapeap",
+        "sapheapsapheap",
+        "saphiapsaphiap",
+        "sapiapsapiap"
+      ]
+    },
+    {
+      "word": "សារមន្ទីរៗ",
+      "rejectedDoubledInputs": [
+        "samontisamonti"
+      ]
+    },
+    {
+      "word": "បណ្ឌិត្យសភាៗ",
+      "rejectedDoubledInputs": [
+        "bondetsapeabondetsapea",
+        "bondetsapheabondetsaphea",
+        "bondetsaphiabondetsaphia",
+        "bondetsapiabondetsapia",
+        "bonditsapeabonditsapea",
+        "bonditsapheabonditsaphea",
+        "bonditsaphiabonditsaphia",
+        "bonditsapiabonditsapia"
+      ]
+    },
+    {
+      "word": "សោតពិនិត្យៗ",
+      "rejectedDoubledInputs": [
+        "saotpinitsaotpinit"
+      ]
+    },
+    {
+      "word": "បណ្ឌិត្យសភាៗ",
+      "rejectedDoubledInputs": [
+        "bondetsapeabondetsapea",
+        "bondetsapheabondetsaphea",
+        "bondetsaphiabondetsaphia",
+        "bondetsapiabondetsapia",
+        "bonditsapeabonditsapea",
+        "bonditsapheabonditsaphea",
+        "bonditsaphiabonditsaphia",
+        "bonditsapiabonditsapia"
+      ]
+    },
+    {
+      "word": "កុមារភាពៗ",
+      "rejectedDoubledInputs": [
+        "komapeapkomapeap",
+        "komapheapkomapheap",
+        "komaphiapkomaphiap",
+        "komapiapkomapiap",
+        "kumapeapkumapeap",
+        "kumapheapkumapheap",
+        "kumaphiapkumaphiap",
+        "kumapiapkumapiap"
+      ]
+    },
+    {
+      "word": "សួនកុមារៗ",
+      "rejectedDoubledInputs": [
+        "surnkomasurnkoma",
+        "surnkumasurnkuma"
+      ]
+    },
+    {
+      "word": "គងវង់ៗ",
+      "rejectedDoubledInputs": [
+        "kongvungkongvung",
+        "kongwungkongwung"
+      ]
+    },
+    {
+      "word": "ម៉ែត្រការ៉េៗ",
+      "rejectedDoubledInputs": [
+        "maetkaremaetkare"
+      ]
+    },
+    {
+      "word": "បកប្រែៗ",
+      "rejectedDoubledInputs": [
+        "bokpraebokprae"
+      ]
+    },
+    {
+      "word": "ដប់ប្រាំៗ",
+      "rejectedDoubledInputs": [
+        "doppramdoppram"
+      ]
+    },
+    {
+      "word": "ដប់ប្រាំបួនៗ",
+      "rejectedDoubledInputs": [
+        "doppramburndoppramburn"
+      ]
+    },
+    {
+      "word": "ទទួលខុសត្រូវៗ",
+      "rejectedDoubledInputs": [
+        "toturlkhohtrovtoturlkhohtrov",
+        "toturlkhuhtrovtoturlkhuhtrov"
+      ]
+    },
+    {
+      "word": "ផលិតផលៗ",
+      "rejectedDoubledInputs": [
+        "paletpholpaletphol",
+        "paletpolpaletpol",
+        "palitpholpalitphol",
+        "palitpolpalitpol",
+        "phaletpholphaletphol",
+        "phaletpolphaletpol",
+        "phalitpholphalitphol",
+        "phalitpolphalitpol"
+      ]
+    },
+    {
+      "word": "ពាណិជ្ជកម្មៗ",
+      "rejectedDoubledInputs": [
+        "peanechkampeanechkam",
+        "peanejkampeanejkam",
+        "peanichkampeanichkam",
+        "peanijkampeanijkam",
+        "pianechkampianechkam",
+        "pianejkampianejkam",
+        "pianichkampianichkam",
+        "pianijkampianijkam"
+      ]
+    },
+    {
+      "word": "ហាត់ប្រាណៗ",
+      "rejectedDoubledInputs": [
+        "hatpranhatpran"
+      ]
+    },
+    {
+      "word": "ពិតប្រាកដៗ",
+      "rejectedDoubledInputs": [
+        "petprakodpetprakod",
+        "pitprakodpitprakod"
+      ]
+    },
+    {
+      "word": "ព្រួយបារម្ភៗ",
+      "rejectedDoubledInputs": [
+        "prurybaromprurybarom"
+      ]
+    },
+    {
+      "word": "ច្បាស់លាស់ៗ",
+      "rejectedDoubledInputs": [
+        "jbahloahjbahloah",
+        "jbahloasjbahloas"
+      ]
+    }
+  ],
+  "retiredGenerated": {
+    "proposedPairs": [
+      [
+        "bokprae",
+        "បកប្រែ"
+      ],
+      [
+        "doppram",
+        "ដប់ប្រាំ"
+      ],
+      [
+        "doppramburn",
+        "ដប់ប្រាំបួន"
+      ],
+      [
+        "hatpran",
+        "ហាត់ប្រាណ"
+      ],
+      [
+        "komapeap",
+        "កុមារភាព"
+      ],
+      [
+        "komapheap",
+        "កុមារភាព"
+      ],
+      [
+        "komaphiap",
+        "កុមារភាព"
+      ],
+      [
+        "komapiap",
+        "កុមារភាព"
+      ],
+      [
+        "kongvung",
+        "គងវង់"
+      ],
+      [
+        "kongwung",
+        "គងវង់"
+      ],
+      [
+        "kroupet",
+        "គ្រូពេទ្យ"
+      ],
+      [
+        "krupet",
+        "គ្រូពេទ្យ"
+      ],
+      [
+        "kumapeap",
+        "កុមារភាព"
+      ],
+      [
+        "kumapheap",
+        "កុមារភាព"
+      ],
+      [
+        "kumaphiap",
+        "កុមារភាព"
+      ],
+      [
+        "kumapiap",
+        "កុមារភាព"
+      ],
+      [
+        "petprakod",
+        "ពិតប្រាកដ"
+      ],
+      [
+        "petsat",
+        "ពេទ្យសត្វ"
+      ],
+      [
+        "petsthan",
+        "ពេទ្យស្ថាន"
+      ],
+      [
+        "petthmenh",
+        "ពេទ្យធ្មេញ"
+      ],
+      [
+        "pitprakod",
+        "ពិតប្រាកដ"
+      ],
+      [
+        "samonti",
+        "សារមន្ទីរ"
+      ],
+      [
+        "sapeap",
+        "សារភាព"
+      ],
+      [
+        "sapheap",
+        "សារភាព"
+      ],
+      [
+        "saphiap",
+        "សារភាព"
+      ],
+      [
+        "sapiap",
+        "សារភាព"
+      ],
+      [
+        "surnkoma",
+        "សួនកុមារ"
+      ],
+      [
+        "surnkuma",
+        "សួនកុមារ"
+      ]
+    ]
+  }
+}

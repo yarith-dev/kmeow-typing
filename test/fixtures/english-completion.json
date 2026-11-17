@@ -1,0 +1,388 @@
+{
+  "words": [
+    {
+      "id": 201,
+      "text": "hello",
+      "rank": 1,
+      "status": "approved"
+    },
+    {
+      "id": 202,
+      "text": "help",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 203,
+      "text": "helpful",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 204,
+      "text": "hello",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 205,
+      "text": "I'm",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 206,
+      "text": "ice",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 207,
+      "text": "mother-in-law",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 208,
+      "text": "Hello",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 209,
+      "text": "he",
+      "rank": 0,
+      "status": "approved"
+    },
+    {
+      "id": 210,
+      "text": "helium",
+      "rank": 1,
+      "status": "approved"
+    },
+    {
+      "id": 211,
+      "text": "helping",
+      "rank": 0,
+      "status": "approved"
+    }
+  ],
+  "cases": [
+    {
+      "input": "",
+      "normalizedInput": "",
+      "candidates": [],
+      "kind": "english-completion"
+    },
+    {
+      "input": "h",
+      "normalizedInput": "h",
+      "candidates": [
+        {
+          "mappingId": 209,
+          "text": "he",
+          "rank": 0,
+          "completion": "he"
+        },
+        {
+          "mappingId": 202,
+          "text": "help",
+          "rank": 0,
+          "completion": "help"
+        },
+        {
+          "mappingId": 208,
+          "text": "Hello",
+          "rank": 0,
+          "completion": "Hello"
+        },
+        {
+          "mappingId": 204,
+          "text": "hello",
+          "rank": 0,
+          "completion": "hello"
+        },
+        {
+          "mappingId": 203,
+          "text": "helpful",
+          "rank": 0,
+          "completion": "helpful"
+        },
+        {
+          "mappingId": 211,
+          "text": "helping",
+          "rank": 0,
+          "completion": "helping"
+        },
+        {
+          "mappingId": 210,
+          "text": "helium",
+          "rank": 1,
+          "completion": "helium"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "he",
+      "normalizedInput": "he",
+      "candidates": [
+        {
+          "mappingId": 209,
+          "text": "he",
+          "rank": 0,
+          "completion": "he"
+        },
+        {
+          "mappingId": 202,
+          "text": "help",
+          "rank": 0,
+          "completion": "help"
+        },
+        {
+          "mappingId": 208,
+          "text": "Hello",
+          "rank": 0,
+          "completion": "Hello"
+        },
+        {
+          "mappingId": 204,
+          "text": "hello",
+          "rank": 0,
+          "completion": "hello"
+        },
+        {
+          "mappingId": 203,
+          "text": "helpful",
+          "rank": 0,
+          "completion": "helpful"
+        },
+        {
+          "mappingId": 211,
+          "text": "helping",
+          "rank": 0,
+          "completion": "helping"
+        },
+        {
+          "mappingId": 210,
+          "text": "helium",
+          "rank": 1,
+          "completion": "helium"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "hel",
+      "normalizedInput": "hel",
+      "candidates": [
+        {
+          "mappingId": 202,
+          "text": "help",
+          "rank": 0,
+          "completion": "help"
+        },
+        {
+          "mappingId": 208,
+          "text": "Hello",
+          "rank": 0,
+          "completion": "Hello"
+        },
+        {
+          "mappingId": 204,
+          "text": "hello",
+          "rank": 0,
+          "completion": "hello"
+        },
+        {
+          "mappingId": 203,
+          "text": "helpful",
+          "rank": 0,
+          "completion": "helpful"
+        },
+        {
+          "mappingId": 211,
+          "text": "helping",
+          "rank": 0,
+          "completion": "helping"
+        },
+        {
+          "mappingId": 210,
+          "text": "helium",
+          "rank": 1,
+          "completion": "helium"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "HEL",
+      "normalizedInput": "hel",
+      "candidates": [
+        {
+          "mappingId": 202,
+          "text": "help",
+          "rank": 0,
+          "completion": "help"
+        },
+        {
+          "mappingId": 208,
+          "text": "Hello",
+          "rank": 0,
+          "completion": "Hello"
+        },
+        {
+          "mappingId": 204,
+          "text": "hello",
+          "rank": 0,
+          "completion": "hello"
+        },
+        {
+          "mappingId": 203,
+          "text": "helpful",
+          "rank": 0,
+          "completion": "helpful"
+        },
+        {
+          "mappingId": 211,
+          "text": "helping",
+          "rank": 0,
+          "completion": "helping"
+        },
+        {
+          "mappingId": 210,
+          "text": "helium",
+          "rank": 1,
+          "completion": "helium"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "hello",
+      "normalizedInput": "hello",
+      "candidates": [
+        {
+          "mappingId": 208,
+          "text": "Hello",
+          "rank": 0,
+          "completion": "Hello"
+        },
+        {
+          "mappingId": 204,
+          "text": "hello",
+          "rank": 0,
+          "completion": "hello"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": " hello",
+      "normalizedInput": "hello",
+      "candidates": [
+        {
+          "mappingId": 208,
+          "text": "Hello",
+          "rank": 0,
+          "completion": "Hello"
+        },
+        {
+          "mappingId": 204,
+          "text": "hello",
+          "rank": 0,
+          "completion": "hello"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "hello ",
+      "normalizedInput": "hello",
+      "candidates": [],
+      "kind": "english-completion"
+    },
+    {
+      "input": "hel!",
+      "normalizedInput": "hel!",
+      "candidates": [],
+      "kind": "english-completion"
+    },
+    {
+      "input": "two words",
+      "normalizedInput": "two words",
+      "candidates": [],
+      "kind": "english-completion"
+    },
+    {
+      "input": "សួ",
+      "normalizedInput": "សួ",
+      "candidates": [],
+      "kind": "english-completion"
+    },
+    {
+      "input": "i",
+      "normalizedInput": "i",
+      "candidates": [
+        {
+          "mappingId": 205,
+          "text": "I'm",
+          "rank": 0,
+          "completion": "I'm"
+        },
+        {
+          "mappingId": 206,
+          "text": "ice",
+          "rank": 0,
+          "completion": "ice"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "I'",
+      "normalizedInput": "i'",
+      "candidates": [
+        {
+          "mappingId": 205,
+          "text": "I'm",
+          "rank": 0,
+          "completion": "I'm"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "mother-",
+      "normalizedInput": "mother-",
+      "candidates": [
+        {
+          "mappingId": 207,
+          "text": "mother-in-law",
+          "rank": 0,
+          "completion": "mother-in-law"
+        }
+      ],
+      "kind": "english-completion"
+    },
+    {
+      "input": "sur",
+      "normalizedInput": "sur",
+      "candidates": [],
+      "kind": "english-completion"
+    },
+    {
+      "input": "helium",
+      "normalizedInput": "helium",
+      "kind": "english-completion",
+      "candidates": [
+        {
+          "mappingId": 210,
+          "text": "helium",
+          "rank": 1,
+          "completion": "helium"
+        }
+      ]
+    }
+  ]
+}

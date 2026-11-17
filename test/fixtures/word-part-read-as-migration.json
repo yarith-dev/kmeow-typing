@@ -1,0 +1,55 @@
+{
+  "movedPart": {
+    "khmer": "ស្តី",
+    "keys": [
+      "sdei",
+      "sdey"
+    ],
+    "cases": [
+      {
+        "kind": "syllable",
+        "order": 1
+      }
+    ],
+    "readingType": "alternative"
+  },
+  "pronunciation": {
+    "word": "សួស្តី",
+    "readAs": "សួស្ដី"
+  },
+  "reuseDisabled": "បណ្ឌិត្យ",
+  "keptScopedDefinition": {
+    "khmer": "បណ្ឌិត្យ",
+    "keys": [
+      "bondet",
+      "bondit"
+    ],
+    "cases": [
+      {
+        "kind": "scoped",
+        "order": 33,
+        "words": [
+          "បណ្ឌិត្យសភា"
+        ],
+        "positions": [
+          "start"
+        ],
+        "preserveMapped": true,
+        "checkedSuffixReadings": [
+          {
+            "word": "បណ្ឌិត្យសភា",
+            "khmer": "សភា",
+            "keys": [
+              "sapea",
+              "saphea",
+              "saphia",
+              "sapia"
+            ],
+            "originalWordOnly": true
+          }
+        ]
+      }
+    ],
+    "readingType": "alternative"
+  }
+}

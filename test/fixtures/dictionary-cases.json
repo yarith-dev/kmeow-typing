@@ -1,0 +1,262 @@
+[
+  {
+    "word": "តោះ",
+    "id": 14559,
+    "commonnessLevel": 3,
+    "partsOfSpeech": [
+      "intj"
+    ],
+    "inputs": [
+      "toh",
+      "tos"
+    ]
+  },
+  {
+    "word": "មែនទែន",
+    "id": 14560,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adv"
+    ],
+    "inputs": [
+      "maentaen",
+      "maenten",
+      "mentaen",
+      "menten"
+    ]
+  },
+  {
+    "word": "មិត្តភក្តិ",
+    "id": 14561,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "noun"
+    ],
+    "inputs": [
+      "mettophkte",
+      "mettophkti",
+      "mettopkte",
+      "mettopkti",
+      "mittophkte",
+      "mittophkti",
+      "mittopkte",
+      "mittopkti"
+    ]
+  },
+  {
+    "word": "អត់ទោស",
+    "id": 14562,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "intj"
+    ],
+    "inputs": [
+      "ottoh",
+      "ottos"
+    ]
+  },
+  {
+    "word": "ត្រឹមតែ",
+    "id": 14563,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adv"
+    ],
+    "inputs": [
+      "trermtae",
+      "troeumtae"
+    ]
+  },
+  {
+    "word": "ព្រះចន្ទ",
+    "id": 14564,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "noun"
+    ],
+    "inputs": [
+      "preahchnto"
+    ]
+  },
+  {
+    "word": "ឡូយ",
+    "id": 14565,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adj"
+    ],
+    "inputs": [
+      "loy"
+    ]
+  },
+  {
+    "word": "គ្រាន់តែ",
+    "id": 14566,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adv"
+    ],
+    "inputs": [
+      "kroantae",
+      "krorntae"
+    ]
+  },
+  {
+    "word": "ណាត់",
+    "id": 14567,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "verb"
+    ],
+    "inputs": [
+      "nat"
+    ]
+  },
+  {
+    "word": "អបអរសាទរ",
+    "id": 14568,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "verb"
+    ],
+    "inputs": [
+      "arbarorsator",
+      "arboaorsator",
+      "arbororsator",
+      "oabarorsator",
+      "oaboaorsator",
+      "oabororsator",
+      "orbarorsator",
+      "orboaorsator",
+      "orbororsator"
+    ]
+  },
+  {
+    "word": "ជូនពរ",
+    "id": 14569,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "verb"
+    ],
+    "inputs": [
+      "chounopor",
+      "chunopor",
+      "jounopor",
+      "junopor"
+    ]
+  },
+  {
+    "word": "សុខសប្បាយ",
+    "id": 14570,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adj"
+    ],
+    "inputs": [
+      "soksabbay",
+      "suksabbay"
+    ]
+  },
+  {
+    "word": "ជម្រាបលា",
+    "id": 14571,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "intj"
+    ],
+    "inputs": [
+      "chomreaplea",
+      "chomreaplia",
+      "chomriaplea",
+      "chomriaplia",
+      "jomreaplea",
+      "jomreaplia",
+      "jomriaplea",
+      "jomriaplia"
+    ]
+  },
+  {
+    "word": "មួយភ្លែត",
+    "id": 14572,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adv"
+    ],
+    "inputs": [
+      "muryphlaet",
+      "muryphlet",
+      "muryplaet",
+      "muryplet"
+    ]
+  },
+  {
+    "word": "មិនបាច់",
+    "id": 14573,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "aux"
+    ],
+    "inputs": [
+      "menbach",
+      "minbach"
+    ]
+  },
+  {
+    "word": "យប់មិញ",
+    "id": 14574,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adv"
+    ],
+    "inputs": [
+      "yopmenh",
+      "yopminh"
+    ]
+  },
+  {
+    "word": "ធុញទ្រាន់",
+    "id": 14575,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adj"
+    ],
+    "inputs": [
+      "thonhtroan",
+      "thonhtrorn",
+      "thunhtroan",
+      "thunhtrorn"
+    ]
+  },
+  {
+    "word": "ខកចិត្ត",
+    "id": 14576,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "adj"
+    ],
+    "inputs": [
+      "khokjet",
+      "khokjettar",
+      "khokjettoa",
+      "khokjettor",
+      "khokjit",
+      "khokjittar",
+      "khokjittoa",
+      "khokjittor"
+    ]
+  },
+  {
+    "word": "ទស្សនៈ",
+    "id": 14577,
+    "commonnessLevel": null,
+    "partsOfSpeech": [
+      "noun"
+    ],
+    "inputs": [
+      "tuhna",
+      "tuhnak",
+      "tusna",
+      "tusnak"
+    ]
+  }
+]

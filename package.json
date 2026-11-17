@@ -1,0 +1,69 @@
+{
+  "name": "@khmer-typing/engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Offline Khmer conversion and Khmer/English suggestions with bundled dictionaries.",
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist/",
+    "wasm/",
+    "compiled-data/",
+    "src/",
+    "rust/",
+    "data/",
+    "test/",
+    "scripts/",
+    "licenses/",
+    "Cargo.toml",
+    "Cargo.lock",
+    "rust-toolchain.toml",
+    "COMPACT_FORMAT.md",
+    "README.md",
+    "LICENSE",
+    "DICTIONARY-LICENSE.md",
+    "NOTICES.txt",
+    "dictionary-manifest.json",
+    "manager/"
+  ],
+  "exports": {
+    ".": {
+      "browser": {
+        "types": "./dist/public/browser.d.ts",
+        "default": "./dist/public/browser.js"
+      },
+      "node": {
+        "types": "./dist/public/node.d.ts",
+        "default": "./dist/public/node.js"
+      },
+      "default": {
+        "types": "./dist/public/browser.d.ts",
+        "default": "./dist/public/browser.js"
+      }
+    },
+    "./simple/browser": {
+      "types": "./dist/public/browser.d.ts",
+      "default": "./dist/public/browser.js"
+    },
+    "./package.json": "./package.json",
+    "./data/*": "./compiled-data/*"
+  },
+  "scripts": {
+    "build": "node scripts/build-public.mjs",
+    "build:wasm": "node scripts/build-public.mjs --wasm",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:rust": "node scripts/test-rust.mjs",
+    "prepack": "npm run build",
+    "manage": "node manager/start.mjs",
+    "test:manager": "node --test manager/test/*.test.mjs",
+    "dict:add": "node scripts/add-word.mjs",
+    "test:dictionary": "node --test test/dictionaries.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "22.20.2"
+  }
+}

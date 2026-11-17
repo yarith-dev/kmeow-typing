@@ -1,0 +1,280 @@
+{
+  "cases": [
+    {
+      "word": "កញ្ញា",
+      "prefixes": [
+        "ka"
+      ],
+      "yes": [
+        "kanhnhea"
+      ],
+      "no": [
+        "kornhnhea",
+        "karnhnhea"
+      ]
+    },
+    {
+      "word": "សញ្ញា",
+      "prefixes": [
+        "sa"
+      ],
+      "yes": [
+        "sanhnhea"
+      ],
+      "no": [
+        "sornhnhea",
+        "sarnhnhea"
+      ]
+    },
+    {
+      "word": "បញ្ញា",
+      "prefixes": [
+        "ba"
+      ],
+      "yes": [
+        "banhnhea"
+      ],
+      "no": [
+        "bornhnhea",
+        "barnhnhea"
+      ]
+    },
+    {
+      "word": "សប្បាយ",
+      "prefixes": [
+        "sa"
+      ],
+      "yes": [
+        "sabbay"
+      ],
+      "no": [
+        "sorbbay",
+        "sarbbay"
+      ]
+    },
+    {
+      "word": "សុខសប្បាយ",
+      "prefixes": [
+        "soksa",
+        "suksa"
+      ],
+      "yes": [
+        "soksabbay",
+        "suksabbay"
+      ],
+      "no": [
+        "sokhosbbay",
+        "sukhosbbay"
+      ]
+    },
+    {
+      "word": "បណ្ណាល័យ",
+      "prefixes": [
+        "bo"
+      ],
+      "yes": [
+        "bonnalai"
+      ],
+      "no": [
+        "bornnalai",
+        "barnnalai"
+      ]
+    },
+    {
+      "word": "បណ្ណាគារ",
+      "prefixes": [
+        "bo"
+      ],
+      "yes": [
+        "bonnakea"
+      ],
+      "no": [
+        "bornnakea",
+        "barnnakea"
+      ]
+    },
+    {
+      "word": "វគ្គ",
+      "prefixes": [
+        "vae",
+        "wae"
+      ],
+      "yes": [
+        "vaek",
+        "waek"
+      ],
+      "no": [
+        "vokko",
+        "wokko"
+      ]
+    },
+    {
+      "word": "វគ្គីករណ៍",
+      "prefixes": [
+        "vae",
+        "wae"
+      ],
+      "yes": [
+        "vaekkikor",
+        "waekkikor"
+      ],
+      "no": [
+        "vokkikor",
+        "wokkikor"
+      ]
+    },
+    {
+      "word": "លក្ខណៈ",
+      "prefixes": [
+        "lae"
+      ],
+      "yes": [
+        "laekna",
+        "laeknak"
+      ],
+      "no": [
+        "lokna",
+        "loknak"
+      ]
+    },
+    {
+      "word": "លក្ខខណ្ឌ",
+      "prefixes": [
+        "lae"
+      ],
+      "yes": [
+        "laekkhan"
+      ],
+      "no": [
+        "lokkhan"
+      ]
+    },
+    {
+      "word": "លក្ខណសម្បត្តិ",
+      "prefixes": [
+        "lae"
+      ],
+      "yes": [
+        "laeknasambat"
+      ],
+      "no": [
+        "loknasambat"
+      ]
+    },
+    {
+      "word": "គុណលក្ខណៈ",
+      "prefixes": [
+        "konlae",
+        "kunlae"
+      ],
+      "yes": [
+        "konlaekna"
+      ],
+      "no": [
+        "konolkkharna"
+      ]
+    },
+    {
+      "word": "លទ្ធិ",
+      "prefixes": [
+        "ler"
+      ],
+      "yes": [
+        "lerthi",
+        "lerthe",
+        "lertthi",
+        "lertthe"
+      ],
+      "no": [
+        "lotthi",
+        "lotthe"
+      ]
+    },
+    {
+      "word": "លទ្ធភាព",
+      "prefixes": [
+        "ler"
+      ],
+      "yes": [
+        "lerthopheap",
+        "lertthopheap"
+      ],
+      "no": [
+        "lotthopheap"
+      ]
+    },
+    {
+      "word": "លទ្ធផល",
+      "prefixes": [
+        "ler"
+      ],
+      "yes": [
+        "lertpol"
+      ],
+      "no": []
+    }
+  ],
+  "unchanged": [
+    {
+      "word": "កក",
+      "inputs": [
+        "kok"
+      ]
+    },
+    {
+      "word": "កកាយ",
+      "inputs": [
+        "karkay",
+        "koakay",
+        "korkay"
+      ]
+    },
+    {
+      "word": "លក់",
+      "inputs": [
+        "luak",
+        "luk",
+        "luok"
+      ]
+    },
+    {
+      "word": "មក",
+      "inputs": [
+        "mok"
+      ]
+    },
+    {
+      "word": "គ",
+      "inputs": [
+        "ko"
+      ]
+    },
+    {
+      "word": "ក",
+      "inputs": [
+        "kar",
+        "koa",
+        "kor"
+      ]
+    },
+    {
+      "word": "សកម្ម",
+      "inputs": [
+        "sakkam"
+      ]
+    },
+    {
+      "word": "ទស្សនា",
+      "inputs": [
+        "tuhna",
+        "tusna"
+      ]
+    },
+    {
+      "word": "ធម្មតា",
+      "inputs": [
+        "thommota"
+      ]
+    }
+  ]
+}
