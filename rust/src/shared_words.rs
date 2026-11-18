@@ -64,7 +64,8 @@ impl Engine {
             (None, Some(extension)) => Some(query(extension, false)),
             (Some(shared), None) => Some(query(&shared.engine, false)),
             (Some(shared), Some(extension)) => {
-                let Some(personal) = &extension.personal_source else {
+                let Some(personal) = extension.personal_source.as_ref()
+                    .filter(|_| extension.dictionary.input_exclusions.is_empty() && extension.dictionary.shorthands.is_empty()) else {
                     // General low-level extensions retain their independent
                     // policy settings; the base query includes the shared view.
                     return Some(query(extension, true));

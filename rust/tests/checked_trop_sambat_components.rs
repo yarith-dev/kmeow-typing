@@ -22,7 +22,7 @@ fn paired_trop_sambat_preserves_old_paths_and_rejects_cross_variant_inputs() {
                 .unwrap_or_else(|| panic!("{input}: {word}"));
             let index = words.iter().position(|&w| w == word).unwrap();
             assert_eq!(hit.mapping_id, Some((860000 + index) as u64));
-            assert_eq!(hit.rank, (index % 7) as u32);
+            assert_eq!(hit.rank, (index % 7) as i32);
         }
     }
     for pair in proof["negativePairs"].as_array().unwrap() {

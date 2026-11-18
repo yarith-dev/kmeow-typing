@@ -1,0 +1,281 @@
+{
+  "cases": [
+    {
+      "word": "មួយ",
+      "previous": [
+        "mury"
+      ],
+      "additional": [
+        "muy"
+      ]
+    },
+    {
+      "word": "ជួយ",
+      "previous": [
+        "chury",
+        "jury"
+      ],
+      "additional": [
+        "chuy",
+        "juy"
+      ]
+    },
+    {
+      "word": "ខ្លួន",
+      "previous": [
+        "khlurn"
+      ],
+      "additional": [
+        "khlun"
+      ]
+    },
+    {
+      "word": "បួន",
+      "previous": [
+        "burn"
+      ],
+      "additional": [
+        "bun"
+      ]
+    },
+    {
+      "word": "ពួក",
+      "previous": [
+        "purk"
+      ],
+      "additional": [
+        "puk"
+      ]
+    },
+    {
+      "word": "មួន",
+      "previous": [
+        "murn"
+      ],
+      "additional": [
+        "mun"
+      ]
+    },
+    {
+      "word": "រួម",
+      "previous": [
+        "rurm"
+      ],
+      "additional": [
+        "rum"
+      ]
+    },
+    {
+      "word": "លួង",
+      "previous": [
+        "lurng"
+      ],
+      "additional": [
+        "lung"
+      ]
+    },
+    {
+      "word": "កួច",
+      "previous": [
+        "kurch"
+      ],
+      "additional": [
+        "kuch"
+      ]
+    },
+    {
+      "word": "ទួល",
+      "previous": [
+        "turl"
+      ],
+      "additional": [
+        "tul"
+      ]
+    },
+    {
+      "word": "ជួន",
+      "previous": [
+        "churn",
+        "jurn"
+      ],
+      "additional": [
+        "chun",
+        "jun"
+      ]
+    },
+    {
+      "word": "មួយថ្ងៃ",
+      "previous": [
+        "murythngai",
+        "murytngai"
+      ],
+      "additional": [
+        "muythngai",
+        "muytngai"
+      ]
+    },
+    {
+      "word": "ជួយគ្នា",
+      "previous": [
+        "churyknea",
+        "churyknia",
+        "juryknea",
+        "juryknia"
+      ],
+      "additional": [
+        "chuyknea",
+        "chuyknia",
+        "juyknea",
+        "juyknia"
+      ]
+    },
+    {
+      "word": "មួស្ស",
+      "previous": [
+        "murh",
+        "murs"
+      ],
+      "additional": [
+        "muh",
+        "mus"
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "word": "ជួរ",
+      "inputs": [
+        "chur",
+        "jur"
+      ]
+    },
+    {
+      "word": "គួរ",
+      "inputs": [
+        "kur"
+      ]
+    },
+    {
+      "word": "សួរ",
+      "inputs": [
+        "sur"
+      ]
+    },
+    {
+      "word": "តួ",
+      "inputs": [
+        "tur"
+      ]
+    },
+    {
+      "word": "ជួ",
+      "inputs": [
+        "chur",
+        "jur"
+      ]
+    },
+    {
+      "word": "គួ",
+      "inputs": [
+        "kur"
+      ]
+    },
+    {
+      "word": "ជួកា",
+      "inputs": [
+        "churka",
+        "jurka"
+      ]
+    },
+    {
+      "word": "គូ",
+      "inputs": [
+        "kou",
+        "ku"
+      ]
+    },
+    {
+      "word": "ជូរ",
+      "inputs": [
+        "chou",
+        "chu",
+        "jou",
+        "ju"
+      ]
+    },
+    {
+      "word": "ទូក",
+      "inputs": [
+        "touk",
+        "tuk"
+      ]
+    },
+    {
+      "word": "មូស",
+      "inputs": [
+        "mouh",
+        "mous",
+        "muh",
+        "mus"
+      ]
+    },
+    {
+      "word": "ប្អូន",
+      "inputs": [
+        "b'on",
+        "b'oun",
+        "p'on",
+        "p'oun"
+      ]
+    },
+    {
+      "word": "រ",
+      "inputs": [
+        "ro"
+      ]
+    },
+    {
+      "word": "កូន",
+      "inputs": [
+        "kon"
+      ]
+    },
+    {
+      "word": "ភូមិ",
+      "inputs": [
+        "phoum",
+        "phum",
+        "poum",
+        "pum"
+      ]
+    },
+    {
+      "word": "មុន",
+      "inputs": [
+        "mon",
+        "mun"
+      ]
+    },
+    {
+      "word": "បុន",
+      "inputs": [
+        "bon",
+        "bun"
+      ]
+    },
+    {
+      "word": "ពុក",
+      "inputs": [
+        "pok",
+        "puk"
+      ]
+    },
+    {
+      "word": "រុម",
+      "inputs": [
+        "rom",
+        "rum"
+      ]
+    }
+  ]
+}

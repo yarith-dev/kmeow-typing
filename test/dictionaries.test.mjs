@@ -4,17 +4,114 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { initSync, WasmEngine, wasmBuildFingerprint } from '../wasm/khmer_engine.js';
 import {readCompactSource} from '../scripts/read-compact-source.mjs';
+import {spaceChoice} from '../manager/composer.js';
 
 const sha = value => createHash('sha256').update(value).digest('hex');
 const read = path => readFileSync(new URL('../' + path, import.meta.url));
 const dictionaryCases = JSON.parse(read('test/fixtures/dictionary-cases.json'));
 const caseWords = new Set(dictionaryCases.map(row=>row.word));
+
+test('ឲ uses the selected អោយ reading while related letters and saved aliases remain independent',()=>{
+  const preview=word=>JSON.parse(WasmEngine.pronunciationInputs(word));
+  assert.deepEqual(preview('ឲ'),preview('អោយ'));
+  assert.deepEqual(preview('ឲ'),['aoy']);
+  assert.deepEqual(preview('ឱ'),['ao']);
+  for(const word of ['ឲ្យ','ឱ្យ'])assert.deepEqual(preview(word),['aoy','oy']);
+  const data={schemaVersion:2,words:[{id:1,khmer:'ឲ',rank:7,status:'approved'}],mappings:[]};
+  const core=new WasmEngine(JSON.stringify(data));
+  const saved=new WasmEngine(JSON.stringify({...data,mappings:[{id:2,romanized:'ao',khmer:'ឲ',rank:3,status:'approved'}]}));
+  const exact=(engine,input,soundMap=true)=>JSON.parse(engine.suggestWithContext(input,JSON.stringify({soundMap}),'{}')).exactCandidates;
+  try{
+    assert(exact(core,'aoy').some(row=>row.khmer==='ឲ'&&row.mappingId===1));
+    assert(!exact(core,'ao').some(row=>row.khmer==='ឲ'));
+    for(const enabled of [true,false])assert(exact(saved,'ao',enabled).some(row=>row.khmer==='ឲ'&&row.mappingId===2&&row.rank===3));
+  }finally{core.free();saved.free();}
+});
 const vowelChoice = JSON.parse(read('test/fixtures/vowel-series.json'));
 const silentCodaSeries = JSON.parse(read('test/fixtures/silent-coda-series.json'));
 const manifest = JSON.parse(read('dictionary-manifest.json'));
 const wasm = read('wasm/khmer_engine_bg.wasm');
 initSync({module: wasm});
 const files = Object.fromEntries(['khmer', 'english'].map(language => [language, read(`compiled-data/${language}.kmd`)]));
+
+test('the three give spellings accept oy and aoy, with oy saved only as the អោយ exception',()=>{
+  const core=WasmEngine.fromAppData(files.khmer,files.english);
+  const exact=(input,soundMap=true)=>JSON.parse(core.suggestWithContext(input,JSON.stringify({soundMap}),'{}')).exactCandidates;
+  try{
+    for(const input of ['oy','aoy'])for(const word of ['ឱ្យ','ឲ្យ','អោយ']){
+      assert(exact(input).some(row=>row.khmer===word),`${input}: ${word}`);
+    }
+    assert.equal(exact('oy')[0].khmer,'ឱ្យ');
+    assert.deepEqual(JSON.parse(core.soundMapInputs('អោយ','')).inputs,['aoy']);
+    assert.deepEqual(readCompactSource(core).mappings.filter(row=>row.khmer==='អោយ').map(row=>row.romanized),['oy']);
+    assert(exact('oy',false).some(row=>row.khmer==='អោយ'));
+    assert(!exact('aoy',false).some(row=>row.khmer==='អោយ'));
+  }finally{core.free();}
+});
+
+test('independent ឧ replaces generated o/u with ouk/ou while saved and personal spellings survive',()=>{
+  const proof=JSON.parse(read('test/fixtures/independent-vowel-choices.json'));
+  const data={schemaVersion:2,mappings:[],words:proof.words.map((khmer,i)=>({id:996500+i,khmer,rank:i,status:'approved'}))};
+  const core=new WasmEngine(JSON.stringify(data));
+  const saved=new WasmEngine(JSON.stringify({...data,soundMapDisabledWords:['ឧត្តម'],mappings:proof.savedAliasControls.map(row=>({
+    id:row.id,romanized:row.input,khmer:row.word,rank:row.rank,status:'approved'
+  }))}));
+  const personal=WasmEngine.fromPersonalWords(JSON.stringify([{word:'ឧ',spellings:['o','u','myreading']}]));
+  const engines=[core,saved,personal],bytes=engines.map(engine=>Buffer.from(engine.exportBinary()));
+  const exact=(engine,input,features={})=>JSON.parse(engine.suggestWithContext(input,JSON.stringify(features),'{}')).exactCandidates;
+  try{
+    for(const field of ['yes','letterUnits','compatibility','no'])for(const [input,word]of proof[field]){
+      assert.equal(exact(core,input).some(row=>row.khmer===word),field!=='no',`${input}: ${word}`);
+    }
+    for(const features of [{soundMap:false},{romanized:false},{mode:'english'}]){
+      assert(!exact(core,'ouk',features).some(row=>row.khmer==='ឧ'));
+      assert(!exact(core,'ou',features).some(row=>row.khmer==='ឧ'));
+    }
+    for(const input of ['oukttom','outtom'])assert(!exact(saved,input).some(row=>row.khmer==='ឧត្តម'));
+    for(const soundMap of [true,false]){
+      for(const row of proof.savedAliasControls){
+        assert(exact(saved,row.input,{soundMap}).some(hit=>hit.khmer===row.word&&hit.mappingId===row.id&&hit.rank===row.rank));
+      }
+      for(const input of ['o','u','myreading'])assert(JSON.parse(core.suggestWithExtension(personal,input,JSON.stringify({soundMap}),'{}'))
+        .exactCandidates.some(row=>row.khmer==='ឧ'));
+    }
+    for(const [i,engine]of engines.entries())assert.deepEqual(Buffer.from(engine.exportBinary()),bytes[i]);
+  }finally{for(const engine of engines)engine.free();}
+});
+
+test('final ប adds b beside p in Wasm without changing other letters or explicit spellings',()=>{
+  const proof=JSON.parse(read('test/fixtures/final-b.json'));
+  const rows=[...proof.readings,...proof.unchanged];
+  const data={schemaVersion:2,mappings:[],words:rows.map(([word],i)=>({
+    id:99300+i,khmer:word,rank:i,status:'approved'
+  }))};
+  const core=new WasmEngine(JSON.stringify(data));
+  data.soundMapDisabledWords=['ប្រាប់'];
+  data.mappings=[{id:99910,romanized:'customp',khmer:'ប្រាប់',rank:77,status:'approved'}];
+  const saved=new WasmEngine(JSON.stringify(data));
+  const personal=WasmEngine.fromPersonalWords(JSON.stringify([{word:'ប្រាប់',spellings:['mybpword','customp'],rank:23}]));
+  const bytes=[core,saved,personal].map(engine=>Buffer.from(engine.exportBinary()));
+  const exact=(engine,input,features={})=>JSON.parse(engine.suggestWithContext(input,JSON.stringify(features),'{}')).exactCandidates;
+  try{
+    for(const [field,added]of [['readings',true],['unchanged',false]])for(const [word,oldInputs,otherInputs]of proof[field]){
+      for(const [inputs,expected]of [[oldInputs,true],[otherInputs,added]])for(const input of inputs){
+        const hit=exact(core,input).find(row=>row.khmer===word);
+        assert.equal(!!hit,expected,`${input}: ${word}`);
+        if(hit){assert.equal(hit.mappingId,99300+rows.findIndex(row=>row[0]===word));assert.equal(hit.rank,rows.findIndex(row=>row[0]===word));}
+      }
+    }
+    for(const features of [{soundMap:false},{romanized:false},{mode:'english'}])assert(!exact(core,'brab',features).some(row=>row.khmer==='ប្រាប់'));
+    for(const input of ['brap','brab'])assert(!exact(saved,input).some(row=>row.khmer==='ប្រាប់'));
+    for(const soundMap of [true,false]){
+      assert(exact(saved,'customp',{soundMap}).some(row=>row.mappingId===99910&&row.rank===77));
+      for(const input of ['mybpword','customp'])assert(JSON.parse(core.suggestWithExtension(personal,input,JSON.stringify({soundMap}),'{}'))
+        .exactCandidates.some(row=>row.khmer==='ប្រាប់'));
+      assert(!JSON.parse(core.suggestWithExtension(personal,'customb',JSON.stringify({soundMap}),'{}'))
+        .exactCandidates.some(row=>row.khmer==='ប្រាប់'));
+    }
+    for(const [i,engine]of [core,saved,personal].entries())assert.deepEqual(Buffer.from(engine.exportBinary()),bytes[i]);
+  }finally{core.free();saved.free();personal.free();}
+});
 
 test('oa and or are vowel alternatives while real consonant r stays literal',()=>{
   const proof=JSON.parse(read('test/fixtures/oa-or-vowels.json'));
@@ -157,15 +254,21 @@ test('only ចា៎ remains and the existing jah input uses the selected spelli
 
 test('Wasm shares the native series-specific vowel selection and leaves other combinations alone',()=>{
   const rows=[...vowelChoice.cases,...vowelChoice.unrelated];
-  const core=new WasmEngine(JSON.stringify({schemaVersion:2,mappings:[],words:rows.map((row,i)=>({
+  const data={schemaVersion:2,mappings:[],words:rows.map((row,i)=>({
     id:98000+i,khmer:row.word,rank:i,status:'approved'
-  }))}));
+  }))};
+  const core=new WasmEngine(JSON.stringify(data));
+  const saved=new WasmEngine(JSON.stringify({...data,mappings:[{id:99002,romanized:'kai',khmer:'គៃ',rank:77,status:'approved'}]}));
   try{
     for(const row of rows)for(const field of ['yes','no'])for(const input of row[field]){
       const result=JSON.parse(core.suggestWithContext(input,'{}','{}'));
       assert.equal(result.exactCandidates.some(c=>c.khmer===row.word),field==='yes',`${input}: ${row.word}`);
     }
-  }finally{core.free();}
+    for(const soundMap of [true,false]){
+      const result=JSON.parse(saved.suggestWithContext('kai',JSON.stringify({soundMap}),'{}'));
+      assert(result.exactCandidates.some(row=>row.mappingId===99002&&row.khmer==='គៃ'&&row.rank===77));
+    }
+  }finally{core.free();saved.free();}
 });
 
 test('Wasm shares the local silent-coda vowel rule and preserves its boundaries',()=>{
@@ -252,6 +355,106 @@ test('the bundled t inputs distinguish តោះ from ទោះ by the selected 
   }finally{core.free();}
 });
 
+test('new vowel ending alternatives preserve established exact choices and complete the checked compound',()=>{
+  const core=WasmEngine.fromAppData(files.khmer,files.english);
+  const personal=WasmEngine.fromPersonalWords(JSON.stringify([{word:'សៀវភៅ',spellings:['phteas','joshatlekha','roam','koam','noam']}]));
+  const before=[Buffer.from(core.exportBinary()),Buffer.from(personal.exportBinary())];
+  try{
+    for(const [input,preferred,alternative] of [
+      ['konlas','កន្លាស់','កន្លះ'],['chrus','ជ្រោះ','ជ្រុះ'],['jrus','ជ្រោះ','ជ្រុះ'],
+      ['domnos','ដំណោះ','ដំណុះ'],['dumnos','ដំណោះ','ដំណុះ'],['pas','ផាស','ប៉ះ'],
+      ['popus','ពពោះ','ពពុះ'],['rus','រូស','រុះ'],['lus','លោះ','លុះ'],
+      ['sompeas','សម្ភាស','សំពះ'],['stus','ស្ទោះ','ស្ទុះ']
+    ]){
+      const result=JSON.parse(core.suggestWithContext(input,'{}','{}'));
+      assert.equal(result.exactCandidates[0]?.khmer,preferred,input);
+      assert(result.exactCandidates.some(candidate=>candidate.khmer===alternative),input);
+      assert.equal(JSON.parse(core.suggest(input)).candidates[0]?.khmer,preferred,input);
+    }
+    for(const input of ['johhatlekha','joshatlekha']){
+      const result=JSON.parse(core.suggestWithContext(input,'{}','{}'));
+      assert(result.exactCandidates.some(candidate=>candidate.khmer==='ចុះហត្ថលេខា'),input);
+    }
+    for(const [input,alternative] of [['phteas','ផ្ទះ'],['joshatlekha','ចុះហត្ថលេខា']]){
+      const result=JSON.parse(core.suggestWithExtension(personal,input,'{}','{}'));
+      assert.equal(result.exactCandidates[0]?.khmer,'សៀវភៅ',input);
+      assert.equal(result.candidates[0]?.khmer,'សៀវភៅ',input);
+      assert(result.exactCandidates.some(candidate=>candidate.khmer===alternative),input);
+    }
+    for(const [input,preferred] of [['roam','រាំ'],['koam','គាំ'],['noam','នាំ']]){
+      const result=JSON.parse(core.suggestWithExtension(personal,input,'{}','{}'));
+      assert.equal(result.exactCandidates[0]?.khmer,preferred,input);
+      assert.equal(result.candidates[0]?.khmer,preferred,input);
+      assert(result.exactCandidates.some(candidate=>candidate.khmer==='សៀវភៅ'),input);
+    }
+    assert.deepEqual(Buffer.from(core.exportBinary()),before[0]);
+    assert.deepEqual(Buffer.from(personal.exportBinary()),before[1]);
+  }finally{core.free();personal.free();}
+});
+
+test('additive endings keep older single/double matches ahead with context and custom ranks',()=>{
+  const oldWord='ច្ចុស';
+  const words=['ចុះ','សុខ','សប្បាយ','សុខសប្បាយ'];
+  const dataset=entries=>JSON.stringify({schemaVersion:3,mappings:[],englishWords:[],
+    words:entries.map((khmer,i)=>({id:i+1,khmer,rank:0,status:'approved'}))});
+  const core=new WasmEngine(dataset(words));
+  const personal=WasmEngine.fromPersonalWords(JSON.stringify([{word:oldWord,spellings:['my-jjos']}]));
+  const ranked=personal.withTypingOverrides(JSON.stringify([{language:'khmer',word:oldWord,rank:0}]));
+  const combined=new WasmEngine(dataset([...words,oldWord]));
+  const combinedRanked=combined.withTypingOverrides(JSON.stringify([{language:'khmer',word:oldWord,rank:0}]));
+  const engines=[core,personal,ranked,combined,combinedRanked];
+  const bytes=engines.map(engine=>Buffer.from(engine.exportBinary()));
+  try{
+    for(const context of ['{}','{"previousWords":["សុខ"]}']){
+      const results=[combined,combinedRanked].map(engine=>JSON.parse(engine.suggestWithContext('jos','{}',context)));
+      for(const extra of [personal,ranked])for(const [base,extension] of [[core,extra],[extra,core]]){
+        results.push(JSON.parse(base.suggestWithExtension(extension,'jos','{}',context)));
+        const saved=JSON.parse(base.suggestWithExtension(extension,'my-jjos','{"soundMap":false}',context));
+        assert.equal(saved.exactCandidates[0]?.khmer,oldWord);
+      }
+      for(const result of results){
+        const exact=result.exactCandidates.map(word=>word.khmer);
+        const displayed=result.candidates.filter(hit=>!hit.completion&&!hit.correction).map(word=>word.khmer);
+        assert.deepEqual(exact,[oldWord,'ចុះ'],context);
+        assert.deepEqual(displayed,exact,context);
+        assert.equal(result.candidates[0].preferredInput,'jjos');
+      }
+    }
+    engines.forEach((engine,i)=>assert.deepEqual(Buffer.from(engine.exportBinary()),bytes[i]));
+  }finally{engines.forEach(engine=>engine.free());}
+});
+
+test('multiple new endings use the same final order for display and Space fallback',()=>{
+  const words=['កះកះ','កះកះកា','សុខ','សប្បាយ','សុខសប្បាយ'];
+  const core=new WasmEngine(JSON.stringify({schemaVersion:3,mappings:[],englishWords:[],
+    words:words.map((khmer,i)=>({id:i+1,khmer,rank:0,status:'approved'}))}));
+  const personal=WasmEngine.fromPersonalWords('[{"word":"ក្កាសកះ","spellings":["personal-reading"]}]');
+  const ranked=personal.withTypingOverrides('[{"language":"khmer","word":"ក្កាសកះ","rank":0}]');
+  const engines=[core,personal,ranked];
+  const bytes=engines.map(engine=>Buffer.from(engine.exportBinary()));
+  try{
+    for(const context of ['{}','{"previousWords":["សុខ"]}']){
+      for(const extra of [personal,ranked])for(const [base,extension] of [[core,extra],[extra,core]]){
+        const result=JSON.parse(base.suggestWithExtension(extension,'kaskas','{}',context));
+        const exact=result.exactCandidates.map(word=>word.khmer);
+        const displayed=result.candidates.filter(hit=>!hit.completion&&!hit.correction).map(word=>word.khmer);
+        assert.deepEqual(exact,['កះកះ','ក្កាសកះ'],context);
+        assert.deepEqual(displayed,exact,context);
+        const completion=result.candidates.findIndex(hit=>hit.completion==='kaskaska');
+        assert(completion>=0,context);
+        assert.equal(spaceChoice(result,0)?.khmer,exact[0]);
+        assert.equal(spaceChoice(result,completion)?.khmer,exact[0]);
+        const alternate=result.candidates.findIndex(hit=>hit.khmer==='ក្កាសកះ');
+        assert.equal(spaceChoice(result,alternate)?.khmer,'ក្កាសកះ');
+        assert.equal(result.candidates[alternate].preferredInput,'kkaskas');
+        const saved=JSON.parse(base.suggestWithExtension(extension,'personal-reading','{"soundMap":false}',context));
+        assert.equal(saved.exactCandidates[0]?.khmer,'ក្កាសកះ');
+      }
+    }
+    engines.forEach((engine,i)=>assert.deepEqual(Buffer.from(engine.exportBinary()),bytes[i]));
+  }finally{engines.forEach(engine=>engine.free());}
+});
+
 test('dictionary cases use the current Sound map and preserve other crowded suggestions',()=>{
   const core=WasmEngine.fromAppData(files.khmer,files.english);
   const source=readCompactSource(core);
@@ -263,9 +466,11 @@ test('dictionary cases use the current Sound map and preserve other crowded sugg
     return [language,JSON.stringify(file)];
   }));
   original.loadWordMetadata(metadata.khmer,metadata.english);
-  // Compare the admission cohort with the same owner pronunciation settings.
-  const pronunciations=JSON.parse(core.appDataInfo()).provenance.pronunciations?.rules??[];
+  // Compare the admission cohort with the same owner typing settings.
+  const provenance=JSON.parse(core.appDataInfo()).provenance;
+  const pronunciations=provenance.pronunciations?.rules??[];
   original.setPronunciations(JSON.stringify(pronunciations.filter(rule=>!caseWords.has(rule.word))));
+  original.setShorthands(JSON.stringify((provenance.shorthands?.words??[]).filter(rule=>!caseWords.has(rule.word))));
   try{
     for(const admission of dictionaryCases){
       const row=JSON.parse(core.browseWords(JSON.stringify({query:admission.word,limit:10}))).words.find(w=>w.khmer===admission.word);
@@ -346,8 +551,9 @@ test('nh adds an exact ខ្ញុំ reading while keeping its mapped inputs',
   const core=WasmEngine.fromAppData(files.khmer,files.english);
   try{
     const row=JSON.parse(core.browseWords(JSON.stringify({query:'ខ្ញុំ',limit:10}))).words.find(r=>r.khmer==='ខ្ញុំ');
-    assert.deepEqual(row.soundMapInputs,['khnhom','khnyom','nh']);
-    for(const input of row.soundMapInputs)assert.equal(JSON.parse(core.suggestWithContext(input,'{}','{}')).exactCandidates[0]?.khmer,'ខ្ញុំ');
+    assert.deepEqual(row.soundMapInputs,['khnhom','khnyom']);
+    assert.deepEqual(JSON.parse(core.wordShorthands('ខ្ញុំ')),['nh']);
+    for(const input of [...row.soundMapInputs,'nh'])assert.equal(JSON.parse(core.suggestWithContext(input,'{}','{}')).exactCandidates[0]?.khmer,'ខ្ញុំ');
   }finally{core.free();}
 });
 

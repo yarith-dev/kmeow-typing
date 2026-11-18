@@ -19,7 +19,9 @@ export async function loadDictionaryWords(files,source){
       if(!components.has(word))components.set(word,[]);
       components.get(word).push(row.componentIds.map(id=>names.get(id)));
     }
-    for(const row of JSON.parse(raw.appDataInfo()).provenance.wordComponents?.words??[])components.set(row.word,row.components);
+    const provenance=JSON.parse(raw.appDataInfo()).provenance;
+    for(const row of provenance.wordComponents?.words??[])components.set(row.word,row.components);
+    const exclusions=new Map((provenance.inputExclusions?.words??[]).map(row=>[row.word,row.inputs]));
     let after;
     do{
       const page=JSON.parse(raw.browseWords(JSON.stringify({query:'',after,limit:100})));
@@ -29,6 +31,6 @@ export async function loadDictionaryWords(files,source){
     return Object.fromEntries(Object.entries(files).map(([language,bytes])=>{
     const start=24+bytes.readUInt32LE(12)+bytes.readUInt32LE(16);
     const metadata=JSON.parse(bytes.subarray(start,-32).toString('utf8'));
-    return [language,metadata.words.map(({id,word,partsOfSpeech,commonnessLevel})=>({id,word,partsOfSpeech,commonnessLevel:commonnessLevel??null,...(language==='khmer'?{components:components.get(word)??null,soundMapEnabled:!disabled.has(word),...(readings.get(word)??{romanizations:[],soundMapInputs:[],soundMapInputsTruncated:false})}:{})}))];
+    return [language,metadata.words.map(({id,word,partsOfSpeech,commonnessLevel})=>({id,word,partsOfSpeech,commonnessLevel:commonnessLevel??null,...(language==='khmer'?{shorthands:JSON.parse(raw.wordShorthands(word)),excludedInputs:exclusions.get(word)??[],components:components.get(word)??null,soundMapEnabled:!disabled.has(word),...(readings.get(word)??{romanizations:[],soundMapInputs:[],soundMapInputsTruncated:false})}:{})}))];
   }));}finally{raw.free();engine.dispose();}
 }

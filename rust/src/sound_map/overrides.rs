@@ -14,8 +14,11 @@ pub(super) struct Context<'a> {
     read_as: &'a [FixedSyllable],
     word_part_pronunciations: &'a [component_words::Reading],
     pronunciation: bool,
+    shared_sign: bool,
+    glottal_carrier: bool,
     part_boundaries: bool,
     pronunciation_component: bool,
+    pub(super) skip_shorthands: bool,
 }
 
 impl<'a> Context<'a> {
@@ -23,13 +26,39 @@ impl<'a> Context<'a> {
         Self::bare(word).with_read_as(&read_as::defaults().syllables)
     }
     pub(super) fn bare(word:&'a str)->Self {
-        Self {word,offset:0,end:word.chars().count(),original:true,word_part_onsets:&[],read_as:&[],word_part_pronunciations:&[],pronunciation:false,part_boundaries:true,pronunciation_component:false}
+        Self {word,offset:0,end:word.chars().count(),original:true,word_part_onsets:&[],read_as:&[],word_part_pronunciations:&[],pronunciation:false,shared_sign:false,glottal_carrier:false,part_boundaries:true,pronunciation_component:false,skip_shorthands:false}
     }
     pub(super) fn with_read_as(self, read_as:&'a [FixedSyllable])->Self {Self{read_as,..self}}
 
     pub(super) fn for_pronunciation(self) -> Self {
         Self { pronunciation: true, ..self }
     }
+
+    pub(super) fn with_shared_sign(self) -> Self { Self { shared_sign: true, ..self } }
+    // A nasal-boundary matcher delegates only its glottal vowel and coda to
+    // a synthetic អ-led syllable. This identity never follows other fragments.
+    pub(super) fn with_glottal_carrier(self) -> Self { Self { glottal_carrier: true, ..self } }
+    pub(super) fn has_glottal_carrier(self) -> bool { self.glottal_carrier && self.offset == 0 }
+    pub(super) fn uses_shared_sign(self) -> bool {
+        // The switch controls inferred dictionary paths. Explicit phonetic
+        // spellings must remain readable, including the built-in defaults.
+        self.pronunciation || (rules().runtime.short_inherent_sign.enabled && self.shared_sign)
+    }
+
+    // The parser sometimes reads a shortened or reconstructed syllable.
+    // Keep the current reading mode and prepared rules without re-entering
+    // stock rule initialization or attributing it to the original compound.
+    pub(super) fn independent<'b>(self, word: &'b str) -> Context<'b> where 'a: 'b {
+        Context {
+            pronunciation: self.pronunciation,
+            shared_sign: self.shared_sign,
+            part_boundaries: self.part_boundaries,
+            skip_shorthands: self.skip_shorthands,
+            ..Context::bare(word).with_read_as(self.read_as)
+        }
+    }
+
+    pub(super) fn without_shorthands(self) -> Self { Self {skip_shorthands:true,..self} }
 
     pub(super) fn reads_pronunciation(self) -> bool { self.pronunciation }
 
@@ -39,8 +68,13 @@ impl<'a> Context<'a> {
         Self { pronunciation_component: true, ..self }
     }
 
-    pub(super) fn allows_checked_ending(self, text: &str) -> bool {
+    pub(super) fn allows_original_word_rules(self, text: &str) -> bool {
         self.word == text || !self.pronunciation_component
+    }
+
+    pub(super) fn with_stock_pronunciations(self) -> Self {
+        self.with_read_as(read_as::stock_syllables())
+            .with_word_part_pronunciations(&[])
     }
 
     pub(super) fn with_word_part_pronunciations(self, readings: &'a [component_words::Reading]) -> Self {
@@ -51,7 +85,7 @@ impl<'a> Context<'a> {
     // respelling. A matching substring alone cannot supply a boundary.
     pub(super) fn word_part_keys(self, spelling: &str) -> Option<&'a [Key]> {
         self.word_part_pronunciations.iter().find(|reading| reading.khmer == spelling)
-            .map(|reading| reading.keys.as_slice())
+            .map(|reading| &reading.keys[..])
     }
 
     pub(super) fn with_word_part_onsets(self, onsets: &'a [usize]) -> Self {
@@ -142,6 +176,41 @@ impl<'a> Context<'a> {
         self.selected_matches(chars).any(|(start,end)|cuts.iter().any(|&cut|start < cut && cut < end))
     }
 
+    pub(super) fn crosses_reviewed_part(self, chars: &[char], cuts: &[usize]) -> bool {
+        if self.crosses(chars, cuts) {
+            return true;
+        }
+        let original: Vec<_> = self.word.chars().collect();
+        let crosses = |start, end| {
+            cuts.iter().any(|cut| start < self.offset + cut && self.offset + cut < end)
+        };
+        let crosses_ending = |ending: &str| {
+            self.word.strip_suffix(ending)
+                .is_some_and(|prefix| crosses(prefix.chars().count(), original.len()))
+        };
+        let runtime = &rules().runtime;
+        // These reviewed endings are selected before cancellation. A split
+        // in the original spelling must respect them even with a final mark.
+        if runtime.terminal_reading_units.iter().any(|unit| {
+            unit.words.iter().any(|word| word == self.word) && crosses_ending(&unit.khmer)
+        }) || runtime.checked_terminal_roots.iter().any(|unit| {
+            unit.words.iter().any(|word| word == self.word) && crosses_ending(&unit.root)
+        }) {
+            return true;
+        }
+        if !self.original { return false; }
+        runtime.word_readings.iter()
+            .filter(|unit| unit.words.iter().any(|word| word == self.word))
+            .any(|unit| (self.offset..self.end).any(|start| {
+                (start == 0 || original[start - 1] != '្')
+                    && unit.checked_end(self.word, &original, start)
+                        .is_some_and(|end| crosses(start, end))
+            }))
+            || runtime.terminal_lexical_units.iter().any(|unit| {
+                unit.words.iter().any(|word| word == self.word) && crosses_ending(&unit.khmer)
+            })
+    }
+
     /// Resolve a stored default without treating its fragment as a standalone
     /// word. Retain equivalent grouping, priorities and key order.
     pub(super) fn component(self, spelling: &str, keys: &[Key]) -> Option<Vec<Vec<Key>>> {
@@ -164,6 +233,7 @@ fn at_in_context<'a>(
 ) -> Option<(&'a FixedSyllable, usize)> {
     let mut longest = None;
     for unit in units {
+        if context.skip_shorthands && has_shorthand_rule(&unit.khmer) {continue;}
         let Some(end) = unit.checked_end_in_context(context,chars,start) else { continue; };
         if longest.as_ref().is_none_or(|(_,previous)|end > *previous) {
             longest = Some((unit,end));
@@ -198,6 +268,11 @@ fn in_range(word: &str, chars: &[char], start: usize, end: usize, original: bool
 }
 
 pub(super) fn same_keys(reading: &[Vec<Key>], keys: &[Key]) -> bool {
+    if reading.iter().flatten().chain(keys).any(|key|key.paths.is_some()) {
+        // A factored choice exceeded the flat budget. Do not mistake its
+        // representative text for equivalence with a finite checked neighbor.
+        return false;
+    }
     let mut prefixes = vec![Key::from(String::new())];
     for group in reading {
         let mut next = Vec::new();
@@ -257,7 +332,49 @@ mod tests {
 
     fn with_configuration(edit: impl FnOnce(&mut serde_json::Value), run: impl FnOnce()) {
         let mut source: serde_json::Value = serde_json::from_str(include_str!("../../../data/khmer-sound-map.json")).unwrap();
+        source["runtime"]["wordParts"] = serde_json::json!([]);
+        // Legacy definitions are test-only controls for migration comparisons.
+        let migrated = source["runtime"]["pronunciationParts"].as_array().unwrap().clone();
+        source["runtime"]["pronunciationParts"] = serde_json::json!([]);
+        for entry in &migrated {
+            let mut part = entry.as_object().unwrap().clone();
+            let word = part.remove("word").unwrap();
+            let read_as = part.remove("readAs").unwrap();
+            part.insert("khmer".into(), word);
+            part.insert("keys".into(), serde_json::json!({"readAs":read_as}));
+            source["runtime"]["wordParts"].as_array_mut().unwrap().push(part.into());
+        }
         edit(&mut source);
+        let parts = source["runtime"]["wordParts"].as_array_mut().unwrap();
+        let mut restored = Vec::new();
+        parts.retain(|part| {
+            let Some(original) = migrated.iter().find(|entry|entry["word"] == part["khmer"]) else { return true; };
+            // Tests that explicitly replace Latin keys or selection policy
+            // are constructing an ordinary override, not editing Read as.
+            if part["keys"].get("readAs").is_none()
+                || part["readingType"] == "shorthand"
+                || part["cases"].as_array().unwrap().iter().any(|case|case.get("keys").is_some()) {
+                return true;
+            }
+            let mut entry = part.as_object().unwrap().clone();
+            let word = entry.remove("khmer").unwrap();
+            entry.remove("keys");
+            entry.insert("word".into(),word);
+            entry.insert("readAs".into(),original["readAs"].clone());
+            restored.push(serde_json::Value::Object(entry));
+            false
+        });
+        source["runtime"]["pronunciationParts"] = restored.into();
+        // Reindex all tables after test-only insertion/removal of a case.
+        for kind in ["syllable","ending","terminalRoot","scoped"] {
+            let mut cases: Vec<_> = source["runtime"].as_object_mut().unwrap().iter_mut()
+                .filter(|(name,_)|["wordParts","shorthands","pronunciationParts"].contains(&name.as_str()))
+                .flat_map(|(_,parts)|parts.as_array_mut().unwrap())
+                .flat_map(|part|part["cases"].as_array_mut().unwrap())
+                .filter(|case|case["kind"] == kind).collect();
+            cases.sort_by_key(|case|case["order"].as_u64().unwrap());
+            for (order,case) in cases.into_iter().enumerate() {case["order"] = order.into();}
+        }
         // Test-only parsed configurations stay on this test thread. Production
         // still uses the single embedded immutable configuration.
         let configured = Box::leak(Box::new(config::parse_rules(&source.to_string()).unwrap()));
@@ -309,7 +426,7 @@ mod tests {
             assert_eq!(after.candidate,before.candidate);
             if before.candidate.khmer == "សកម្ម" {
                 exception = Some(i);
-                assert_eq!(after.readings,vec![vec![vec![Key::from("sakkam")]]]);
+                assert_eq!(reading_profile(&after.readings),reading_profile(&[vec![vec![Key::from("sakkam")]]]));
                 continue;
             }
             assert_retained_lattices(&before.candidate.khmer,&before.readings,&after.readings);
@@ -430,11 +547,26 @@ mod tests {
         }}}
     }
 
+    fn retains_key(before:&Key, after:&Key)->bool {
+        before.priority==after.priority && before.preserve_existing==after.preserve_existing
+            && before.prediction_stage==after.prediction_stage && match (&before.paths,&after.paths) {
+                (None,None)=>before.text==after.text,
+                (Some(before),Some(after))=>before.iter().all(|reading|after.iter().any(|now|retains_lattice(reading,now))),
+                _=>false,
+            }
+    }
+    fn retains_lattice(before:&[Vec<Key>], after:&[Vec<Key>])->bool {
+        before.len()==after.len() && before.iter().zip(after).all(|(old,new)| {
+            let mut next=0;
+            old.iter().all(|key| {
+                let found=new[next..].iter().position(|candidate|retains_key(key,candidate));
+                if let Some(offset)=found {next+=offset+1;true} else {false}
+            })
+        })
+    }
     fn assert_retained_lattices(word: &str, before: &[Vec<Vec<Key>>], after: &[Vec<Vec<Key>>]) {
         for reading in before {
-            assert!(after.iter().any(|now|now.len() == reading.len()
-                && reading.iter().zip(now).all(|(old,new)|
-                    old.iter().eq(new.iter().filter(|key|old.contains(key))))),
+            assert!(after.iter().any(|now|retains_lattice(reading,now)),
                 "{word} lost or reordered a complete reading lattice: {reading:?} -> {after:?}");
         }
     }
@@ -462,12 +594,45 @@ mod tests {
     }
 
     #[test]
+    fn explicit_read_as_and_personal_words_work_with_general_reuse_off() {
+        with_configuration(|source| {
+            source["runtime"]["wordRuleReuse"]["enabled"] = false.into();
+        }, || {
+            let mut engine = Engine::from_json(&serde_json::json!({
+                "schemaVersion": 3, "mappings": [], "englishWords": [],
+                "words": (["កិច្ច", "កូន", "កិច្ចកូន", "មិត្ត"].into_iter().enumerate()
+                    .map(|(i, khmer)| serde_json::json!({
+                        "id": i + 1, "khmer": khmer, "rank": i, "status": "approved"
+                    })).collect::<Vec<_>>())
+            }).to_string()).unwrap();
+            let personal = Engine::from_personal_words_json(
+                r#"[{"word":"មិត្តកូន","spellings":[]}]"#).unwrap();
+            let personal_match = |engine: &Engine| engine.suggest_with_extension(
+                &personal, "konkon", Default::default(), &Default::default()).unwrap()
+                .exact_candidates.iter().any(|candidate| candidate.khmer == "មិត្តកូន");
+            let before = engine.sound_index.get().unwrap().browse_inputs("កិច្ចកូន");
+            assert!(!personal_match(&engine));
+            engine.set_pronunciations(vec![crate::Pronunciation {
+                word: "មិត្ត".into(), read_as: "កូន".into(),
+            }]).unwrap();
+            assert_eq!(engine.sound_index.get().unwrap().browse_inputs("កិច្ចកូន"), before);
+            assert!(personal_match(&engine));
+            engine.set_pronunciations(vec![]).unwrap();
+            assert!(!personal_match(&engine));
+        });
+    }
+
+    #[test]
     fn shorthand_type_stays_whole_word_even_for_an_otherwise_reusable_rule() {
         with_configuration(|source|{
             let fixture:serde_json::Value=serde_json::from_str(include_str!("../../../test/fixtures/read-as-boundaries.json")).unwrap();
             let mut part=fixture["movedParts"][0].clone();
             part["readingType"]="shorthand".into();
             let parts=source["runtime"]["wordParts"].as_array_mut().unwrap();
+            // This isolated test deliberately makes កម្ម a shorthand instead
+            // of a reusable pronunciation. Remove the unrelated សកម្ម
+            // respelling which depends on the normal reusable កម្ម default.
+            parts.retain(|part|part["khmer"] != "សកម្ម");
             let order=parts.iter().flat_map(|part|part["cases"].as_array().unwrap()).filter(|case|case["kind"]=="syllable").count();
             part["cases"][0]["order"]=order.into();parts.push(part);
         },||{
@@ -477,7 +642,7 @@ mod tests {
                     {"id":3,"khmer":"កម្មកា","rank":0,"status":"approved"}]
             }).to_string()).unwrap();
             let shorthand=core.suggest("kam").unwrap();
-            assert!(shorthand.candidates.iter().any(|s|s.tap_only
+            assert!(shorthand.candidates.iter().any(|s|!s.tap_only
                 && matches!(&s.candidate,crate::SuggestionCandidate::Khmer(c) if c.khmer=="កម្ម")));
             assert!(!core.suggest_with_context("kamka",Default::default(),&Default::default()).unwrap()
                 .exact_candidates.iter().any(|c|c.khmer=="កម្មកា"));
@@ -499,7 +664,7 @@ mod tests {
             }).to_string()).unwrap();
             for input in ["tiny","tinny"] {
                 let result=core.suggest_with_context(input,Default::default(),&Default::default()).unwrap();
-                assert!(result.result.candidates.iter().any(|s|s.tap_only
+                assert!(result.result.candidates.iter().any(|s|!s.tap_only
                     && matches!(&s.candidate,crate::SuggestionCandidate::Khmer(c) if c.khmer=="ខ្ញុំ")),"{input}");
             }
             assert!(!shorthand_match("nh","ខ្ញុំ"));
@@ -615,7 +780,7 @@ mod tests {
                 {"word":"អភិសិទ្ធិ","spellings":["orphiset","myright"]}
             ]"#).unwrap();
             let before = (engine.to_binary(),personal.to_binary());
-            for prefix in ["orpe","orphe","orphi","orpi"] {
+            for prefix in ["akpe","akphe","akphi","akpi"] {
                 assert!(exact(&engine,&format!("{prefix}right"),"អភិសិទ្ធិ"));
                 for old in ["set","sit"] {
                     assert!(!exact(&engine,&format!("{prefix}{old}"),"អភិសិទ្ធិ"),"{prefix}{old}");
@@ -638,9 +803,15 @@ mod tests {
 
     #[test]
     fn standalone_only_override_does_not_leak_into_a_stored_compound_root() {
-        with_configuration(|source|add_case(source,"ពេជ្រ",serde_json::json!({
-            "kind":"terminalRoot","keys":["diamond"],"words":["កាពេជ្រ"]
-        })), || {
+        with_configuration(|source| {
+            // Retain the migrated source's standalone-only reuse policy while
+            // adding an independent terminal case for this boundary test.
+            source["runtime"]["wordParts"].as_array_mut().unwrap().iter_mut()
+                .find(|part|part["khmer"]=="ពេជ្រ").unwrap()["reusableAsComponent"] = false.into();
+            add_case(source,"ពេជ្រ",serde_json::json!({
+                "kind":"terminalRoot","keys":["diamond"],"words":["កាពេជ្រ"]
+            }));
+        }, || {
             assert!(exact(&engine_for("ពេជ្រ"),"pech","ពេជ្រ"));
             let engine = engine_for("កាពេជ្រ");
             assert!(exact(&engine,"kadiamond","កាពេជ្រ"));
@@ -716,12 +887,12 @@ mod tests {
 
     #[test]
     fn longest_complete_match_is_independent_of_entry_order() {
-        let short = FixedSyllable {khmer:"កម្ម".into(),keys:vec!["kam".into()],original_spelling_only:true,words:vec![],positions:vec![]};
-        let long = FixedSyllable {khmer:"កម្មវិធី".into(),keys:vec!["program".into()],original_spelling_only:true,words:vec![],positions:vec![]};
+        let short = FixedSyllable {khmer:"កម្ម".into(),keys:vec!["kam".into()].into(),original_spelling_only:true,words:vec![],positions:vec![]};
+        let long = FixedSyllable {khmer:"កម្មវិធី".into(),keys:vec!["program".into()].into(),original_spelling_only:true,words:vec![],positions:vec![]};
         let chars: Vec<_> = "កម្មវិធី".chars().collect();
         for units in [[&short, &long], [&long, &short]] {
             let parsed: Vec<_> = units.iter().map(|unit| FixedSyllable {
-                khmer:unit.khmer.clone(),keys:unit.keys.clone(),original_spelling_only:unit.original_spelling_only,
+                khmer:unit.khmer.clone(),keys:unit.keys.to_vec().into(),original_spelling_only:unit.original_spelling_only,
                 words:unit.words.clone(),positions:unit.positions.clone(),
             }).collect();
             assert_eq!(at(&parsed,"កម្មវិធី",&chars,0,true).unwrap().0.keys[0].text,"program");
@@ -745,16 +916,31 @@ mod tests {
         assert_eq!(cases.len(),6);
         for row in cases {
             let word = row["khmer"].as_str().unwrap();
+            if ["នឹង", "ផល"].contains(&word) {
+                assert!(!rules().runtime.fixed_syllables.iter().any(|unit|unit.khmer == word));
+                continue; // Explicitly removed by the owner.
+            }
             let unit = rules().runtime.fixed_syllables.iter().find(|unit|unit.khmer == word).unwrap();
             let old = &row["sourceCase"];
             let words: Vec<String> = serde_json::from_value(old["words"].clone()).unwrap();
             let positions: Vec<WordReadingPosition> = serde_json::from_value(
                 if old["kind"] == "prefix" {serde_json::json!(["start"])} else {old["positions"].clone()}
             ).unwrap();
-            let keys: Vec<Key> = serde_json::from_value(row["keys"].clone()).unwrap();
+            // The owner later selected ទិន្ន → ទិន, retaining ten and adding tin.
+            let keys: Vec<Key> = serde_json::from_value(if word == "ទិន្ន" {
+                serde_json::json!(["tin","ten"])
+            } else { row["keys"].clone() }).unwrap();
             assert_eq!(unit.words,words,"{word}");
             assert_eq!(unit.positions,positions,"{word}");
-            assert_eq!(unit.keys,keys,"{word}");
+            let graph=factored::Graph::new(&[vec![unit.keys.to_vec()]]);
+            let mut expected:Vec<_>=keys.iter().map(|key|key.text.clone()).collect();
+            expected.extend(keys.iter().filter(|key|key.text.ends_with("ech")||key.text.ends_with("ich"))
+                .map(|key|format!("{}x",&key.text[..key.text.len()-2])));
+            expected.sort();expected.dedup();
+            let (actual,more)=browse::display_inputs(&[vec![unit.keys.to_vec()]],64);
+            assert!(!more);assert_eq!(actual,expected,"{word}");
+            for key in &keys {assert!(graph.matching(&key.text,None,false)
+                .is_some_and(|hit|hit.exact&&hit.priority==key.priority),"{word}: {}",key.text);}
             assert_eq!(unit.original_spelling_only,old["kind"] == "prefix","{word}");
             assert!(!rules().runtime.word_readings.iter().any(|unit|unit.khmer == word));
             for selected in &words {
@@ -809,20 +995,20 @@ mod tests {
                 ("សិទ្ធិ","right"),("សាស្ត្រ","science"),("កាជ័យ","kawin"),
                 ("គណិតសាស្ត្រ","kaeknitscience"),("តារាសាស្ត្រ","tarascience"),
                 ("តារាវិទ្យាសាស្ត្រ","taravityeascience"),("លោកអ្នក","lokperson"),
-                ("អភិសិទ្ធិ","orphiright")] {
+                ("អភិសិទ្ធិ","akphiright")] {
                 let query = base.suggest_with_context(input,Default::default(),&Default::default()).unwrap();
                 let hit = query.exact_candidates.iter().find(|candidate|candidate.khmer == word)
                     .unwrap_or_else(||panic!("{input}: {word}"));
                 let index = words.iter().position(|&entry|entry == word).unwrap();
                 assert_eq!(hit.mapping_id,Some(index as u64 + 1));
-                assert_eq!(hit.rank,index as u32);
+                assert_eq!(hit.rank,index as i32);
                 assert!(!base.suggest_with_context(input,SuggestionFeatures {sound_map:false,..Default::default()},
                     &Default::default()).unwrap().exact_candidates.iter().any(|candidate|candidate.khmer == word));
             }
             for (word,input) in [("អ្នក","neak"),("ជ័យ","jey"),("ជ័យ","chey"),
                 ("កម្មវិធី","kamvithi"),("សាស្ត្រ","sah"),("សាស្ត្រ","sas"),("សាស្ត្រ","sastro"),
                 ("គណិតសាស្ត្រ","kaeknitsah"),("តារាវិទ្យាសាស្ត្រ","taravityeasas"),
-                ("លោកអ្នក","lokneak"),("អភិសិទ្ធិ","orphiset")] {
+                ("លោកអ្នក","lokneak"),("អភិសិទ្ធិ","akphiset")] {
                 assert!(!base.suggest_with_context(input,Default::default(),&Default::default()).unwrap()
                     .exact_candidates.iter().any(|candidate|candidate.khmer == word),"old default {input}: {word}");
             }
@@ -880,8 +1066,8 @@ mod tests {
     fn crossing_an_old_terminal_root_split_replaces_the_whole_default_path() {
         with_overrides(&[("ភិសិទ្ធិ","edge")], || {
             let engine = engine_for("អភិសិទ្ធិ");
-            assert!(exact(&engine,"oredge","អភិសិទ្ធិ"));
-            assert!(!exact(&engine,"orphiset","អភិសិទ្ធិ"));
+            assert!(exact(&engine,"akedge","អភិសិទ្ធិ"));
+            assert!(!exact(&engine,"akphiset","អភិសិទ្ធិ"));
         });
     }
 
@@ -953,7 +1139,11 @@ mod tests {
             parts.push(moved.clone());
             let scoped=parts.iter_mut().find(|p|p["khmer"]==proof["reuseDisabled"]).unwrap();
             scoped.as_object_mut().unwrap().remove("reusableAsComponent");
-            assert_eq!(scoped,&proof["keptScopedDefinition"]);
+            let mut expected = proof["keptScopedDefinition"].clone();
+            expected["keys"] = serde_json::json!({"readAs":"បណ្ឌិត"});
+            expected.as_object_mut().unwrap().remove("readingType");
+            expected["cases"][0]["order"] = scoped["cases"][0]["order"].clone();
+            assert_eq!(scoped,&expected);
         },||{
             let mut former=Engine::bundled().unwrap();former.set_pronunciations(former_pronunciations).unwrap();
             let previous=Index::new(&former.dictionary);
@@ -971,15 +1161,109 @@ mod tests {
     }
     #[test]
     #[cfg(feature="bundled-dictionaries")]
+    fn glottal_ou_retains_all_existing_weighted_readings_and_word_identities() {
+        let engine = Engine::bundled().unwrap();
+        let current = Index::new(&engine.dictionary);
+        with_configuration(|source| {
+            source["runtime"]["glottalOnset"]["additionalVowelKeys"] = serde_json::json!({});
+        }, || {
+            let previous = Index::new(&engine.dictionary);
+            assert_eq!(previous.words.len(),current.words.len());
+            for (old,new) in previous.words.iter().zip(&current.words) {
+                assert_eq!(old.candidate,new.candidate);
+                for reading in &old.readings {
+                    assert!(new.readings.iter().any(|after|after.len() == reading.len()
+                        && reading.iter().zip(after).all(|(before,after)|before.iter().all(|key|after.contains(key)))),
+                        "lost weighted reading: {} {reading:?}",old.candidate.khmer);
+                }
+            }
+        });
+    }
+
+    #[test]
+    #[cfg(feature="bundled-dictionaries")]
+    fn disabling_shared_two_dot_keeps_explicit_read_as_defaults_and_edits_usable() {
+        with_configuration(|source| {
+            source["runtime"]["shortInherentSign"]["enabled"] = false.into();
+        }, || {
+            assert_eq!(Engine::pronunciation_inputs("គៈណៈ").unwrap(), ["keaknak", "keanak"]);
+            let mut engine = Engine::from_json(&serde_json::json!({
+                "schemaVersion":3,"mappings":[],"englishWords":[],
+                "words":[{"id":1,"khmer":"កុម្ភៈ","rank":0,"status":"approved"},
+                    {"id":2,"khmer":"ស្រៈ","rank":1,"status":"approved"}]
+            }).to_string()).unwrap();
+            let before = engine.to_binary();
+            let exact = |engine:&Engine, input:&str, word:&str| engine.suggest_with_context(
+                input, Default::default(), &Default::default()).unwrap()
+                .exact_candidates.iter().any(|candidate|candidate.khmer == word);
+            assert!(exact(&engine,"kompheak","កុម្ភៈ"));
+            assert!(!exact(&engine,"srak","ស្រៈ"),"the ordinary shared path is disabled");
+            engine.set_pronunciations(vec![crate::Pronunciation { word:"ស្រៈ".into(),read_as:"រ៉ៈ".into() }]).unwrap();
+            assert!(exact(&engine,"rak","ស្រៈ"));
+            engine.set_pronunciations(vec![]).unwrap();
+            assert!(exact(&engine,"kompheak","កុម្ភៈ"));
+            assert!(!exact(&engine,"rak","ស្រៈ"));
+            assert_eq!(engine.to_binary(),before);
+        });
+    }
+
+    #[test]
+    #[cfg(feature="bundled-dictionaries")]
+    fn shared_two_dot_preserves_all_existing_weighted_readings_and_prefix_membership() {
+        let engine = Engine::bundled().unwrap();
+        let current = Index::new(&engine.dictionary);
+        let proof: serde_json::Value = serde_json::from_str(include_str!("../../../test/fixtures/shared-two-dot.json")).unwrap();
+        with_configuration(|source| {
+            source["runtime"]["shortInherentSign"]["enabled"] = false.into();
+            source["pronunciationSyllables"].as_array_mut().unwrap().retain(|rule|
+                !proof["irregular"].as_array().unwrap().iter().any(|entry|entry["word"] == rule["word"]));
+            let part = source["runtime"]["wordParts"].as_array_mut().unwrap().iter_mut()
+                .find(|part|part["khmer"] == "គណៈ").unwrap();
+            part["cases"][0]["words"].as_array_mut().unwrap().retain(|word|word != "គណៈកម្មាធិការ");
+        }, || {
+            let previous = Index::new(&engine.dictionary);
+            for old in &previous.words {
+                let new = current.words.iter().find(|word|word.candidate.khmer == old.candidate.khmer).unwrap();
+                assert_eq!(new.candidate,old.candidate);
+                for reading in &old.readings {
+                    assert!(new.readings.iter().any(|after|after.len() == reading.len()
+                        && reading.iter().zip(after).all(|(before,after)|before.iter().all(|key|after.contains(key)))),
+                        "lost weighted lattice: {} {reading:?}",old.candidate.khmer);
+                }
+            }
+            for (prefix, ids) in &previous.prefixes {
+                let new = &current.prefixes[prefix];
+                for &id in ids {
+                    let candidate = &previous.words[id].candidate;
+                    assert!(new.iter().any(|&id|current.words[id].candidate == *candidate),"{prefix}: {candidate:?}");
+                }
+            }
+        });
+    }
+
+    #[test]
+    #[cfg(feature="bundled-dictionaries")]
     fn read_as_boundaries_preserve_every_bundled_lattice_and_scoped_path() {
         let fixture:serde_json::Value=serde_json::from_str(include_str!("../../../test/fixtures/read-as-boundaries.json")).unwrap();
         let engine=Engine::bundled().unwrap();
-        let current=Index::new(&engine.dictionary);
+        // Compare the boundary migration independently of newer whole-word
+        // edits whose alternate spellings themselves use these defaults.
+        let mut dictionary=engine.dictionary.clone();
+        dictionary.pronunciations=std::sync::Arc::new(dictionary.pronunciations.iter().filter(|rule|
+            !fixture["defaults"].as_array().unwrap().iter().any(|default|
+                rule.word != default["word"].as_str().unwrap()
+                    && rule.read_as.spellings().iter().any(|spelling|spelling.contains(default["word"].as_str().unwrap())))).cloned().collect());
+        let dependent: BTreeSet<_> = rules().runtime.pronunciation_defaults.iter().filter(|rule|
+            fixture["defaults"].as_array().unwrap().iter().any(|default|
+                rule.read_as.spellings().iter().any(|spelling|spelling.contains(default["word"].as_str().unwrap()))))
+            .map(|rule|rule.word.clone()).collect();
+        let current=Index::new(&dictionary);
         let controls:Vec<_>=super::super::parity::fixture_words().into_iter().map(|word|{
             let readings=(word_readings_mode(&word,false),word_readings_mode(&word,true));(word,readings)
         }).collect();
         with_configuration(|source|{
-            source.as_object_mut().unwrap().remove("pronunciationSyllables");
+            source["pronunciationSyllables"].as_array_mut().unwrap().retain(|rule|
+                !fixture["defaults"].as_array().unwrap().iter().any(|default|default["word"] == rule["word"]));
             let parts=source["runtime"]["wordParts"].as_array_mut().unwrap();
             for part in parts.iter_mut() {for case in part["cases"].as_array_mut().unwrap() {
                 if case["kind"]=="syllable" {case["order"]=(case["order"].as_u64().unwrap()+2).into();}
@@ -989,19 +1273,89 @@ mod tests {
             science.as_object_mut().unwrap().remove("reusableAsComponent");
             science["cases"].as_array_mut().unwrap().insert(0,fixture["movedParts"][1]["cases"][0].clone());
         },||{
-            let mut legacy=engine.dictionary.clone();
+            let mut legacy=dictionary.clone();
             legacy.pronunciations=std::sync::Arc::new(legacy.pronunciations.iter().filter(|rule|!fixture["defaults"].as_array().unwrap().iter().any(|default|default["word"]==rule.word)).cloned().collect());
             let previous=Index::new(&legacy);
             assert_eq!(current.words.len(),previous.words.len());
             for (after,before) in current.words.iter().zip(&previous.words) {
                 assert_eq!(after.candidate,before.candidate);
+                if dependent.contains(&before.candidate.khmer) {continue;}
                 assert_eq!(after.readings,before.readings,"{}",before.candidate.khmer);
                 assert_eq!(after.recovery_lengths,before.recovery_lengths);
             }
-            assert_eq!(current.prefixes,previous.prefixes);
+            let without_dependents = |index:&Index| index.prefixes.iter().map(|(prefix,ids)|
+                (prefix.clone(),ids.iter().copied().filter(|id|!dependent.contains(&index.words[*id].candidate.khmer)).collect::<Vec<_>>()))
+                .filter(|(_,ids)|!ids.is_empty()).collect::<BTreeMap<_,_>>();
+            assert_eq!(without_dependents(&current),without_dependents(&previous));
             for (word,readings) in controls {
+                if dependent.contains(&word) {continue;}
                 assert_eq!((word_readings_mode(&word,false),word_readings_mode(&word,true)),readings,"{word}");
             }
+        });
+    }
+
+    #[test]
+    #[cfg(feature = "bundled-dictionaries")]
+    fn dry_run_of_scoped_and_standalone_migrations_preserves_bundled_typing() {
+        let engine = Engine::bundled().unwrap();
+        let before = Index::new(&engine.dictionary);
+        let starting_context = starting_rule_context(&engine.dictionary);
+        let controls: Vec<_> = super::super::parity::fixture_words().into_iter()
+            .filter(|word| word.contains("អ្នក"))
+            .map(|word| {
+                let readings = word_readings_mode(&word, false);
+                (word, readings)
+            }).collect();
+        with_configuration(|source| {
+            let parts = source["runtime"]["wordParts"].as_array_mut().unwrap();
+            let mut migrated = Vec::new();
+            for (word, read_as) in [("អ្នក", "នាក់")] {
+                let index = parts.iter().position(|part| part["khmer"] == word).unwrap();
+                let part = parts.remove(index);
+                let [case] = part["cases"].as_array().unwrap().as_slice() else {
+                    panic!("{word} must have one rule case for this migration");
+                };
+                assert_eq!(case["kind"], "syllable");
+                let order = case["order"].as_u64().unwrap();
+                for part in parts.iter_mut() {
+                    for remaining in part["cases"].as_array_mut().unwrap() {
+                        if remaining["kind"] == "syllable" && remaining["order"].as_u64().unwrap() > order {
+                            remaining["order"] = (remaining["order"].as_u64().unwrap() - 1).into();
+                        }
+                    }
+                }
+                migrated.push(serde_json::json!({
+                    "word": word, "readAs": read_as, "words": case["words"], "positions": case["positions"],
+                }));
+            }
+            source["pronunciationSyllables"].as_array_mut().unwrap().extend(migrated);
+        }, || {
+            let after = Index::new(&engine.dictionary);
+            assert_eq!(after.words.len(), before.words.len());
+            for (new, old) in after.words.iter().zip(&before.words) {
+                assert_eq!(new.candidate, old.candidate);
+                assert_eq!(reading_profile(&new.readings),reading_profile(&old.readings),"{}",old.candidate.khmer);
+                assert_eq!(new.recovery_lengths, old.recovery_lengths);
+            }
+            assert_eq!(after.prefixes, before.prefixes);
+            assert_eq!(after.count_prefixes, before.count_prefixes);
+            assert_eq!(starting_rule_context(&engine.dictionary), starting_context);
+            for (word, readings) in controls {
+                assert_eq!(word_readings_mode(&word, false), readings, "{word}");
+            }
+        });
+    }
+
+    #[test]
+    fn migrated_pronunciation_can_initialize_with_a_reparsed_marked_syllable() {
+        let expected = Engine::pronunciation_inputs("បង្អាក់").unwrap();
+        with_configuration(|source| {
+            source["pronunciationSyllables"].as_array_mut().unwrap().push(serde_json::json!({
+                "word":"មិត្ត", "readAs":"បង្អាក់", "words":["មិត្ត"], "positions":["standalone"],
+            }));
+        }, || {
+            let core = engine_for("មិត្ត");
+            assert_eq!(core.sound_index.get().unwrap().browse_inputs("មិត្ត").0, expected);
         });
     }
 

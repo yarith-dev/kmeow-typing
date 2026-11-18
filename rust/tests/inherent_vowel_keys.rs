@@ -32,8 +32,8 @@ fn ar_and_or_are_per_syllable_alternatives_without_changing_other_vowels() {
         ("ល្អ",vec!["l'ar","l'or"]), ("ក្អក",vec!["k'ark","k'ork"]),
         ("សាលា",vec!["sala"]), ("កម្ម",vec!["kam"]),
         ("សកម្ម",vec!["sakkam"]), ("សកម្មភាព",vec!["sorkampheap","sarkampheap"]),
-        ("សព្ទ",vec!["sap","sorpto","sarpto"]),
-        ("កិច្ច",vec!["kech","kich","kejjor","kejjar","kijjor","kijjar"]),
+        ("សព្ទ",vec!["sap"]),
+        ("កិច្ច",vec!["kech","kich"]),
     ] {
         for input in inputs {
             assert!(exact(&core,input,word),"{input}: {word}");

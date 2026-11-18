@@ -23,7 +23,12 @@ export const wasmengine_lookupWordTranslations: (a: number, b: number, c: number
 export const wasmengine_new: (a: number, b: number) => [number, number, number];
 export const wasmengine_pronunciationInputs: (a: number, b: number) => [number, number, number, number];
 export const wasmengine_rankingVocabulary: (a: number, b: number, c: number) => [number, number, number, number];
+export const wasmengine_setInputExclusions: (a: number, b: number, c: number) => [number, number];
+export const wasmengine_setInputExclusionsWithExtension: (a: number, b: number, c: number, d: number) => [number, number];
 export const wasmengine_setPronunciations: (a: number, b: number, c: number) => [number, number];
+export const wasmengine_setShorthands: (a: number, b: number, c: number) => [number, number];
+export const wasmengine_setShorthandsWithExtension: (a: number, b: number, c: number, d: number) => [number, number];
+export const wasmengine_soundMapInputs: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
 export const wasmengine_stats: (a: number) => [number, number];
 export const wasmengine_suggest: (a: number, b: number, c: number) => [number, number, number, number];
 export const wasmengine_suggestWithContext: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
@@ -31,6 +36,7 @@ export const wasmengine_suggestWithExtension: (a: number, b: number, c: number, 
 export const wasmengine_suggestWithFeatures: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
 export const wasmengine_suggestWithRanking: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number, number, number];
 export const wasmengine_withTypingOverrides: (a: number, b: number, c: number) => [number, number, number];
+export const wasmengine_wordShorthands: (a: number, b: number, c: number) => [number, number];
 export const wasmengine_wordTypingSettings: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
 export const __wbindgen_export_0: WebAssembly.Table;
 export const __wbindgen_malloc: (a: number, b: number) => number;

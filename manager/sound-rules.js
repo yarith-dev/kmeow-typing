@@ -2,18 +2,18 @@ import {t,ruleGuide,familyGuide,fieldLabel} from './i18n.js';
 // Read the same configuration as the engine; new rule groups remain visible
 // even before they receive a more specific explanatory label here.
 const guides={
-  shorthands:['Shorthands','Short inputs offer a complete word for explicit selection. They are never reused as word-part readings.',['ខ្ញុំ']],
+  shorthands:['Shorthands','Short inputs suggest a complete word with normal typing acceptance. They are never reused as word-part readings.',['ខ្ញុំ']],
   defaultComponentParts:['Components using the default sound map','These names establish complete component boundaries. Their spellings come from the normal sound map; no custom Romanized reading is stored.',['ក្រដាស','ខុស']],
-  wordRuleReuse:['Using word readings in compounds','Alternative readings can be reused in complete, unambiguous word components. Shorthands require explicit selection and stay with the complete word. Saved aliases and ambiguous splits are not reused; existing full-word readings remain available.',['កិច្ចការ','ខកចិត្ត']],
+  wordRuleReuse:['Using word readings in compounds','Alternative readings can be reused in complete, unambiguous word components. Shorthands follow normal typing acceptance and stay with the complete word. Saved aliases and ambiguous splits are not reused; existing full-word readings remain available.',['កិច្ចការ','ខកចិត្ត']],
   componentReadings:['Complete component readings','Selected keys for complete word parts inside supported compounds. Other parts retain their own reading rules.',['សាស្ត្រ','វិទ្យាសាស្ត្រ']],
-  wordParts:['Word-part readings','Reusable patterns match complete word parts. Scoped cases keep their exact words, positions and checked neighbors. Simple pronunciation changes are in Read as.',['សាស្ត្រ','វិទ្យាសាស្ត្រ']],
   nasalBoundaries:['Splitting at nasal clusters','One set of matchers handles these consonant-pair patterns. Each case keeps its own initial letters, cluster and final-letter restrictions.',['កន្ត្រៃ','កញ្ចក់']],
   inherent:["When no vowel is written","A consonant can carry its own vowel. The consonant series decides which keys to use.",["មតិ","សមុទ្រ"]],
   localVowelPairs:['Unwritten vowels from letter pairs','The first two letters, their subscript and syllable structure select a, o, ae or er. Written vowels, shortening marks and shared overrides retain their own rules.',['បណ្ណាល័យ','វគ្គីករណ៍','លទ្ធិ','សប្បាយ']],
   consonantCountTolerance:['Single or double consonants','Generated readings accept one or two of the same consonant: lerthi / lertthi and vaekkikor / vaekikor. Suggestions show the preferred spelling. Vowels and saved spellings stay literal.',['លទ្ធិ','វគ្គីករណ៍']],
   shortInherent:["Short vowels with ់","With an unwritten vowel, the shortening mark uses o in both A-series and O-series. Separately configured ending choices still apply.",["ចង់","គង់","រលត់"]],
   closedInherent:["Unwritten vowels before final letters","When a consonant closes the syllable, use the closed-syllable vowel keys.",["កង","ទង"]],
-  codas:["Consonants at the end of a syllable","A final consonant can sound different from the same letter at the beginning.",["កាត","ទឹក"]],
+  endingAlternatives:["Final ech / ich can use ex / ix","At the end of a word or a complete, unambiguous component, ech also accepts ex and ich accepts ix: តិច → tech / tex, tich / tix; កិច្ចការ → kechka / kexka. Other ch endings and initial ch stay unchanged. Saved aliases and shorthands remain literal.",["តិច","ភ្លេច","កិច្ចការ"]],
+  codas:["Consonants at the end of a syllable","A final consonant can sound different from the same letter at the beginning. Final ប accepts p or b, including inside compounds: brap / brab for ប្រាប់ and reapjom / reabjom for រៀបចំ.",["ប្រាប់","រៀបចំ","កាត","ទឹក"]],
   terminalReadingUnits:["Reading ទស្សន៍ at the end","Read the ending as tuh or tus, including in the listed longer words. The marked ន៍ is silent.",["ទស្សន៍","ទូរទស្សន៍"]],
   silentCodaClusters:["Closing ស្ស and ក្ខ","These clusters close the syllable without adding another syllable for the subscript. Some preceding vowels have a special reading.",["សិស្ស","ទស្សនា","ទុក្ខ"]],
   terminalSilentCodaClusters:["Keeping the final sound, dropping its subscript","At the supported word endings, keep the main final consonant sound and leave its subscript silent.",["ព្យាង្គ","សម្ព័ន្ធ","បុណ្យ","គម្ពីរ"]],
@@ -31,9 +31,10 @@ const guides={
   silentWordEndings:["Silent endings in selected words","Some words omit their final written letter or sign when read. This applies only to the listed words.",["ភូមិ","សមុទ្រ"]],
   repeatedInitialPresyllable:["Repeated letters with a short first syllable","In these selected words, read the first repeated consonant separately before continuing with the word.",["ពពក","បបរ"]],
   shortInherentBeforeCoda:["Short vowel choices before final ក","For the supported O-series ending, u, ua and uo are alternative typing keys.",["កន្ទក់"]],
-  glottalOnset:["Typing subscript អ with an apostrophe","An apostrophe marks the break before the subscript អ sound. The following vowel still has its own keys.",["ផ្អែម","ក្អក"]],
+  glottalOnset:["Typing subscript អ with an apostrophe","An apostrophe marks the break before subscript អ. The pattern ្អូ accepts 'o and 'ou: ប្អូន → p'on / p'oun. You may omit apostrophes when looking for suggestions: poun suggests ប្អូន as a completion, after existing matches such as ពូន. Explicit apostrophe spellings stay exact. This also applies after a nasal and in Read-As.",["ប្អូន","ចង្អូរ","ផ្អែម","ក្អក"]],
   scopedOnsetClusters:["ហ្វ reads f in កាហ្វេ","Use f for the selected ហ្វ cluster in កាហ្វេ. This does not change every spelling containing ហ្វ.",["កាហ្វេ"]],
   vowelsBeforeCoda:["ាំ changes before final ង","Before the specified final ង, the vowel uses a in A-series and ea in O-series.",["ខាង","ទាំង"]],
+  closedVowelAlternatives:['◌ួ before a closing consonant','When a consonant closes the syllable, ◌ួ accepts ur or u: មួយ → mury / muy and ជួយ → jury / juy. Open syllables and silent final រ keep their existing readings: តួ → tur and ជួរ → jur. ◌ូ is unchanged.',['មួយ','ជួយ','ខ្លួន']],
   explicitBantoc:["How ់ changes a written ា","The shortened reading depends on the consonant series and the final letter.",["កាត់","គាត់","ទាក់"]],
   crossSyllableGovernance:["An earlier consonant changes a later vowel","In supported two-syllable words, the earlier A-series consonant makes a later consonant use A-series vowel keys. Listed exceptions keep their own series.",["សាលា","កុលាប"]],
   reviewedWordFinalCodas:["Special final keys in selected words","The listed words can use a shorter final-consonant reading while keeping any explicitly retained alternatives.",["ពុធ","មេឃ"]],
@@ -50,13 +51,15 @@ const guides={
   writtenNasalGlottalBoundary:["A nasal before subscript អ","Close the first syllable with the nasal, then use an apostrophe before the following អ sound.",["ចង្អុល","ចង្អៀត"]],
   weakRSecondVowelGovernance:["Vowels after a short រ-cluster syllable","In the listed shapes, a short first syllable determines which vowel keys the following syllable uses.",["ក្រមា","ស្រមោល"]],
   explicitGlottalBantoc:["Shortened ា after subscript អ","The supported អ syllable keeps its a key when the final consonant carries ់.",["ផ្អាក","ក្អាត់","ចង្អាប់"]],
-  terminalPlainASign:["Typing final ៈ as a or ak","At a supported A-series ending, both a and ak are accepted typing keys.",["ខណៈ","លក្ខណៈ"]],
-  terminalWrittenSameOSign:["Typing supported O-series final ៈ as eak","In the supported two-syllable shape, the final mark uses eak.",["ជីវៈ","ធុរៈ"]],
+  terminalPlainASign:["Existing final ៈ spellings","Keep the existing a / ak alternatives at supported A-series endings.",["ខណៈ","លក្ខណៈ"]],
+  terminalWrittenSameOSign:["Existing O-series final ៈ spellings","Keep the existing eak readings of supported two-syllable words.",["ជីវៈ","ធុរៈ"]],
+  shortInherentSign:["Short vowel and closure: ៈ","Use ak in A-series and eak in O-series, including inside words. Resolve the syllable's series and cluster first: ស្រៈ → srak; ឋានៈ → thanak. In Read-As, គៈណៈ → keaknak. Existing keanak remains accepted. Irregular syllable splits use Read-As. The enabled flag controls ordinary dictionary paths; explicit Read-As stays available. Independent vowels can start the next syllable: គៈឥ → keakei / keakey. This is separate from ះ.",["ស្រៈ","ឋានៈ","គណៈ"]],
   terminalNasalCompoundBoundary:["Keeping a nasal boundary in compounds","Read the supported compound boundary without merging its two syllables.",["ទូបង្កក","កាត់បន្ថយ"]],
-  independentCoengY:["ឲ្យ and ឱ្យ read oy","Read the independent vowel together with subscript យ as oy.",["ឲ្យ","ឱ្យ"]],
+  independentCoengY:["ឲ្យ and ឱ្យ read oy / aoy","Read the independent vowel together with subscript យ as oy or aoy.",["ឲ្យ","ឱ្យ"]],
   compactOrdinaryABoundaryPriority:["Priority for compact readings around អ","A small priority adjustment favors a supported compact compound reading without changing its spelling.",["ទឹកអប់","កៅអី"]],
   checkedAamNgBoundary:["Special boundaries in វាំងនន and បាំងភក់","Keep the selected first-syllable vowel when splitting these two words.",["វាំងនន","បាំងភក់"]],
   savedInputMatchPriorities:["Priority for a selected saved spelling","The listed saved input gets its own priority adjustment; other spellings keep their usual order.",["ប៉ុស្តិ៍"]],
+  initialCarrierDirectVowel:["Initial អ before a consonant with a written vowel","Use ak for bare initial អ when the next consonant carries a written vowel directly.",["អធិដ្ឋាន","អតិថិជន"]],
   initialCarrierNasal:["Initial អ before nasal clusters","In the selected initial cluster shapes, the first unwritten vowel uses o. Later letters keep their own keys.",["អង្ករ","អង្កត់"]],
 };
 const englishLabel=name=>name.replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());
@@ -100,10 +103,11 @@ function ruleExamples(id,value,byWord,term='',filtered=false){
 export function soundRules(runtime,query='',catalog=[]){
   const term=query.trim().toLowerCase(),byWord=new Map(catalog.map(row=>[row.word,row]));
   return Object.entries(runtime??{}).flatMap(([id,original])=>{
+    if(id==='pronunciationParts'||id==='wordParts')return [];
     const [englishTitle,englishDescription]=guides[id]??[englishLabel(id),'Supported letters, conditions and choices for this rule.'];
     const [title,description]=ruleGuide(id,ruleLabel(id)===englishLabel(id)?englishTitle:ruleLabel(id),t(englishDescription));
     let value=original,filtered=false;
-    if(['wordParts','shorthands'].includes(id)&&term&&!`${id} ${englishTitle} ${englishDescription} ${title} ${description}`.toLowerCase().includes(term)){
+    if(id==='shorthands'&&term&&!`${id} ${englishTitle} ${englishDescription} ${title} ${description}`.toLowerCase().includes(term)){
       value=original.filter(part=>searchable(part).toLowerCase().includes(term)
         ||partWords(part).some(word=>entryMatches(byWord.get(word),term)));
       if(!value.length)return [];
@@ -115,13 +119,12 @@ export function soundRules(runtime,query='',catalog=[]){
   });
 }
 export const ruleFamilyDefinitions=[
-  {id:'vowels',title:'Vowels',description:'Written and unwritten vowels, short forms and combined vowel sounds.',groups:['inherent','shortInherent','closedInherent','localVowelPairs','pairVowelReadings','shortInherentBeforeCoda','vowelsBeforeCoda','terminalCombinedVowels','independentCoengY','initialCarrierNasal']},
-  {id:'consonants',title:'Consonants & endings',description:'Initial consonants, final sounds and alternative consonant keys.',groups:['codas','consonantCountTolerance','optionalInitialOnsets','finalClusters','reviewedWordFinalCodas','glottalOnset','scopedOnsetClusters']},
-  {id:'syllables',title:'Syllable splitting',description:'Where one syllable ends and the next begins.',groups:['terminalInherentBoundaryCodas','pairBeforeSubscript','nasalBoundaries','writtenNhBoundary','unwrittenNasalRBoundary','writtenVelarRBoundary','writtenNasalGlottalBoundary','terminalNasalCompoundBoundary','checkedAamNgBoundary']},
+  {id:'vowels',title:'Vowels',description:'Written and unwritten vowels, short forms and combined vowel sounds.',groups:['inherent','shortInherent','closedInherent','localVowelPairs','pairVowelReadings','shortInherentBeforeCoda','vowelsBeforeCoda','closedVowelAlternatives','terminalCombinedVowels','independentCoengY','initialCarrierDirectVowel','initialCarrierNasal']},
+  {id:'consonants',title:'Consonants & endings',description:'Initial consonants, final sounds and alternative consonant keys.',groups:['codas','endingAlternatives','consonantCountTolerance','optionalInitialOnsets','finalClusters','reviewedWordFinalCodas','glottalOnset','scopedOnsetClusters']},
+  {id:'syllables',title:'Syllable splitting',description:'Where one syllable ends and the next begins.',groups:['terminalInherentBoundaryCodas','pairBeforeSubscript','nasalBoundaries','writtenNhBoundary','unwrittenNasalRBoundary','writtenVelarRBoundary','writtenNasalGlottalBoundary','terminalNasalCompoundBoundary','checkedAamNgBoundary','wordRuleReuse','defaultComponentParts']},
   {id:'series',title:'A/O changes',description:'Which consonant determines the vowel series.',groups:['crossSyllableGovernance','onsetClusterGovernance','nasalPairGovernance','riyaGovernance','openLaaGovernance','localWrittenClusterGovernance','initialSamaaGovernance','weakRSecondVowelGovernance']},
-  {id:'silence',title:'Silent letters & marks',description:'Silent letters, subscripts, shortening and other spelling marks.',groups:['terminalReadingUnits','silentCodaClusters','terminalSilentCodaClusters','terminalShortCodaClusters','terminalSilentGroups','terminalCancellation','wordFinalSilentConsonants','silentWordEndings','simpleMarkedRhymes','explicitBantoc','explicitGlottalBantoc','terminalPlainASign','terminalWrittenSameOSign']},
-  {id:'parts',title:'Word-part readings',description:'Reusable alternatives, complete component boundaries and word-specific exceptions.',groups:['wordParts','wordRuleReuse','defaultComponentParts']},
-  {id:'shorthands',title:'Shorthands',description:'Short inputs requiring explicit selection of a complete word.',groups:['shorthands']},
+  {id:'silence',title:'Silent letters & marks',description:'Silent letters, subscripts, shortening and other spelling marks.',groups:['terminalReadingUnits','silentCodaClusters','terminalSilentCodaClusters','terminalShortCodaClusters','terminalSilentGroups','terminalCancellation','wordFinalSilentConsonants','silentWordEndings','simpleMarkedRhymes','explicitBantoc','explicitGlottalBantoc','terminalPlainASign','terminalWrittenSameOSign','shortInherentSign']},
+  {id:'shorthands',title:'Shorthands',description:'Short inputs suggesting a complete word.',groups:['shorthands']},
   {id:'repetition',title:'Repetition',description:'Repeated initial letters that form a short first syllable.',groups:['repeatedInitialPresyllable']},
   {id:'ranking',title:'Ranking',description:'How existing readings are ordered without changing their spelling.',groups:['exactInputPriorities','compactOrdinaryABoundaryPriority','savedInputMatchPriorities']},
 ];
@@ -132,7 +135,7 @@ export function ruleFamilies(runtime,query='',catalog=[]){
   return ruleFamilyDefinitions.map(family=>{
     const translated=familyGuide(family);
     return {...translated,rules:(!term||`${family.title} ${family.description} ${translated.title} ${translated.description}`.toLowerCase().includes(term)?all:matches).filter(rule=>
-      family.groups.includes(rule.id)||(family.id==='parts'&&!known.has(rule.id)))};
+      family.groups.includes(rule.id)||(family.id==='syllables'&&!known.has(rule.id)))};
   }).filter(family=>family.rules.length);
 }
 export function renderRuleExamples(examples,doc=document){

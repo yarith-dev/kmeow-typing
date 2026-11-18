@@ -1,4 +1,4 @@
-//! One editable definition per word part, compiled into the parser's ordered
+//! Read as scopes and shorthands, compiled into the parser's ordered
 //! phase indexes. Cases retain their complete scope and independent readings.
 use serde_json::{Map, Value};
 use std::collections::{BTreeMap, BTreeSet};
@@ -12,10 +12,30 @@ const PHASES: [(&str, &str, &str); 4] = [
 
 pub(super) fn parse_rules(source: &str) -> Result<super::Rules, String> {
     let mut value: Value = serde_json::from_str(source).map_err(|error| error.to_string())?;
-    expand_word_parts(value["runtime"].as_object_mut().ok_or("Missing runtime object")?)?;
-    let rules: super::Rules = serde_json::from_value(value).map_err(|error| error.to_string())?;
+    compile_reading_scopes(value["runtime"].as_object_mut().ok_or("Missing runtime object")?)?;
+    let mut rules: super::Rules = serde_json::from_value(value).map_err(|error| error.to_string())?;
+    // Added onset spellings keep the established prefix priors until their
+    // new spelling is typed. Coda fallbacks remain independent.
+    for consonant in &mut rules.consonants {
+        for key in &mut consonant.onset_keys {
+            if key.preserve_existing { key.prediction_stage = 2; }
+        }
+    }
+    for (vowel,keys) in &mut rules.runtime.closed_vowel_alternatives {
+        if !rules.dependent_vowels.iter().chain(&rules.additional_vowel_forms).any(|row|row.khmer==*vowel)
+            || keys.is_empty() || keys.iter().any(|key|!key.preserve_existing || key.priority>=0) {
+            return Err("Closed-vowel alternatives require a mapped vowel and additive keys with negative priority.".into());
+        }
+        for key in keys {key.prediction_stage=3;}
+    }
+    super::ending_alternatives::validate(&rules.runtime.ending_alternatives)?;
     super::local_vowels::validate(&rules)?;
     rules.runtime.consonant_count_tolerance.validate()?;
+    let sign = &rules.runtime.short_inherent_sign;
+    if sign.mark != "ៈ" || sign.a_series_keys.is_empty() || sign.o_series_keys.is_empty()
+        || sign.additional_path_priority >= 0 {
+        return Err("The shared ៈ rule requires both vowel series and a negative additive priority".into());
+    }
     if rules.runtime.word_rule_reuse.enabled && rules.runtime.word_rule_reuse.rank_priority>=0 {
         return Err("Word rule reuse requires a negative fallback priority".into());
     }
@@ -37,9 +57,33 @@ pub(super) fn parse_rules(source: &str) -> Result<super::Rules, String> {
     Ok(rules)
 }
 
-pub(super) fn expand_word_parts(runtime: &mut Map<String, Value>) -> Result<(), String> {
-    let parts = runtime.remove("wordParts").ok_or("Missing wordParts")?;
-    let mut parts = parts.as_array().ok_or("wordParts must be an array")?.clone();
+pub(super) fn compile_reading_scopes(runtime: &mut Map<String, Value>) -> Result<(), String> {
+    // Legacy Latin-key definitions exist only in migration regression tests.
+    // Production rules come exclusively from Read as and Shorthands.
+    #[cfg(test)]
+    let mut parts = runtime.remove("wordParts").unwrap_or_else(|| Value::Array(Vec::new()))
+        .as_array().ok_or("wordParts must be an array")?.clone();
+    #[cfg(not(test))]
+    let mut parts = {
+        if runtime.contains_key("wordParts") { return Err("wordParts is retired; use pronunciationParts".into()); }
+        Vec::new()
+    };
+    let pronunciations = runtime.remove("pronunciationParts")
+        .unwrap_or_else(|| Value::Array(Vec::new()));
+    let mut pronunciation_defaults = Vec::new();
+    for pronunciation in pronunciations.as_array().ok_or("pronunciationParts must be an array")? {
+        let mut part = pronunciation.as_object().ok_or("Pronunciation must be an object")?.clone();
+        let word = part.remove("word").ok_or("Missing pronunciation word")?;
+        let read_as = part.remove("readAs").ok_or("Missing Read as spelling")?;
+        let spelling = read_as.as_str().ok_or("Read as must be a Khmer spelling")?;
+        if !crate::valid_khmer(spelling) || spelling.chars().count() > 120 || spelling.contains(' ') || word == read_as {
+            return Err("Invalid built-in Read as spelling".into());
+        }
+        pronunciation_defaults.push(serde_json::json!({"word": word, "readAs": read_as}));
+        part.insert("khmer".into(), word);
+        part.insert("keys".into(), serde_json::json!({"readAs": read_as}));
+        parts.push(Value::Object(part));
+    }
     let shorthands=runtime.remove("shorthands").unwrap_or_else(||Value::Array(Vec::new()));
     for shorthand in shorthands.as_array().ok_or("shorthands must be an array")? {
         let mut entry=shorthand.as_object().ok_or("Shorthand must be an object")?.clone();
@@ -61,7 +105,9 @@ pub(super) fn expand_word_parts(runtime: &mut Map<String, Value>) -> Result<(), 
     for part in &parts {
         let unit = part["khmer"].as_str().filter(|text| !text.is_empty()).ok_or("Missing word-part spelling")?;
         if !units.insert(unit) { return Err(format!("Duplicate word part: {unit}")); }
-        let keys = part["keys"].as_array().filter(|keys| !keys.is_empty()).ok_or("Missing word-part keys")?;
+        let keys = part.get("keys").filter(|keys| {
+            keys.as_array().is_some_and(|keys| !keys.is_empty()) || keys.get("readAs").is_some()
+        }).ok_or("Missing word-part keys")?;
         let cases = part["cases"].as_array().filter(|cases| !cases.is_empty()).ok_or("Missing word-part cases")?;
         let standalone_only=cases.iter().all(|case|case["positions"].as_array()
             .is_some_and(|positions|!positions.is_empty()&&positions.iter().all(|p|p=="standalone")));
@@ -89,7 +135,7 @@ pub(super) fn expand_word_parts(runtime: &mut Map<String, Value>) -> Result<(), 
                 .ok_or("Missing case order")?;
             if row.contains_key("khmer") || row.contains_key("root") { return Err("Case must use its parent spelling".into()); }
             row.insert((*spelling).into(), Value::String(unit.into()));
-            row.entry("keys").or_insert_with(|| Value::Array(keys.clone()));
+            row.entry("keys").or_insert_with(|| keys.clone());
             if reading_type=="shorthand" {
                 // A case can replace its parent's keys. Selection policy must
                 // follow the exact same effective readings as the parser.
@@ -113,7 +159,9 @@ pub(super) fn expand_word_parts(runtime: &mut Map<String, Value>) -> Result<(), 
         if rows.keys().copied().ne(0..rows.len()) { return Err(format!("Non-contiguous case order in {field}")); }
         runtime.insert(field.into(), Value::Array(rows.into_values().collect()));
     }
+    runtime.insert("pronunciationDefaults".into(), Value::Array(pronunciation_defaults));
     runtime.insert("componentReadings".into(),Value::Array(component_readings));
+    non_reusable_word_parts.sort_by(|a,b|a.as_str().cmp(&b.as_str()));
     runtime.insert("nonReusableWordParts".into(), Value::Array(non_reusable_word_parts));
     runtime.insert("shorthandReadings".into(),Value::Array(shorthand_readings));
     Ok(())
@@ -151,13 +199,15 @@ mod tests {
         let mut rules: Value = serde_json::from_str(include_str!("../../../data/khmer-sound-map.json")).unwrap();
         let proof: Value = serde_json::from_str(include_str!("../../../test/fixtures/rule-consolidation.json")).unwrap();
         let runtime = rules["runtime"].as_object_mut().unwrap();
-        let parts = runtime["wordParts"].as_array().unwrap();
+        let parts = runtime.get("wordParts").and_then(Value::as_array).cloned().unwrap_or_default();
         assert_eq!(parts.len(), proof["wordParts"].as_u64().unwrap() as usize);
         let shorthands=runtime["shorthands"].as_array().unwrap();
         assert_eq!(shorthands.len(),proof["shorthands"].as_u64().unwrap() as usize);
-        assert_eq!(parts.iter().chain(shorthands).map(|part| part["cases"].as_array().unwrap().len()).sum::<usize>(),
+        let pronunciations=runtime["pronunciationParts"].as_array().unwrap();
+        assert_eq!(pronunciations.len(), proof["pronunciationParts"].as_u64().unwrap() as usize);
+        assert_eq!(parts.iter().chain(shorthands).chain(pronunciations).map(|part| part["cases"].as_array().unwrap().len()).sum::<usize>(),
             proof["cases"].as_u64().unwrap() as usize);
-        expand_word_parts(runtime).unwrap();
+        compile_reading_scopes(runtime).unwrap();
         let mut tables = Map::new();
         for (_, field, _) in PHASES {
             let hash = format!("{:x}", Sha256::digest(serde_json::to_vec(&runtime[field]).unwrap()));
@@ -173,10 +223,10 @@ mod tests {
         let old=legacy["runtime"].as_object_mut().unwrap().remove("shorthands").unwrap();
         for entry in old.as_array().unwrap() {
             let mut entry=entry.clone();entry["readingType"]="shorthand".into();
-            legacy["runtime"]["wordParts"].as_array_mut().unwrap().push(entry);
+            legacy["runtime"].as_object_mut().unwrap().entry("wordParts").or_insert_with(||serde_json::json!([])).as_array_mut().unwrap().push(entry);
         }
-        expand_word_parts(separated["runtime"].as_object_mut().unwrap()).unwrap();
-        expand_word_parts(legacy["runtime"].as_object_mut().unwrap()).unwrap();
+        compile_reading_scopes(separated["runtime"].as_object_mut().unwrap()).unwrap();
+        compile_reading_scopes(legacy["runtime"].as_object_mut().unwrap()).unwrap();
         assert_eq!(separated,legacy,"Moving the source entry must not change any generated rule, key, order or priority");
     }
     #[test]
@@ -186,7 +236,7 @@ mod tests {
             serde_json::json!([{"khmer":"កម្ម","keys":["kam"],"cases":[{"kind":"unknown","order":0}]}]),
             serde_json::json!([{"khmer":"កម្ម","keys":["kam"],"cases":[{"kind":"syllable","order":1}]}])] {
             let mut runtime = Map::new();runtime.insert("wordParts".into(),parts);
-            assert!(expand_word_parts(&mut runtime).is_err());
+            assert!(compile_reading_scopes(&mut runtime).is_err());
         }
     }
     #[test]

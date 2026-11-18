@@ -43,6 +43,26 @@ fn packages_typable_words_without_requiring_romanized_aliases() {
 }
 
 #[test]
+fn signed_ranks_survive_language_splitting_and_paired_bundle_reload() {
+    let (_,khmer,english)=fixture();
+    let engine=Engine::from_json(&json!({"schemaVersion":3,
+        "mappings":[{"id":3,"romanized":"book","khmer":"សៀវភៅ","rank":-3,"status":"approved"}],
+        "words":[{"id":1,"khmer":"សៀវភៅ","rank":-1,"status":"approved"}],
+        "englishWords":[{"id":2,"text":"Book","rank":-2,"status":"approved"}]
+    }).to_string()).unwrap();
+    let (khmer,english)=(khmer.to_string(),english.to_string());
+    let (kb,eb)=engine.compile_app_data(&khmer,&english,&provenance(&engine,&khmer,&english)).unwrap();
+    let loaded=Engine::from_app_data(&kb,&eb).unwrap();
+    assert_eq!(loaded.compiled_bytes(),engine.compiled_bytes());
+    assert_eq!(loaded.convert("book").unwrap(),engine.convert("book").unwrap());
+    assert_eq!(loaded.convert("book").unwrap().candidates[0].rank,-3);
+    assert_eq!(loaded.suggest("សៀវ").unwrap().candidates[0].candidate.mapping_id(),Some(1));
+    let features=khmer_engine::SuggestionFeatures{mode:khmer_engine::TypingMode::English,..Default::default()};
+    let result=loaded.suggest_with_features("boo",features).unwrap();
+    assert!(matches!(&result.candidates[0].candidate,khmer_engine::SuggestionCandidate::English(hit) if hit.rank==-2));
+}
+
+#[test]
 fn app_bundles_preserve_free_form_sense_and_translation_contexts() {
     let (mut engine, original_khmer, original_english) = fixture();
     for context in ["first sense\nsecond\tline\r\n🙂".to_owned(), format!("\n{}", "x".repeat(3999))] {

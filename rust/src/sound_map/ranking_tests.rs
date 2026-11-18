@@ -2,8 +2,8 @@
 use super::*;
 use crate::{Engine, SuggestionFeatures, TypingContext, suggestion_output};
 
-fn key(text: &str, priority: i64) -> Key { Key { text: text.into(), priority } }
-fn word(id: u64, khmer: &str, rank: u32, readings: Vec<Vec<Vec<Key>>>) -> Word {
+fn key(text: &str, priority: i64) -> Key { Key { text: text.into(), priority, preserve_existing: false, prediction_stage: 0, paths: None } }
+fn word(id: u64, khmer: &str, rank: i32, readings: Vec<Vec<Vec<Key>>>) -> Word {
     Word::new(Candidate { mapping_id: Some(id), mapping_ids: vec![], khmer: khmer.into(), rank }, readings)
 }
 fn index(words: Vec<Word>) -> Index {
@@ -111,7 +111,7 @@ fn commonness_respects_path_priority_and_committed_context() {
 fn generated_common_words_survive_the_prefix_limit_and_merge_with_saved_prefixes() {
     let mut core = engine(true);
     let words: Vec<_> = rules().consonants.iter().take(25).enumerate().map(|(id,base)|
-        word(id as u64+1,&base.khmer,id as u32,vec![vec![vec![key("qaa",0)]]])).collect();
+        word(id as u64+1,&base.khmer,id as i32,vec![vec![vec![key("qaa",0)]]])).collect();
     let last = words.last().unwrap().candidate.khmer.clone();
     core.sound_index = std::sync::OnceLock::new();
     assert!(core.sound_index.set(index(words)).is_ok());
@@ -188,7 +188,7 @@ fn signed_paths_sum_and_equal_totals_retain_existing_rank_order() {
 fn preferred_prefix_beyond_twenty_fallbacks_survives_the_limit() {
     let mut words = Vec::new();
     for (id, base) in rules().consonants.iter().take(21).enumerate() {
-        words.push(word(id as u64 + 1, &base.khmer, id as u32,
+        words.push(word(id as u64 + 1, &base.khmer, id as i32,
             vec![vec![vec![key("qaa", if id == 20 { 0 } else { -2 })]]]));
     }
     let index = index(words);

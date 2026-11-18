@@ -86,6 +86,7 @@ impl Engine {
         if let Some(extra) = extension {
             extra.letter_votes(&prefix, features, Some(&self.dictionary), &mut votes);
         }
+        if !english { votes.retain(|word, _| !self.input_excluded(&prefix, word, extension.map(|extra| &extra.dictionary))); }
         // Each distinct output contributes once, shared equally among its next
         // choices. Many aliases/readings cannot multiply one word's influence.
         let mut mass = [0u64; 27];

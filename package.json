@@ -23,6 +23,7 @@
     "rust-toolchain.toml",
     "COMPACT_FORMAT.md",
     "README.md",
+    "README.en.md",
     "LICENSE",
     "DICTIONARY-LICENSE.md",
     "NOTICES.txt",

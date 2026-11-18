@@ -9,15 +9,17 @@ function page({legacy=[],failSave=false,failStorage=false}={}){
   const requests=[],bases=[],stored=[],engines=[];
   class Element{
     constructor(){this.value='';this.children=[];this.dataset={};this.checked=false;}
-    append(...children){this.children.push(...children);}replaceChildren(...children){this.children=children;}setAttribute(){}
+    append(...children){this.children.push(...children);}replaceChildren(...children){this.children=children;}setAttribute(){}removeAttribute(){}
     reset(){}showModal(){this.open=true;}close(){this.open=false;}focus(){}
   }
   const nodes=new Map(),$=key=>{if(!nodes.has(key))nodes.set(key,new Element());return nodes.get(key);};
   const catalog={revision:'original',token:'local',khmer:[{id:1,word:'សៀវភៅ',partsOfSpeech:['noun'],rank:4,soundMapEnabled:true,commonnessLevel:2,romanizations:['sievphov'],soundMapInputs:['seavphov']}],english:[]};
-  function engine(){const current={words:[],getWords(){return this.words;},addWords(words){this.words=words;},dispose(){this.disposed=true;}};engines.push(current);return current;}
+  function engine(){const current={words:[],getWords(){return this.words;},addWords(words){this.words=words;},dispose(){this.disposed=true;},
+    soundMapInputs(word){return {inputs:catalog.khmer.find(row=>row.word===word)?.soundMapInputs??[],nextAfter:null};},
+  };engines.push(current);return current;}
   const old=engine();old.words=legacy;
   const context=vm.createContext({...i18n,$,el:(tag,text)=>Object.assign(new Element(),{textContent:text}),$$:()=>[],engine:old,
-    dictionaryWords:catalog,dictionaryError:'',wordLanguage:'khmer',wordLetter:'',missingRomanized:false,wordPageIndex:0,busy:false,damagedWords:null,legacyWords:legacy,editRow:null,editCatalog:null,dictionaryLoads:Promise.resolve(),map:null,
+    dictionaryWords:catalog,dictionaryError:'',wordLanguage:'khmer',wordLetter:'',missingRomanized:false,wordPageIndex:0,busy:false,damagedWords:null,legacyWords:legacy,editRow:null,editCatalog:null,dictionaryLoads:Promise.resolve(),map:null,sentenceConverter:null,
     wordList,wordPage,wordPageLinks,wordLetters,wordsForLetter,romanizedKeys,wordsWithoutRomanized,suggest(){},refreshExampleEditor(){},renderPronunciations(){},announce(){},errorMessage:error=>error.message,
     createEngine(){},loadSharedDictionary:async()=>({engine:engine(),catalog}),saveSharedDictionary:async({request,catalog:base})=>{requests.push(request);bases.push(base);if(failSave)throw new Error('Save rejected');return catalog;},
     localStorage:{setItem(key,value){if(failStorage)throw new Error('Storage unavailable');stored.push(value);}},WORDS_KEY:'legacy',
@@ -54,6 +56,57 @@ test('Edit word saves only selected fields without touching the draft or browser
   assert.equal(current.old.disposed,true);assert.deepEqual(current.stored,[]);assert.equal(current.$('#word-dialog').open,false);
   assert.equal(current.run('wordLetter'),'');assert.equal(current.$('#personal-rows').children.length,1);
   assert.equal(current.run('missingRomanized'),false);
+});
+
+test('Edit word pages through every generated spelling, marks exclusions and keeps the list read-only',async()=>{
+  const current=page(),inputs=Array.from({length:150},(_,index)=>'input'+String(index).padStart(3,'0'));
+  const calls=[];
+  current.old.soundMapInputs=(word,after='')=>{
+    calls.push([word,after]);
+    const start=after?inputs.indexOf(after)+1:0;
+    const page=inputs.slice(start,start+64);
+    return {inputs:page,nextAfter:start+64<inputs.length?page.at(-1):null};
+  };
+  current.run("dictionaryWords.khmer[0].soundMapEnabled=false;dictionaryWords.khmer[0].excludedInputs=['input070'];openWord(wordList(dictionaryWords,[],'khmer')[0]);");
+  const list=current.$('#word-generated-inputs'),more=current.$('#word-generated-more');
+  assert.equal(current.$('#word-generated-field').hidden,false);
+  assert.equal(list.children.length,64);assert.equal(more.hidden,false);
+  more.onclick();more.onclick();
+  assert.deepEqual(list.children.map(chip=>chip.textContent),inputs);
+  assert.equal(more.hidden,true);
+  assert.equal(list.children[70].className,'key excluded-reading');
+  assert.equal(current.$('#word-spellings').value,'sievphov');
+  assert.equal(current.$('#word-sound-map').checked,false);
+  current.$('#word-excluded-inputs').value='input000';
+  current.$('#word-excluded-inputs').oninput();
+  assert.equal(list.children[0].className,'key excluded-reading');
+  assert.equal(list.children[70].className,'key');
+  current.$('#cancel-dialog').onclick();
+  assert.deepEqual(current.requests,[]);assert.deepEqual(current.stored,[]);
+  current.run("openWord(wordList(dictionaryWords,[],'khmer')[0]);");
+  assert.equal(list.children.length,64);assert.equal(calls.at(-1)[1],'');
+  await current.$('#word-form').onsubmit({preventDefault(){}});
+  assert.deepEqual(current.requests,[]);
+  current.run("openWord({word:'book',language:'english',bundled:true,personalIndices:[],romanizations:[],spellings:[],rank:0});");
+  assert.equal(current.$('#word-generated-field').hidden,true);
+});
+
+test('a failed spelling page can be retried without losing earlier pages or the word draft',()=>{
+  const current=page();let fail=true;
+  current.old.soundMapInputs=(_word,after='')=>{
+    if(!after)return {inputs:['first'],nextAfter:'first'};
+    if(fail)throw new Error('Read failed');
+    return {inputs:['last'],nextAfter:null};
+  };
+  current.run("openWord(wordList(dictionaryWords,[],'khmer')[0]);");
+  current.$('#word-spellings').value='unsaved';
+  const more=current.$('#word-generated-more');
+  more.onclick();assert.equal(current.$('#word-generated-status').textContent,'Read failed');
+  assert.equal(more.hidden,false);
+  fail=false;more.onclick();
+  assert.deepEqual(current.$('#word-generated-inputs').children.map(chip=>chip.textContent),['first','last']);
+  assert.equal(current.$('#word-spellings').value,'unsaved');
+  assert.deepEqual(current.requests,[]);
 });
 
 test('a failed shared save retains the old live engine and previous browser words',async()=>{
@@ -143,4 +196,55 @@ test('an explicit spelling edit preserves the existing personal rank during shar
   await current.$('#word-form').onsubmit({preventDefault(){}});
   assert.equal(current.requests[0].preservePersonal,true);assert.equal(current.requests[0].word.rank,5);
   assert.equal(current.requests[0].word.spellings.join(','),'sievphov,mybook,sharedbook');
+});
+
+test('word exclusion field loads, normalizes and saves only selected exclusions, including clearing',async()=>{
+  const current=page();
+  current.run("dictionaryWords.khmer[0].excludedInputs=['seavphov'];openWord(wordList(dictionaryWords,[],'khmer')[0]);");
+  assert.equal(current.$('#word-excluded-inputs').value,'seavphov');
+  assert.equal(current.$('#excluded-inputs-field').hidden,false);
+  current.$('#word-excluded-inputs').value=' SEAVPHOV, book, book ';
+  await current.$('#word-form').onsubmit({preventDefault(){}});
+  assert.deepEqual(JSON.parse(JSON.stringify(current.requests[0].word)),{word:'សៀវភៅ',language:'khmer',excludedInputs:['book','seavphov']});
+  current.run("openWord(wordList(dictionaryWords,[],'khmer')[0]);");current.$('#word-excluded-inputs').value='';
+  await current.$('#word-form').onsubmit({preventDefault(){}});
+  assert.deepEqual(Array.from(current.requests[1].word.excludedInputs),[]);
+  current.run("openWord({word:'book',language:'english',bundled:true,personalIndices:[]});");
+  assert.equal(current.$('#excluded-inputs-field').hidden,true);assert.equal(current.$('#word-excluded-inputs').disabled,true);
+});
+
+test('Shorthand loads separately from saved spellings and saves or clears only its own field',async()=>{
+  const current=page();
+  current.run("dictionaryWords.khmer[0].shorthands=['sb'];openWord(wordList(dictionaryWords,[],'khmer')[0]);");
+  assert.equal(current.$('#word-shorthands').value,'sb');assert.equal(current.$('#word-spellings').value,'sievphov');
+  current.$('#word-shorthands').value=' SB, b, b ';
+  await current.$('#word-form').onsubmit({preventDefault(){}});
+  assert.deepEqual(JSON.parse(JSON.stringify(current.requests[0].word)),{word:'សៀវភៅ',language:'khmer',shorthands:['b','sb']});
+  current.run("openWord(wordList(dictionaryWords,[],'khmer')[0]);");current.$('#word-shorthands').value='';
+  await current.$('#word-form').onsubmit({preventDefault(){}});assert.deepEqual(Array.from(current.requests[1].word.shorthands),[]);
+  current.run("openWord({word:'book',language:'english',bundled:true,personalIndices:[]});");
+  assert.equal(current.$('#shorthand-field').hidden,true);assert.equal(current.$('#word-shorthands').disabled,true);
+});
+
+test('Rank saves negative values without changing other fields',async()=>{
+  const current=page();current.run("openWord(wordList(dictionaryWords,[],'khmer')[0]);");
+  const field=current.$('#word-rank');field.value='-1';
+  await current.$('#word-form').onsubmit({preventDefault(){}});
+  assert.deepEqual(JSON.parse(JSON.stringify(current.requests[0].word)),{word:'សៀវភៅ',language:'khmer',rank:-1});
+});
+
+test('Rank rejects values outside the signed range and allows both boundaries',async()=>{
+  const current=page();current.run("openWord(wordList(dictionaryWords,[],'khmer')[0]);");
+  const field=current.$('#word-rank');
+  for(const value of ['','-1000001','1.5','1000001','NaN']){
+    field.value=value;
+    await current.$('#word-form').onsubmit({preventDefault(){}});
+    assert.equal(current.requests.length,0);assert.match(current.$('#form-error').textContent,/Rank must be an integer/);
+    assert.equal(current.$('#word-dialog').open,true);
+  }
+  for(const value of ['-1000000','1000000']){
+    current.run("openWord(wordList(dictionaryWords,[],'khmer')[0]);");field.value=value;
+    await current.$('#word-form').onsubmit({preventDefault(){}});
+    assert.equal(current.requests.at(-1).word.rank,Number(value));
+  }
 });

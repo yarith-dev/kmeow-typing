@@ -42,7 +42,7 @@ export function managerServer({dictionaryRoot=root,store=dictionaryStore(diction
         res.setHeader('Content-Type','application/octet-stream');res.writeHead(200);res.end(req.method==='HEAD'?undefined:snapshot.files[pathname.includes('khmer')?'khmer':'english']);return;
       }
       const relative = pathname === '/' ? 'manager/index.html' : pathname.slice(1);
-      const allowed = ['manager/index.html', 'manager/app.js', 'manager/i18n.js', 'manager/khmer-ui.js', 'manager/examples.js', 'manager/sound-rules.js', 'manager/pronunciations.js', 'manager/field-help.js', 'manager/suggestion-view.js', 'manager/suggestion-gesture.js', 'manager/word-list.js', 'manager/composer.js', 'manager/state.js', 'manager/style.css', 'manager/mobile.css',
+      const allowed = ['manager/index.html', 'manager/app.js', 'manager/converter.js', 'manager/i18n.js', 'manager/khmer-ui.js', 'manager/examples.js', 'manager/sound-rules.js', 'manager/pronunciations.js', 'manager/field-help.js', 'manager/suggestion-view.js', 'manager/suggestion-gesture.js', 'manager/word-list.js', 'manager/composer.js', 'manager/state.js', 'manager/style.css', 'manager/mobile.css',
         'manager/fonts/noto-sans-khmer-khmer-400-normal.woff2', 'data/khmer-sound-map.json',
         'compiled-data/khmer.kmd', 'compiled-data/english.kmd', 'wasm/khmer_engine.js', 'wasm/khmer_engine_bg.wasm'];
       const file = resolve(root, relative);

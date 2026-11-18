@@ -9,6 +9,7 @@ const MAGIC: &[u8; 8] = b"KMEOWC01";
 const JOINED_MAGIC: &[u8; 8] = b"KMEOWC02";
 const CONTEXT_MAGIC: &[u8; 8] = b"KMEOWC03";
 const POLICY_MAGIC: &[u8; 8] = b"KMEOWC04";
+const SIGNED_MAGIC: &[u8; 8] = b"KMEOWC05";
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Kind {
     Romanized = 0,
@@ -25,12 +26,13 @@ pub(crate) struct Index {
     pub(crate) kind: Kind,
     joined_forms: bool,
     word_policy: bool,
-    local_ranks: Arc<BTreeMap<u64, u32>>,
+    signed_ranks: bool,
+    local_ranks: Arc<BTreeMap<u64, i32>>,
     local_rank_words: Arc<BTreeSet<String>>,
     local_sounds: Arc<BTreeMap<String, bool>>,
     // Runtime-only lower bounds including the current reviewed commonness.
     // One tuple per encoded block; compact bytes and saved ranks stay intact.
-    completion_bounds: Arc<Vec<(u8, u32, usize)>>,
+    completion_bounds: Arc<Vec<(u8, i32, usize)>>,
 }
 #[derive(Clone)]
 pub(crate) struct Pool {
@@ -54,11 +56,13 @@ pub(crate) struct Dictionary {
     // Owner choices used by runtime component readings; never serialized here.
     pub(crate) component_definitions: Arc<crate::components::Definitions>,
     pub(crate) pronunciations: Arc<Vec<crate::Pronunciation>>,
+    pub(crate) input_exclusions: Arc<BTreeMap<String, BTreeSet<String>>>,
+    pub(crate) shorthands: Arc<BTreeMap<String, Vec<String>>>,
 }
 pub(crate) struct Row<'a> {
     pub key: &'a str,
     pub id: u64,
-    pub rank: u32,
+    pub rank: i32,
     pub target: u128,
     /// Position of the canonical Romanized row; absent for an approved source.
     pub source: Option<usize>,
@@ -178,7 +182,8 @@ impl Index {
             }
             previous = Some(offset);
         }
-        let word_policy = &data[..8] == POLICY_MAGIC;
+        let signed_ranks = &data[..8] == SIGNED_MAGIC;
+        let word_policy = &data[..8] == POLICY_MAGIC || signed_ranks;
         Ok(Self {
             data,
             start,
@@ -188,6 +193,7 @@ impl Index {
             kind,
             joined_forms,
             word_policy,
+            signed_ranks,
             local_ranks: Default::default(),
             local_rank_words: Default::default(),
             local_sounds: Default::default(),
@@ -198,13 +204,13 @@ impl Index {
         self.entries
             + number(&self.data, self.start + 16 + block * 12).expect("validated directory")
     }
-    pub fn block_min(&self, block: usize) -> (u32, usize) {
+    pub fn block_min(&self, block: usize) -> (i32, usize) {
         (
-            number(&self.data, self.start + 20 + block * 12).unwrap() as u32,
+            number(&self.data, self.start + 20 + block * 12).unwrap() as u32 as i32,
             number(&self.data, self.start + 24 + block * 12).unwrap(),
         )
     }
-    pub(crate) fn completion_block_min(&self, block: usize, commonness: bool) -> Option<(u8, u32, usize)> {
+    pub(crate) fn completion_block_min(&self, block: usize, commonness: bool) -> Option<(u8, i32, usize)> {
         if commonness { self.completion_bounds.get(block).copied() }
         else { let (rank, length) = self.block_min(block); Some((6, rank, length)) }
     }
@@ -291,7 +297,8 @@ impl<'a> Cursor<'a> {
             .filter(|id| *id > 0 && *id as u64 <= MAX_SAFE_INTEGER)
             .ok_or_else(|| invalid("Invalid compact mapping ID."))?;
         self.previous_id = id;
-        let stored_rank = small(data, &mut self.pos, 1_000_000)? as u32;
+        let encoded_rank = small(data, &mut self.pos, if self.index.signed_ranks {2_000_000} else {1_000_000})? as i32;
+        let stored_rank = if encoded_rank <= 1_000_000 {encoded_rank} else {1_000_000 - encoded_rank};
         let rank = self.index.local_ranks.get(&(id as u64)).copied().unwrap_or(stored_rank);
         let mut target = if self.index.kind == Kind::Khmer && !self.index.word_policy {
             0
@@ -408,6 +415,8 @@ impl Dictionary {
             && Arc::ptr_eq(&self.khmer.local_sounds,&other.khmer.local_sounds)
             && Arc::ptr_eq(&self.component_definitions,&other.component_definitions)
             && Arc::ptr_eq(&self.pronunciations,&other.pronunciations)
+            && Arc::ptr_eq(&self.input_exclusions,&other.input_exclusions)
+            && Arc::ptr_eq(&self.shorthands,&other.shorthands)
     }
     pub(crate) fn set_completion_commonness(&mut self, commonness: &crate::word_metadata::Commonness) {
         for index in [&mut self.romanized, &mut self.khmer, &mut self.english] {
@@ -434,6 +443,8 @@ impl Dictionary {
         // Rebuild views from the immutable source, so clearing a local setting
         // also restores rows hidden by a previous prepared view.
         let mut copy = Self::from_bytes(self.data.as_ref().clone())?;
+        copy.input_exclusions = self.input_exclusions.clone();
+        copy.shorthands = self.shorthands.clone();
         copy.excluded_khmer = Arc::new(settings.iter().filter(|s| s.language == "khmer" && s.excluded == Some(true))
             .map(|s| s.word.clone()).collect());
         copy.excluded_english = Arc::new(settings.iter().filter(|s| s.language == "english" && s.excluded == Some(true))
@@ -462,7 +473,7 @@ impl Dictionary {
                 builder.push(&key, id, rank, target, source);
             }
             let section = builder.finish()?;
-            let mut bytes = if index.word_policy { POLICY_MAGIC } else if index.joined_forms { JOINED_MAGIC } else { MAGIC }.to_vec();
+            let mut bytes = if index.signed_ranks { SIGNED_MAGIC } else if index.word_policy { POLICY_MAGIC } else if index.joined_forms { JOINED_MAGIC } else { MAGIC }.to_vec();
             bytes.extend(&section);
             *index = Index::parse(Arc::new(bytes), 8, section.len(), index.kind, index.joined_forms)?;
         }
@@ -496,13 +507,20 @@ impl Dictionary {
         self.khmer.cursor(self.khmer.bound(word, false)).next().expect("validated dictionary")
             .is_some_and(|row| row.key == word && row.target != 0)
     }
+    /// A read-only inspection view can reveal a disabled word's default keys.
+    pub(crate) fn with_sound_map_enabled(&self, word: &str) -> Self {
+        let mut copy = self.clone();
+        Arc::make_mut(&mut copy.khmer.local_sounds).insert(word.to_owned(), true);
+        copy
+    }
     pub fn from_bytes(bytes: Vec<u8>) -> Result<Self, EngineError> {
         if bytes.len() < 36
-            || (&bytes[..8] != MAGIC && &bytes[..8] != JOINED_MAGIC && &bytes[..8] != CONTEXT_MAGIC && &bytes[..8] != POLICY_MAGIC)
+            || (&bytes[..8] != MAGIC && &bytes[..8] != JOINED_MAGIC && &bytes[..8] != CONTEXT_MAGIC && &bytes[..8] != POLICY_MAGIC && &bytes[..8] != SIGNED_MAGIC)
         {
             return Err(invalid("Unsupported compact dictionary format."));
         }
-        let policy = &bytes[..8] == POLICY_MAGIC;
+        let signed_ranks = &bytes[..8] == SIGNED_MAGIC;
+        let policy = &bytes[..8] == POLICY_MAGIC || signed_ranks;
         let contextual = &bytes[..8] == CONTEXT_MAGIC || policy;
         let joined_forms = &bytes[..8] == JOINED_MAGIC || contextual;
         let end = bytes.len() - 8;
@@ -510,7 +528,7 @@ impl Dictionary {
             return Err(invalid("Compact dictionary checksum mismatch."));
         }
         let schema = number(&bytes, 8)?;
-        if !(1..=3).contains(&schema) || (joined_forms && schema < 2) {
+        if !(1..=3).contains(&schema) || (joined_forms && schema < 2 && !signed_ranks) {
             return Err(invalid("Invalid compact source schema."));
         }
         let data = Arc::new(bytes);
@@ -574,7 +592,7 @@ impl Dictionary {
                     return Err(invalid("Noncontiguous compact block."));
                 }
                 let mut cursor = index.cursor(block * BLOCK);
-                let mut min = (u32::MAX, usize::MAX);
+                let mut min = (i32::MAX, usize::MAX);
                 for position in block * BLOCK..((block + 1) * BLOCK).min(index.len) {
                     let row = cursor.next()?.unwrap();
                     if row.key < previous.as_str() || row.key.is_empty() {
@@ -702,6 +720,8 @@ impl Dictionary {
             excluded_english: Default::default(),
             component_definitions: Default::default(),
             pronunciations: Default::default(),
+            input_exclusions: Default::default(),
+            shorthands: Default::default(),
         })
     }
 }
@@ -709,7 +729,7 @@ struct Builder {
     kind: Kind,
     count: usize,
     bytes: Vec<u8>,
-    blocks: Vec<(usize, u32, usize)>,
+    blocks: Vec<(usize, i32, usize)>,
     previous: String,
     previous_id: i64,
     joined_forms: bool,
@@ -728,7 +748,7 @@ impl Builder {
             word_policy: false,
         }
     }
-    fn push(&mut self, key: &str, id: u64, rank: u32, target: u128, source: Option<usize>) {
+    fn push(&mut self, key: &str, id: u64, rank: i32, target: u128, source: Option<usize>) {
         if self.count % BLOCK == 0 {
             self.blocks.push((self.bytes.len(), rank, key.len()));
             self.previous.clear();
@@ -747,7 +767,7 @@ impl Builder {
             &mut self.bytes,
             ((delta << 1) ^ (delta >> 63)) as u64 as u128,
         );
-        put(&mut self.bytes, rank as u128);
+        put(&mut self.bytes, if rank >= 0 {rank as u128} else {1_000_000 + u128::from(rank.unsigned_abs())});
         if self.kind != Kind::Khmer || self.word_policy {
             put(&mut self.bytes, target);
         }
@@ -774,7 +794,7 @@ impl Builder {
         put32(&mut out, BLOCK)?;
         for (offset, rank, len) in self.blocks {
             put32(&mut out, offset)?;
-            put32(&mut out, rank as usize)?;
+            out.extend_from_slice(&rank.to_le_bytes());
             put32(&mut out, len)?;
         }
         out.extend(self.bytes);
@@ -790,7 +810,9 @@ pub(crate) fn compile(
     structures: BTreeSet<(String, Vec<String>)>,
     disabled: BTreeSet<String>,
 ) -> Result<Dictionary, EngineError> {
-    let policy = !disabled.is_empty();
+    let signed_ranks = romanized.values().flatten().chain(khmer.values()).any(|row| row.rank < 0)
+        || english.values().flatten().any(|row| row.rank < 0);
+    let policy = !disabled.is_empty() || signed_ranks;
     let contextual = !structures.is_empty() || policy;
     let joined_forms = !joined.is_empty() || contextual;
     let sources: BTreeMap<u64, usize> = romanized
@@ -871,7 +893,9 @@ pub(crate) fn compile(
             .collect::<Vec<_>>();
         sections.push(crate::context::compile(&sequences)?);
     }
-    let mut bytes = if policy {
+    let mut bytes = if signed_ranks {
+        SIGNED_MAGIC
+    } else if policy {
         POLICY_MAGIC
     } else if contextual {
         CONTEXT_MAGIC
@@ -898,14 +922,16 @@ pub(crate) fn compile_sorted_english(
 ) -> Result<Dictionary, EngineError> {
     let mut builder = Builder::new(Kind::English, false);
     let mut previous: Option<(String, String)> = None;
+    let mut signed_ranks = false;
     for word in words {
         if word.id == 0
             || word.id > MAX_SAFE_INTEGER
-            || word.rank > 1_000_000
+            || !super::valid_rank(word.rank)
             || !super::valid_english(&word.text)
         {
             return Err(invalid("Invalid approved English word fields."));
         }
+        signed_ranks |= word.rank < 0;
         let key = word.text.to_ascii_lowercase();
         if previous
             .as_ref()
@@ -923,13 +949,14 @@ pub(crate) fn compile_sorted_english(
         builder.push(&key, word.id, word.rank, mask, None);
         previous = Some((key, word.text));
     }
-    let sections = [
+    let mut sections = vec![
         Builder::new(Kind::Romanized, false).finish()?,
         Builder::new(Kind::Khmer, false).finish()?,
         builder.finish()?,
         vec![0u8; 8],
     ];
-    let mut bytes = MAGIC.to_vec();
+    if signed_ranks {sections.push(Vec::new());}
+    let mut bytes = if signed_ranks {SIGNED_MAGIC} else {MAGIC}.to_vec();
     put32(&mut bytes, 3)?;
     for section in &sections {
         put32(&mut bytes, section.len())?;
@@ -1001,7 +1028,7 @@ mod tests {
         }
     }
 
-    fn encoded_rows(rows: &[(&str, u64, u32, u128, Option<usize>)], joined: bool) -> Vec<u8> {
+    fn encoded_rows(rows: &[(&str, u64, i32, u128, Option<usize>)], joined: bool) -> Vec<u8> {
         let mut romanized = Builder::new(Kind::Romanized, joined);
         for &(key, id, rank, target, source) in rows {
             romanized.push(key, id, rank, target, source);
@@ -1112,7 +1139,7 @@ mod tests {
 // Split encoded sections without rebuilding entries, ranks, IDs or context.
 // All inputs have already passed Dictionary::from_bytes validation.
 fn sections(data: &[u8]) -> Vec<&[u8]> {
-    let mut start = if &data[..8] == CONTEXT_MAGIC || &data[..8] == POLICY_MAGIC { 32 } else { 28 };
+    let mut start = if &data[..8] == CONTEXT_MAGIC || &data[..8] == POLICY_MAGIC || &data[..8] == SIGNED_MAGIC { 32 } else { 28 };
     let header = start;
     (12..header).step_by(4).map(|offset| {
         let length = number(data, offset).expect("validated compact section");
@@ -1139,14 +1166,18 @@ pub(crate) fn split(dictionary: &Dictionary) -> (Vec<u8>, Vec<u8>) {
     let pool = [0u8; 8];
     let mut km = sections.clone();
     km[2] = &english;
-    (assemble(&data[..8], &data[8..12], &km),
-     assemble(MAGIC, &3u32.to_le_bytes(), &[&romanized, &khmer, sections[2], &pool]))
+    let en = if &data[..8] == SIGNED_MAGIC {
+        assemble(SIGNED_MAGIC, &3u32.to_le_bytes(), &[&romanized, &khmer, sections[2], &pool, &[]])
+    } else {assemble(MAGIC, &3u32.to_le_bytes(), &[&romanized, &khmer, sections[2], &pool])};
+    (assemble(&data[..8], &data[8..12], &km), en)
 }
 pub(crate) fn join(khmer: Vec<u8>, english: Vec<u8>) -> Result<Vec<u8>, EngineError> {
     let km = Dictionary::from_bytes(khmer)?;
     let en = Dictionary::from_bytes(english)?;
     if km.english.len != 0 || en.romanized.len != 0 || en.khmer.len != 0
-        || en.pool.count != 0 || en.context.is_some() || &en.data[..8] != MAGIC {
+        || en.pool.count != 0 || en.context.is_some()
+        || (&en.data[..8] != MAGIC && &en.data[..8] != SIGNED_MAGIC)
+        || (&km.data[..8] == SIGNED_MAGIC) != (&en.data[..8] == SIGNED_MAGIC) {
         return Err(invalid("App typing sections are not language-specific."));
     }
     let mut sections = sections(&km.data);

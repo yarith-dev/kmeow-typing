@@ -1,0 +1,21 @@
+{
+  "cases": [
+    {"word":"ប្អូន","previous":["b'on","p'on"],"additional":["b'oun","p'oun"]},
+    {"word":"ប្អូនថ្លៃ","previous":["b'onthlai","b'ontlai","p'onthlai","p'ontlai"],"additional":["b'ounthlai","b'ountlai","p'ounthlai","p'ountlai"]},
+    {"word":"ត្អូញ","previous":["t'onh"],"additional":["t'ounh"]},
+    {"word":"ផ្អូម","previous":["p'om","ph'om"],"additional":["p'oum","ph'oum"]},
+    {"word":"ចង្អូរ","previous":["jong'o"],"additional":["jong'ou"]}
+  ],
+  "controls": [
+    {"word":"អូន","inputs":["on"]},
+    {"word":"អូរ","inputs":["o"]},
+    {"word":"អូ","inputs":["o"]},
+    {"word":"កូន","inputs":["kon"]},
+    {"word":"ផ្អែម","inputs":["p'aem","ph'aem"]},
+    {"word":"ស្អាត","inputs":["s'at"]},
+    {"word":"ក្អក","inputs":["k'ark","k'oak","k'ork"]},
+    {"word":"ចង្អុល","inputs":["jong'ol","jong'ul"]},
+    {"word":"ប្អូះ","inputs":["b'oh","p'oh"]},
+    {"word":"ប្អូំ","inputs":["b'oom","b'oum","p'oom","p'oum"]}
+  ]
+}

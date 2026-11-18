@@ -86,8 +86,8 @@ export function createTypingEngine(raw: WasmEngine, options: EngineOptions): Typ
       if (entry.language !== undefined && entry.language !== "khmer" && entry.language !== "english") {
         throw new EngineBindingError("Personal word language must be khmer or english.");
       }
-      if (entry.rank !== undefined && (!Number.isSafeInteger(entry.rank) || entry.rank < 0 || entry.rank > 1_000_000)) {
-        throw new EngineBindingError("Personal word rank must be an integer from 0 to 1000000.");
+      if (entry.rank !== undefined && (!Number.isSafeInteger(entry.rank) || entry.rank < -1_000_000 || entry.rank > 1_000_000)) {
+        throw new EngineBindingError("Personal word rank must be an integer from -1000000 to 1000000.");
       }
       const language = entry.language ?? "khmer";
       const key = JSON.stringify([language, entry.word]);
@@ -111,10 +111,48 @@ export function createTypingEngine(raw: WasmEngine, options: EngineOptions): Typ
   } catch (error) { personal?.free(); raw.free(); throw bindingError(error); }
 
   return {
+    soundMapInputs(word, after = "") {
+      check();
+      if (typeof word !== "string" || typeof after !== "string") {
+        throw new EngineBindingError("Sound map word and cursor must be text.");
+      }
+      try { return JSON.parse(raw.soundMapInputs(word, after)); }
+      catch (error) { throw bindingError(error); }
+    },
     previewPronunciation(readAs) {
       check();
-      if (typeof readAs !== "string") throw new EngineBindingError("Enter a Khmer pronunciation spelling.");
-      try { return JSON.parse(WasmEngine.pronunciationInputs(readAs)); }
+      const spellings = typeof readAs === "string" ? [readAs] : readAs;
+      if (!Array.isArray(spellings) || spellings.length === 0 || spellings.length > 1000
+        || !spellings.every(spelling => typeof spelling === "string")) {
+        throw new EngineBindingError("Enter one or more Khmer pronunciation spellings.");
+      }
+      try {
+        const inputs: string[] = spellings.flatMap(spelling => JSON.parse(WasmEngine.pronunciationInputs(spelling)) as string[]);
+        return [...new Set(inputs)];
+      }
+      catch (error) { throw bindingError(error); }
+    },
+    wordShorthands(word) {
+      check();
+      if (typeof word !== "string") throw new EngineBindingError("Word must be text.");
+      try { return JSON.parse(raw.wordShorthands(word)); }
+      catch (error) { throw bindingError(error); }
+    },
+    setShorthands(words) {
+      check();
+      try {
+        const json=JSON.stringify(words);
+        if(personal) raw.setShorthandsWithExtension(personal,json);
+        else raw.setShorthands(json);
+      } catch(error) { throw bindingError(error); }
+    },
+    setInputExclusions(words) {
+      check();
+      try {
+        const json = JSON.stringify(words);
+        if (personal) raw.setInputExclusionsWithExtension(personal, json);
+        else raw.setInputExclusions(json);
+      }
       catch (error) { throw bindingError(error); }
     },
     setPronunciations(rules) {

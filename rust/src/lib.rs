@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, BTreeSet, BinaryHeap};
 mod compact;
 mod sound_map;
 mod browse;
-pub use browse::{DictionaryPage, DictionaryWord};
+pub use browse::{DictionaryPage, DictionaryWord, SoundMapInputPage};
 mod app_data;
 pub use app_data::MAX_APP_DATA_BYTES;
 mod word_metadata;
@@ -21,12 +21,20 @@ mod shared_words;
 mod next_letters;
 mod personal;
 mod pronunciations;
-pub use pronunciations::Pronunciation;
+mod input_exclusions;
+mod shorthands;
+pub use shorthands::WordShorthand;
+pub use input_exclusions::WordInputExclusion;
+pub use pronunciations::{Pronunciation, ReadAs};
 mod ranking;
 pub use ranking::{RankingRequest, RankingEnvelope, RankingGroup, RankingCandidate, RankingSuggestionResult};
 pub use personal::{PersonalWord, TypingOverride};
 pub mod profanity;
 use profanity::{contains as contains_profanity, ProfanityLanguage};
+
+pub const MIN_RANK: i32 = -1_000_000;
+pub const MAX_RANK: i32 = 1_000_000;
+fn valid_rank(rank: i32) -> bool { (MIN_RANK..=MAX_RANK).contains(&rank) }
 
 const MAX_SAFE_INTEGER: u64 = 9_007_199_254_740_991;
 const MAX_COMPOSED_CANDIDATES: usize = 20;
@@ -44,7 +52,7 @@ pub struct ApprovedMapping {
     pub id: u64,
     pub romanized: String,
     pub khmer: String,
-    pub rank: u32,
+    pub rank: i32,
     pub status: ApprovedStatus,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -95,7 +103,7 @@ pub struct ContextualSuggestionResult {
 pub struct ApprovedEnglishWord {
     pub id: u64,
     pub text: String,
-    pub rank: u32,
+    pub rank: i32,
     pub status: ApprovedStatus,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -103,7 +111,7 @@ pub struct ApprovedEnglishWord {
 pub struct ApprovedWord {
     pub id: u64,
     pub khmer: String,
-    pub rank: u32,
+    pub rank: i32,
     pub status: ApprovedStatus,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -113,7 +121,7 @@ pub struct Candidate {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub mapping_ids: Vec<u64>,
     pub khmer: String,
-    pub rank: u32,
+    pub rank: i32,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -149,7 +157,7 @@ pub enum SuggestionCandidate {
     English(EnglishCandidate),
 }
 impl SuggestionCandidate {
-    fn rank(&self) -> u32 {
+    fn rank(&self) -> i32 {
         match self {
             Self::Khmer(c) => c.rank,
             Self::English(c) => c.rank,
@@ -174,7 +182,7 @@ pub struct EnglishCandidate {
     /// Zero for a runtime contraction rule without a lexical approval identity.
     pub mapping_id: u64,
     pub text: String,
-    pub rank: u32,
+    pub rank: i32,
     /// An explicit replacement choice which must never be accepted on a boundary.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub manual_only: bool,
@@ -436,7 +444,7 @@ impl Engine {
         for word in dataset.english_words.unwrap_or_default() {
             if word.id == 0
                 || word.id > MAX_SAFE_INTEGER
-                || word.rank > 1_000_000
+                || !valid_rank(word.rank)
                 || !valid_english(&word.text)
                 || !english_ids.insert(word.id)
             {
@@ -475,7 +483,7 @@ impl Engine {
         for word in dataset.words.unwrap_or_default() {
             if word.id == 0
                 || word.id > MAX_SAFE_INTEGER
-                || word.rank > 1_000_000
+                || !valid_rank(word.rank)
                 || !valid_khmer(&word.khmer)
                 || word_ids.insert(word.id, word.khmer.clone()).is_some()
             {
@@ -509,7 +517,7 @@ impl Engine {
         for row in dataset.mappings {
             if row.id == 0
                 || row.id > MAX_SAFE_INTEGER
-                || row.rank > 1_000_000
+                || !valid_rank(row.rank)
                 || !valid_romanized(&row.romanized)
                 || !valid_khmer(&row.khmer)
             {
@@ -629,7 +637,7 @@ impl Engine {
             SuggestionCandidate::English(c) => self.commonness.level("english", &c.text),
         }
     }
-    fn mark_tap_only(&self, suggestions: &mut [Suggestion], extension: Option<&Engine>, input: &str) {
+    fn mark_tap_only(&self, suggestions: &mut [Suggestion], extension: Option<&Engine>, _input: &str) {
         for suggestion in suggestions {
             let (language, bundled) = match &suggestion.candidate {
                 SuggestionCandidate::Khmer(word) => ("khmer", self.dictionary.khmer.contains(&word.khmer)),
@@ -639,15 +647,7 @@ impl Engine {
             // Unrated/legacy words keep their existing behavior.
             let source = if bundled { self } else { extension.unwrap_or(self) };
             suggestion.tap_only |= matches!(source.commonness.level(language, suggestion_output(suggestion)), 4 | 5);
-            if language=="khmer" {
-                let pronunciation=source.dictionary.pronunciations.iter()
-                    .find(|rule|rule.word==suggestion_output(suggestion));
-                let shorthand=|reading:&str|sound_map::shorthand_match(reading,suggestion_output(suggestion))
-                    || pronunciation.is_some_and(|rule|sound_map::shorthand_match(reading,&rule.read_as));
-                suggestion.tap_only |= shorthand(input)
-                    || suggestion.completion.as_deref().is_some_and(shorthand)
-                    || suggestion.preferred_input.as_deref().is_some_and(shorthand);
-            }
+
         }
     }
     fn blocked_mapping(&self, row: &compact::Row<'_>) -> bool {
@@ -727,7 +727,8 @@ impl Engine {
                     self.commonness.level("khmer", &candidate.khmer)));
             }
         }
-        candidates.retain(|candidate| !self.dictionary.excluded_khmer.contains(&candidate.khmer));
+        candidates.retain(|candidate| !self.dictionary.excluded_khmer.contains(&candidate.khmer)
+            && !self.input_excluded(&normalized_input, &candidate.khmer, None));
         Ok(ConversionResult {
             input: input.to_owned(),
             normalized_input,
@@ -835,8 +836,9 @@ impl Engine {
         let saved_priorities = self.saved_match_priorities(&result.normalized_input);
         // Re-score the independent saved and generated paths together from
         // their original tie order, rather than a conversion-only ordering.
-        let saved = if saved_priorities.is_empty() { result.candidates }
+        let mut saved = if saved_priorities.is_empty() { result.candidates }
             else { self.exact_candidates(&result.normalized_input, usize::MAX) };
+        saved.retain(|word| !self.input_excluded(prefix, &word.khmer, base_policy));
         let mut candidates: Vec<_> = saved
             .into_iter()
             .map(|candidate| Suggestion { tap_only: false, preferred_input: None,
@@ -909,6 +911,7 @@ impl Engine {
         if features.khmer_completion {
             self.add_recoveries(&mut result, features.sound_map, base_policy, context);
         }
+        self.filter_excluded_inputs(&mut result.candidates, &result.normalized_input, base_policy);
         Ok(result)
     }
     /// Context ranks existing exact and prefix matches before completion limits.
@@ -1004,7 +1007,9 @@ impl Engine {
                 result.candidates = candidates;
             }
         }
-        self.place_recoveries(&mut result.candidates, None);
+        self.filter_excluded_inputs(&mut result.candidates, &result.normalized_input, base_policy);
+        exact_candidates.retain(|word| !self.input_excluded(&result.normalized_input, &word.khmer, base_policy));
+        self.place_recoveries(&mut result.candidates, None, features.mode, &result.normalized_input);
         if features.mode == TypingMode::English {
             Self::prioritize_english_corrections(&mut result.candidates, &result.normalized_input);
         }
@@ -1048,7 +1053,11 @@ impl Engine {
         let scores = supplied_scores.unwrap_or(&computed);
         let mut base = if layer { self.suggest_with_context_using(input, dictionary_features, context, Some(scores))? }
             else { self.suggest_with_context_base(input, dictionary_features, context, Some(scores))? };
-        let extra = extension.suggest_with_context_and_policy(input, dictionary_features, context, Some(&self.dictionary), Some(scores))?;
+        let mut extra = extension.suggest_with_context_and_policy(input, dictionary_features, context, Some(&self.dictionary), Some(scores))?;
+        self.filter_excluded_inputs(&mut base.result.candidates, &base.result.normalized_input, Some(&extension.dictionary));
+        self.filter_excluded_inputs(&mut extra.result.candidates, &base.result.normalized_input, Some(&extension.dictionary));
+        base.exact_candidates.retain(|word| !self.input_excluded(&base.result.normalized_input, &word.khmer, Some(&extension.dictionary)));
+        extra.exact_candidates.retain(|word| !self.input_excluded(&base.result.normalized_input, &word.khmer, Some(&extension.dictionary)));
         let mut preferred: BTreeMap<_,_> = extra.result.candidates.iter().chain(&base.result.candidates).filter_map(|hit|
             hit.preferred_input.as_ref().map(|input|(suggestion_output(hit).to_owned(),input.clone()))).collect();
         if !preferred.is_empty() {
@@ -1064,6 +1073,7 @@ impl Engine {
                 preferred.remove(&saved.khmer);
             }
         }
+        let competing_exact = !base.exact_candidates.is_empty() && !extra.exact_candidates.is_empty();
         let mut exact_outputs: BTreeSet<_> = base.exact_candidates.iter().map(|c| c.khmer.clone()).collect();
         for candidate in extra.exact_candidates {
             if exact_outputs.insert(candidate.khmer.clone()) { base.exact_candidates.push(candidate); }
@@ -1072,6 +1082,9 @@ impl Engine {
         // A saved/strict match in the personal layer also precedes a newly
         // tolerated base match, even when neither dictionary has local ranks.
         base.exact_candidates.sort_by_key(|candidate|preferred.contains_key(&candidate.khmer));
+        if competing_exact && features.mode == TypingMode::Khmer && features.sound_map {
+            self.rank_added_exact(&mut base.exact_candidates, extension, &base.result.normalized_input);
+        }
         let mut candidates = base.exact_candidates.iter().cloned().map(|candidate| Suggestion { tap_only: false,
             preferred_input: preferred.get(&candidate.khmer).cloned(),
             candidate: SuggestionCandidate::Khmer(candidate), completion: None, correction: None,
@@ -1101,7 +1114,8 @@ impl Engine {
         // Stable partition retains personal-first order within each class.
         let mut remaining = extra.result.candidates;
         remaining.extend(base.result.candidates);
-        remaining.sort_by_key(|candidate| candidate.correction.is_some());
+        remaining.sort_by_key(|candidate| (candidate.correction.is_some(),
+            features.mode==TypingMode::Khmer && sound_map::omitted_apostrophe_completion(candidate,&base.result.normalized_input)));
         for candidate in remaining {
             if skip_runtime_english_exact && Self::runtime_english_exact(&candidate, &base.result.normalized_input) { continue; }
             if outputs.insert(suggestion_output(&candidate).to_owned()) { candidates.push(candidate); }
@@ -1118,9 +1132,15 @@ impl Engine {
         }
         base.result.candidates = candidates;
         self.rank_local_merged(&mut base.result.candidates, extension, &base.result.normalized_input, features, scores);
-        // Apply recovery tiers before the personal-first list can fill every
-        // display slot. Complete alternatives still survive the normal cap.
-        self.place_recoveries(&mut base.result.candidates, Some(extension));
+        if features.mode==TypingMode::Khmer {
+            // Local ranks/context preserve their order inside each class;
+            // new apostrophe completions cannot overtake ordinary prefixes.
+            base.result.candidates.sort_by_key(|hit| (hit.completion.is_some(),hit.correction.is_some(),
+                sound_map::omitted_apostrophe_completion(hit,&base.result.normalized_input)));
+        }
+        // Preserve each language's correction policy before the display cap.
+        // Complete alternatives still survive the normal cap.
+        self.place_recoveries(&mut base.result.candidates, Some(extension), features.mode, &base.result.normalized_input);
         if features.mode == TypingMode::English {
             Self::prioritize_english_corrections(&mut base.result.candidates, &base.result.normalized_input);
         }
@@ -1133,6 +1153,7 @@ impl Engine {
                 context.english_word_context.as_ref());
         }
         base.result.candidates.truncate(MAX_COMPLETIONS.max(complete_count));
+        Self::align_exact_suggestions(&mut base.result.candidates, &base.exact_candidates);
         base.next_letter_weights = self.next_letter_weights(input, features, Some(extension));
         self.mark_tap_only(&mut base.result.candidates, Some(extension), &base.result.normalized_input);
         Ok(base)
@@ -1166,7 +1187,7 @@ impl Engine {
         let exact_end = index.bound(prefix, true);
         // Exact word, context, commonness, saved rank, then lexical key/ID ties.
         // Keep only the best twenty distinct outputs, even for a broad prefix.
-        let mut best: BinaryHeap<(bool, std::cmp::Reverse<context::Score>, u8, u32, String, u64, String)> =
+        let mut best: BinaryHeap<(bool, std::cmp::Reverse<context::Score>, u8, i32, String, u64, String)> =
             BinaryHeap::with_capacity(limit);
         let mut kept_outputs = BTreeSet::new();
         let mut cursor = index.cursor(start);
@@ -1196,6 +1217,7 @@ impl Engine {
                 continue;
             }
             let target = if romanized { self.dictionary.pool.get(row.target) } else { row.key };
+            if romanized && self.input_excluded(prefix.trim_end(), target, None) { continue; }
             let ranked = (row.key != prefix, std::cmp::Reverse(context::score(context, target)),
                 self.commonness.level("khmer", target), row.rank, row.key, row.id);
             if kept_outputs.contains(target) {
@@ -1233,7 +1255,7 @@ impl Engine {
         let index = &self.dictionary.english;
         let (start, end) = index.prefix(prefix);
         let exact_end = index.bound(prefix, true);
-        let mut best: BinaryHeap<(bool, u8, u32, usize, String, String, u64)> =
+        let mut best: BinaryHeap<(bool, u8, i32, usize, String, String, u64)> =
             BinaryHeap::with_capacity(limit);
         let mut cursor = index.cursor(start);
         while cursor.next < end {
@@ -1405,7 +1427,7 @@ fn keep_path(paths: &mut Vec<Candidate>, path: Candidate) {
 mod joined_tests {
     use super::*;
 
-    fn dataset(rows: Vec<(u64, String, &str, u32)>) -> ApprovedDataset {
+    fn dataset(rows: Vec<(u64, String, &str, i32)>) -> ApprovedDataset {
         ApprovedDataset {
             schema_version: 2,
             words: Some(
@@ -1528,7 +1550,7 @@ mod joined_tests {
             words: Some((1..=48).map(|id| ApprovedWord {
                 id,
                 khmer: "ក".repeat(id as usize + 1),
-                rank: if id == 48 { 0 } else { 100 + id as u32 },
+                rank: if id == 48 { 0 } else { 100 + id as i32 },
                 status: ApprovedStatus::Approved,
             }).chain(std::iter::once(ApprovedWord {
                 id: 100,
@@ -1624,6 +1646,25 @@ mod wasm {
             Engine::pronunciation_inputs(text).map(|value| serde_json::to_string(&value).unwrap())
                 .map_err(|e| JsValue::from_str(&e.to_string()))
         }
+        #[wasm_bindgen(js_name = wordShorthands)]
+        pub fn word_shorthands(&self, word: &str) -> String { serde_json::to_string(&self.engine.word_shorthands(word)).unwrap() }
+        #[wasm_bindgen(js_name = setShorthands)]
+        pub fn set_shorthands(&mut self, json: &str) -> Result<(), JsValue> {
+            self.engine.set_shorthands_json(json).map_err(|e|JsValue::from_str(&e.to_string()))
+        }
+        #[wasm_bindgen(js_name = setShorthandsWithExtension)]
+        pub fn set_shorthands_with_extension(&mut self, extension: &WasmEngine, json: &str) -> Result<(), JsValue> {
+            self.engine.set_shorthands_with_extension_json(&extension.engine,json).map_err(|e|JsValue::from_str(&e.to_string()))
+        }
+        #[wasm_bindgen(js_name = setInputExclusions)]
+        pub fn set_input_exclusions(&mut self, json: &str) -> Result<(), JsValue> {
+            self.engine.set_input_exclusions_json(json).map_err(|e| JsValue::from_str(&e.to_string()))
+        }
+        #[wasm_bindgen(js_name = setInputExclusionsWithExtension)]
+        pub fn set_input_exclusions_with_extension(&mut self, extension: &WasmEngine, json: &str) -> Result<(), JsValue> {
+            self.engine.set_input_exclusions_with_extension_json(&extension.engine, json)
+                .map_err(|e| JsValue::from_str(&e.to_string()))
+        }
         #[wasm_bindgen(js_name = setPronunciations)]
         pub fn set_pronunciations(&mut self, json: &str) -> Result<(), JsValue> {
             let rules=serde_json::from_str(json).map_err(|e| JsValue::from_str(&format!("Invalid pronunciations: {e}")))?;
@@ -1668,6 +1709,12 @@ mod wasm {
         pub fn browse_words(&self, request: &str) -> Result<String, JsValue> {
             self.engine.browse_words_json(request)
                 .map_err(|e| JsValue::from_str(&e.to_string()))
+        }
+        #[wasm_bindgen(js_name = soundMapInputs)]
+        pub fn sound_map_inputs(&self, word: &str, after: &str) -> Result<String, JsValue> {
+            self.engine.sound_map_inputs(word, after)
+                .and_then(|page| serde_json::to_string(&page).map_err(|error| crate::invalid(&error.to_string())))
+                .map_err(|error| JsValue::from_str(&error.to_string()))
         }
         #[wasm_bindgen(js_name = analyzeComponents)]
         pub fn analyze_components(&self, word: &str) -> Result<String, JsValue> {

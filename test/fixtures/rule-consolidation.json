@@ -1,9 +1,9 @@
 {
   "originalTables": {
-    "fixedSyllables": "e0edbe9c45eac2b2c6e47a0039b9a30c025e13ab43534bb4528235f946ff9c09",
-    "terminalLexicalUnits": "c168258956fc075f9e0cc9c876a0e07aa29b5f95c9fb7699884dbbb5a2cea3b9",
-    "checkedTerminalRoots": "a1182669ddc053e41351cf7f51c1d1b8167cc3c27c5713ed3455035d29c52db2",
-    "wordReadings": "06a95a22226796bf7af54e19375113b4d276ae0a9b1d4d587ace85de9d119e78"
+    "fixedSyllables": "802f5a0b9ba262965d47d95226ca2e59c900095e94c3de2e1774e51fac44ec6a",
+    "terminalLexicalUnits": "d01105185b55bc0a898a7751b389e7bd66af8c5001f91d33104172b4834e7b1d",
+    "checkedTerminalRoots": "00d826e01caa6f3d107f06cc7380c7e3b88fa1a860312fa8c655f82a463c9d41",
+    "wordReadings": "5b64fec3c2b932d238a42debde00cfcf96ebf33c0e9a899843e9bd2cd2871495"
   },
   "originalBoundaryTables": {
     "writtenNtrBoundary": "d4b1a2f839ae5955486a40bedecf40a99b5ffdcf1fac067e019817d7d51a528d",
@@ -12,7 +12,8 @@
     "unwrittenNasalStopBoundary": "ffcd0314f5e2d979863f7faa5f4ea0875d73e7842b08650ed9962a32a4392b16",
     "unwrittenNasalAspiratedBoundary": "9dbf2dfe280a57068e2ae57febf4422f6e70c9b610e5a9bbc5ecdeccfe4baa4e"
   },
-  "wordParts": 56,
-  "cases": 68,
-  "shorthands": 1
+  "wordParts": 0,
+  "cases": 61,
+  "shorthands": 1,
+  "pronunciationParts": 49
 }

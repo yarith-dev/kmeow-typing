@@ -1,0 +1,363 @@
+{
+  "previous": [
+    {
+      "word": "កាលៈទេសៈ",
+      "inputs": []
+    },
+    {
+      "word": "កុម្ភៈ",
+      "inputs": []
+    },
+    {
+      "word": "ខណៈ",
+      "inputs": [
+        "kharna",
+        "kharnak",
+        "khoana",
+        "khoanak",
+        "khorna",
+        "khornak"
+      ]
+    },
+    {
+      "word": "គណៈ",
+      "inputs": [
+        "keanak"
+      ]
+    },
+    {
+      "word": "គណៈកម្មាធិការ",
+      "inputs": []
+    },
+    {
+      "word": "គណៈរដ្ឋមន្ត្រី",
+      "inputs": [
+        "keanakroatmontrei",
+        "keanakroatmontrey",
+        "keanakroatmontri",
+        "keanakrodthomntri",
+        "keanakrortmontrei",
+        "keanakrortmontrey",
+        "keanakrortmontri"
+      ]
+    },
+    {
+      "word": "គុណលក្ខណៈ",
+      "inputs": [
+        "konlaekna",
+        "konlaeknak",
+        "kunlaekna",
+        "kunlaeknak"
+      ]
+    },
+    {
+      "word": "ឆន្ទៈ",
+      "inputs": []
+    },
+    {
+      "word": "ឋានៈ",
+      "inputs": []
+    },
+    {
+      "word": "ទស្សនៈ",
+      "inputs": [
+        "tuhna",
+        "tuhnak",
+        "tusna",
+        "tusnak"
+      ]
+    },
+    {
+      "word": "ធុរៈ",
+      "inputs": [
+        "thoreak",
+        "thureak",
+        "toreak",
+        "tureak"
+      ]
+    },
+    {
+      "word": "បុគ្គលិកលក្ខណៈ",
+      "inputs": [
+        "bokkoleklaekna",
+        "bokkoleklaeknak",
+        "bokkoliklaekna",
+        "bokkoliklaeknak",
+        "bukkoleklaekna",
+        "bukkoleklaeknak",
+        "bukkoliklaekna",
+        "bukkoliklaeknak"
+      ]
+    },
+    {
+      "word": "បេយ្យាលៈ",
+      "inputs": []
+    },
+    {
+      "word": "ព្យញ្ជនៈ",
+      "inputs": []
+    },
+    {
+      "word": "ភារៈ",
+      "inputs": [
+        "peareak",
+        "pheareak",
+        "phiareak",
+        "piareak"
+      ]
+    },
+    {
+      "word": "ភេសជ្ជៈ",
+      "inputs": []
+    },
+    {
+      "word": "រយៈ",
+      "inputs": []
+    },
+    {
+      "word": "លក្ខណៈ",
+      "inputs": [
+        "laekna",
+        "laeknak"
+      ]
+    },
+    {
+      "word": "លោហៈ",
+      "inputs": [
+        "loha",
+        "lohak"
+      ]
+    },
+    {
+      "word": "សម្ភារៈ",
+      "inputs": []
+    },
+    {
+      "word": "សាធារណៈ",
+      "inputs": [
+        "satearona",
+        "satearonak",
+        "sathearona",
+        "sathearonak",
+        "sathiarona",
+        "sathiaronak",
+        "satiarona",
+        "satiaronak"
+      ]
+    },
+    {
+      "word": "សារៈសំខាន់",
+      "inputs": []
+    },
+    {
+      "word": "សិល្បៈ",
+      "inputs": []
+    },
+    {
+      "word": "ស្រៈ",
+      "inputs": []
+    },
+    {
+      "word": "ស្រៈនិស្ស័យ",
+      "inputs": []
+    },
+    {
+      "word": "ស្រៈផ្សំ",
+      "inputs": []
+    },
+    {
+      "word": "ស្រៈពេញតួ",
+      "inputs": []
+    },
+    {
+      "word": "ស្វរៈ",
+      "inputs": []
+    },
+    {
+      "word": "អនុស្សរណៈ",
+      "inputs": [
+        "aknohrona",
+        "aknohronak",
+        "aknosrona",
+        "aknosronak",
+        "aknuhrona",
+        "aknuhronak",
+        "aknusrona",
+        "aknusronak"
+      ]
+    },
+    {
+      "word": "ឥន្ធនៈ",
+      "inputs": []
+    }
+  ],
+  "examples": [
+    [
+      "keaknak",
+      "គណៈ"
+    ],
+    [
+      "keanak",
+      "គណៈ"
+    ],
+    [
+      "keaknakroatmontrei",
+      "គណៈរដ្ឋមន្ត្រី"
+    ],
+    [
+      "keanakroatmontrei",
+      "គណៈរដ្ឋមន្ត្រី"
+    ],
+    [
+      "keaknakarmmeatheka",
+      "គណៈកម្មាធិការ"
+    ],
+    [
+      "srak",
+      "ស្រៈ"
+    ],
+    [
+      "thanak",
+      "ឋានៈ"
+    ],
+    [
+      "kalaktesak",
+      "កាលៈទេសៈ"
+    ],
+    [
+      "royeak",
+      "រយៈ"
+    ],
+    [
+      "saraksomkhan",
+      "សារៈសំខាន់"
+    ],
+    [
+      "srakphsom",
+      "ស្រៈផ្សំ"
+    ],
+    [
+      "srakpenhtur",
+      "ស្រៈពេញតួ"
+    ],
+    [
+      "kompheak",
+      "កុម្ភៈ"
+    ],
+    [
+      "chonteak",
+      "ឆន្ទៈ"
+    ],
+    [
+      "paiyalak",
+      "បេយ្យាលៈ"
+    ],
+    [
+      "phesachcheak",
+      "ភេសជ្ជៈ"
+    ],
+    [
+      "pyonhcheakneak",
+      "ព្យញ្ជនៈ"
+    ],
+    [
+      "entheakneak",
+      "ឥន្ធនៈ"
+    ],
+    [
+      "sel",
+      "សិល្បៈ"
+    ],
+    [
+      "svakrak",
+      "ស្វរៈ"
+    ],
+    [
+      "sraknihsai",
+      "ស្រៈនិស្ស័យ"
+    ]
+  ],
+  "irregular": [
+    {
+      "word": "កុម្ភៈ",
+      "readAs": "កុមភៈ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "ឆន្ទៈ",
+      "readAs": "ឆនទៈ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "ព្យញ្ជនៈ",
+      "readAs": "ព្យញ់ជៈនៈ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "ភេសជ្ជៈ",
+      "readAs": "ភេសាចជៈ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "ឥន្ធនៈ",
+      "readAs": "អិនធៈនៈ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "បេយ្យាលៈ",
+      "readAs": "ប៉ៃយ៉ាល៉ៈ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "ស្វរៈ",
+      "readAs": "ស្វៈរ៉ៈ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "សិល្បៈ",
+      "readAs": "សិល",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    },
+    {
+      "word": "ស្រៈនិស្ស័យ",
+      "readAs": "ស្រៈនិះសៃ",
+      "originalSpellingOnly": true,
+      "positions": [
+        "standalone"
+      ],
+      "reusableAsComponent": false
+    }
+  ]
+}

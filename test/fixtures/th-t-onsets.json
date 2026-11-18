@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {"word":"ថា","previous":["tha"],"additional":["ta"]},
+    {"word":"ថែ","previous":["thae"],"additional":["tae"]},
+    {"word":"ថ្លៃ","previous":["thlai"],"additional":["tlai"]},
+    {"word":"ថ្ងៃ","previous":["thngai"],"additional":["tngai"]},
+    {"word":"ថ្នាំ","previous":["thnam"],"additional":["tnam"]},
+    {"word":"ថ្ម","previous":["thmo"],"additional":["tmo"]},
+    {"word":"ថត","previous":["thot"],"additional":["tot"]},
+    {"word":"ធំ","previous":["thom","thum"],"additional":["tom","tum"]},
+    {"word":"ធុង","previous":["thong","thung"],"additional":["tong","tung"]},
+    {"word":"ធូរ","previous":["thou","thu"],"additional":["tou","tu"]},
+    {"word":"ធ្វើ","previous":["thver","thwer"],"additional":["tver","twer"]},
+    {"word":"ធម្មតា","previous":["thommota"],"additional":["tommota"]},
+    {"word":"ធម៌","previous":["thoa","thor"],"additional":["toa","tor"]},
+    {"word":"ធ្លាក់","previous":["thleak"],"additional":["tleak"]},
+    {"word":"ធ្មេញ","previous":["thmenh"],"additional":["tmenh"]},
+    {"word":"ធ្ងន់","previous":["thngon"],"additional":["tngon"]},
+    {"word":"កថា","previous":["kartha","koatha","kortha"],"additional":["karta","koata","korta"]},
+    {"word":"អថា","previous":["aktha"],"additional":["akta"]},
+    {"word":"អធា","previous":["akthea","akthia"],"additional":["aktea","aktia"]},
+    {"word":"ធា","previous":["thea","thia"],"additional":["tea","tia"]},
+    {"word":"ស្ថ","previous":["sthar","sthoa","sthor"],"additional":["star","stoa","stor"]},
+    {"word":"ទ្ធ","previous":["ttho"],"additional":["tto"]},
+    {"word":"លទ្ធិ","previous":["lerthe","lerthi"],"additional":["lerte","lerti"]},
+    {"word":"លទ្ធភាព","previous":["lerthopeap","lerthopheap","lerthophiap","lerthopiap"],"additional":["lertopeap","lertopheap","lertophiap","lertopiap"]}
+  ],
+  "controls": [
+    {"word":"តា","inputs":["ta"]},
+    {"word":"តែ","inputs":["tae"]},
+    {"word":"ទំ","inputs":["tom","tum"]},
+    {"word":"ទុំ","inputs":["tum"]},
+    {"word":"ទង់","inputs":["tong"]},
+    {"word":"ទង","inputs":["tong"]},
+    {"word":"តុ","inputs":["to","tu"]},
+    {"word":"ទូរ","inputs":["tou","tu"]},
+    {"word":"កូន","inputs":["kon"]},
+    {"word":"លទ្ធផល","inputs":["lertphol","lertpol"]},
+    {"word":"កថ","inputs":["koth"]},
+    {"word":"កធ","inputs":["koth"]},
+    {"word":"អាថ","inputs":["ath"]},
+    {"word":"អាធ","inputs":["ath"]},
+    {"word":"ពុធ","inputs":["pot","poth","put","puth"]},
+    {"word":"ឋា","inputs":["tha"]},
+    {"word":"ឍា","inputs":["thea","thia"]}
+  ],
+  "collisions": [
+    ["ta","តា"],["tae","តែ"],["tom","ទំ"],["tum","ទំ"],
+    ["tong","ទង់"],["tu","តុ"],["tou","ទូរ"],["tver","កូន"]
+  ]
+}

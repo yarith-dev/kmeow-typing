@@ -137,6 +137,10 @@ impl ReadingSplits {
             && !base.is_some_and(|base|base.sound_map_disabled(word)||base.excluded_khmer.contains(word)));
         Self {words,saved,cached:Default::default()}
     }
+    pub(crate) fn is_standalone(&self, word: &str) -> bool {
+        self.saved.get(word).is_some_and(Vec::is_empty)
+    }
+
     pub(crate) fn parts(&self,word:&str)->Option<Vec<WordComponent>> {
         if let Some(parts)=self.cached.borrow().get(word) {return parts.clone();}
         let result=detect(word,|part|self.words.get(part).copied(),self.saved.get(word)).render(word);

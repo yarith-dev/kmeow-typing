@@ -51,8 +51,7 @@ pub(super) fn validate(rules: &Rules) -> Result<(), String> {
             let left = rules.consonants.iter().find(|c|c.khmer == pair.second).unwrap();
             let right = rules.consonants.iter().find(|c|c.khmer == pair.subscript).unwrap();
             if left.onset_keys.len() != 1 || right.onset_keys.is_empty()
-                || !right.onset_keys.iter().all(|key|key.text.starts_with(&left.onset_keys[0].text)
-                    && key.text != left.onset_keys[0].text) {
+                || !right.onset_keys.iter().all(|key|key.text.starts_with(&left.onset_keys[0].text)) {
                 return Err("Joined consonants require the left key to overlap the start of the right key.".into());
             }
         }
@@ -121,6 +120,7 @@ pub(super) fn component(spelling: &str, keys: &[Key], context: overrides::Contex
         .chain(rules().runtime.closed_inherent.get(&onset.series)).flatten().collect();
     let mut result = Vec::new();
     for key in keys {
+        if key.paths.is_some() {result.push(key.clone());continue;}
         let replacement = onset.onset_keys.iter().find_map(|initial|
             defaults.iter().find_map(|vowel|
                 key.text.strip_prefix(&format!("{}{}",initial.text,vowel.text)).map(|tail|(initial,tail))));
@@ -133,7 +133,8 @@ pub(super) fn component(spelling: &str, keys: &[Key], context: overrides::Contex
                         &tail[left.len()..]
                     } else { tail }
                 } else { tail };
-                let key = Key {text:format!("{}{}{tail}",initial.text,vowel.text),priority:key.priority};
+                let key = Key {text:format!("{}{}{tail}",initial.text,vowel.text),
+                    priority:key.priority,preserve_existing:key.preserve_existing,prediction_stage:key.prediction_stage,paths:key.paths.clone()};
                 if !result.contains(&key) { result.push(key); }
             }
         } else if !result.contains(key) { result.push(key.clone()); }

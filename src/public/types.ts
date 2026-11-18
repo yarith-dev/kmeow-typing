@@ -17,7 +17,7 @@ export interface PersonalWord {
   /** Defaults to Khmer. English words do not accept Romanized spellings. */
   language?: "khmer" | "english";
   spellings?: string[];
-  /** Lower ranks come first; defaults to 0. */
+  /** Integer from -1,000,000 to 1,000,000. Lower ranks come first; defaults to 0. */
   rank?: number;
 }
 
@@ -56,12 +56,25 @@ export interface ComponentAnalysis {
   moreAlternatives: boolean;
 }
 
-export interface Pronunciation { word: string; readAs: string; }
+export interface Pronunciation { word: string; readAs: string | string[]; }
+export interface WordInputExclusion { word: string; inputs: string[]; }
+export interface WordShorthand { word: string; inputs: string[]; }
+export interface SoundMapInputPage {
+  inputs: string[];
+  nextAfter: string | null;
+}
 
 export interface TypingEngine {
-  /** Preview up to 64 normal Sound map readings of a Khmer alternate spelling. */
-  previewPronunciation(readAs: string): string[];
-  /** Replace generated readings using Khmer respellings; [] restores defaults. Saved aliases remain. */
+  /** Read a bundled word's generated spellings, 64 per page. Includes excluded/disabled keys, omits saved aliases and shorthands. */
+  soundMapInputs(word: string, after?: string): SoundMapInputPage;
+  /** Replace exact Romanized exclusions for bundled and personal words. Survives personal changes; [] clears it. */
+  setInputExclusions(words: WordInputExclusion[]): void;
+  /** Whole-word suggestion-only inputs. [] restores defaults; an empty word inputs list disables its shorthand. */
+  setShorthands(words: WordShorthand[]): void;
+  wordShorthands(word: string): string[];
+  /** Combine the previews of one or more Khmer spellings, omitting duplicate readings. */
+  previewPronunciation(readAs: string | readonly string[]): string[];
+  /** Edit a word or built-in part using one or more Khmer respellings; [] restores defaults. Saved aliases remain. */
   setPronunciations(rules: Pronunciation[]): void;
   /** Saved whole-input readings and composition, unchanged by suggestion settings. */
   convert(input: string): ConversionResult;

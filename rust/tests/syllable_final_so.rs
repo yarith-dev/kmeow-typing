@@ -26,7 +26,7 @@ fn syllable_final_so_accepts_h_and_s_inside_compounds_without_changing_onsets_or
             let hit = result.exact_candidates.iter().find(|candidate|candidate.khmer == word)
                 .unwrap_or_else(||panic!("{input}: {word}"));
             assert_eq!(hit.mapping_id,Some(98000+i as u64));
-            assert_eq!(hit.rank,i as u32);
+            assert_eq!(hit.rank,i as i32);
             assert_eq!(restored.suggest(input).unwrap(),core.suggest(input).unwrap());
             for features in [SuggestionFeatures {sound_map:false,..Default::default()},
                 SuggestionFeatures {romanized:false,..Default::default()},

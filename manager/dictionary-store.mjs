@@ -159,20 +159,24 @@ export function dictionaryStore(root,{commitRename=rename}={}){
       const preferences=structuredClone(before.info.provenance.sharedWords?.words??[]);
       check(request.preferences===undefined||(Array.isArray(request.preferences)&&request.preferences.length<=10000),'Invalid shared word preferences.');
       const componentChoices=structuredClone(before.info.provenance.wordComponents?.words??[]);
+      const inputExclusions=structuredClone(before.info.provenance.inputExclusions?.words??[]);
+      const shorthands=structuredClone(before.info.provenance.shorthands?.words??[]);
       const ratingChanges=new Map(),pendingComponents=new Map();
       let nextId=Math.max(0,...source.words.map(word=>word.id),...source.englishWords.map(word=>word.id),...source.mappings.map(word=>word.id))+1;
       for(const entry of entries){
         check(entry&&typeof entry==='object'&&!Array.isArray(entry),'Invalid word.');
-        check(Object.keys(entry).every(key=>['word','language','spellings','rank','soundMapEnabled','commonnessLevel','components'].includes(key)),'Unexpected word fields.');
+        check(Object.keys(entry).every(key=>['word','language','spellings','rank','soundMapEnabled','commonnessLevel','components','excludedInputs','shorthands'].includes(key)),'Unexpected word fields.');
         const language=entry.language??'khmer',word=entry.word;
         check(['khmer','english'].includes(language),'Choose Khmer or English.');
         check(typeof word==='string'&&word.length>0&&word.length<=240&&word===word.trim(),'Enter a word of at most 240 characters.');
-        check(entry.rank===undefined||(Number.isSafeInteger(entry.rank)&&entry.rank>=0&&entry.rank<=1000000),'Rank must be an integer from 0 to 1000000.');
+        check(entry.rank===undefined||(Number.isSafeInteger(entry.rank)&&entry.rank>=-1000000&&entry.rank<=1000000),'Rank must be an integer from -1000000 to 1000000.');
         check(entry.soundMapEnabled===undefined||typeof entry.soundMapEnabled==='boolean','Sound map setting must be a boolean.');
         check(language==='khmer'||entry.soundMapEnabled===undefined,'Sound map settings apply only to Khmer words.');
         check(entry.commonnessLevel===undefined||entry.commonnessLevel===null||(Number.isInteger(entry.commonnessLevel)&&entry.commonnessLevel>=1&&entry.commonnessLevel<=5),'Word level must be from 1 to 5 or unrated.');
         check(entry.spellings===undefined||(Array.isArray(entry.spellings)&&entry.spellings.length<=1000&&entry.spellings.every(key=>typeof key==='string'&&key.length<=512&&/^[a-z]+(?:[ '\-][a-z]+)*$/i.test(key))),'Use Romanized letters, spaces, apostrophes or hyphens for spellings.');
         check(language==='khmer'||!entry.spellings?.length,'English words do not use Romanized spellings.');
+        check(entry.excludedInputs===undefined||(language==='khmer'&&Array.isArray(entry.excludedInputs)&&entry.excludedInputs.length<=1000&&entry.excludedInputs.every(key=>typeof key==='string'&&key.trim().length<=120&&/^[a-z]+(?:[ '\-][a-z]+)*$/i.test(key.trim()))),'Use up to 1,000 Romanized excluded inputs of at most 120 characters for a Khmer word.');
+        check(entry.shorthands===undefined||(language==='khmer'&&Array.isArray(entry.shorthands)&&entry.shorthands.length<=1000&&entry.shorthands.every(key=>typeof key==='string'&&key.trim().length<=120&&/^[a-z]+(?:'[a-z]+)*$/i.test(key.trim()))),'Use up to 1,000 Romanized shorthands of at most 120 characters for a Khmer word.');
         const records=language==='khmer'?source.words:source.englishWords,key=language==='khmer'?'khmer':'text';
         let typing=records.find(row=>row[key]===word);
         if(!typing&&language==='english'&&(request.type==='import'||request.preservePersonal===true))typing=records.find(row=>row.text.toLowerCase()===word.toLowerCase());
@@ -192,6 +196,24 @@ export function dictionaryStore(root,{commitRename=rename}={}){
         if(entry.commonnessLevel!==undefined){
           ratingChanges.set(JSON.stringify([language,typing[key]]),entry.commonnessLevel);
           for(const row of meta[language].words)if(row.word===typing[key])row.commonnessLevel=entry.commonnessLevel;
+        }
+        if(entry.shorthands!==undefined){
+          const inputs=[...new Set(entry.shorthands.map(key=>key.trim().toLowerCase()))].sort();
+          const previous=before.catalog.khmer.find(row=>row.word===word)?.shorthands??[];
+          if(JSON.stringify(inputs)!==JSON.stringify(previous)){
+            const index=shorthands.findIndex(row=>row.word===word);
+            if(index>=0)shorthands.splice(index,1);
+            shorthands.push({word,inputs});
+          }
+        }
+        if(entry.excludedInputs!==undefined){
+          const inputs=[...new Set(entry.excludedInputs.map(key=>key.trim().toLowerCase()))].sort();
+          const index=inputExclusions.findIndex(row=>row.word===word);
+          const previous=inputExclusions[index]?.inputs??[];
+          if(JSON.stringify(inputs)!==JSON.stringify(previous)){
+            if(index>=0)inputExclusions.splice(index,1);
+            if(inputs.length)inputExclusions.push({word,inputs});
+          }
         }
         if(entry.components!==undefined)pendingComponents.set(JSON.stringify([language,word]),{language,word,value:entry.components});
         if(language==='khmer'&&entry.soundMapEnabled!==undefined){
@@ -243,14 +265,18 @@ export function dictionaryStore(root,{commitRename=rename}={}){
       }
       for(const preferred of request.preferences??[])mergePreference(preferences,preferred);
       const previousPreferences=before.info.provenance.sharedWords?.words??[];
-      if(JSON.stringify(pronunciationRules)===JSON.stringify(before.info.provenance.pronunciations?.rules??[])&&JSON.stringify(source)===JSON.stringify(before.source)&&JSON.stringify(preferences)===JSON.stringify(previousPreferences)&&JSON.stringify(meta)===JSON.stringify(before.metadata)&&JSON.stringify(componentChoices)===JSON.stringify(before.info.provenance.wordComponents?.words??[]))return before;
+      if(JSON.stringify(shorthands)===JSON.stringify(before.info.provenance.shorthands?.words??[])&&JSON.stringify(inputExclusions)===JSON.stringify(before.info.provenance.inputExclusions?.words??[])&&JSON.stringify(pronunciationRules)===JSON.stringify(before.info.provenance.pronunciations?.rules??[])&&JSON.stringify(source)===JSON.stringify(before.source)&&JSON.stringify(preferences)===JSON.stringify(previousPreferences)&&JSON.stringify(meta)===JSON.stringify(before.metadata)&&JSON.stringify(componentChoices)===JSON.stringify(before.info.provenance.wordComponents?.words??[]))return before;
       const core=new WasmEngine(JSON.stringify(source));
       let packed,manifest;
       try{
-        try{core.setPronunciations(JSON.stringify(pronunciationRules));}catch(error){throw new DictionaryError(String(error));}
+        try{core.setPronunciations(JSON.stringify(pronunciationRules));core.setInputExclusions(JSON.stringify(inputExclusions));core.setShorthands(JSON.stringify(shorthands));}catch(error){throw new DictionaryError(String(error));}
         const compactHash=sha(core.exportBinary()),snapshot=sha(JSON.stringify({compactHash,words:[meta.khmer.words,meta.english.words]}));
         const json={};for(const language of ['khmer','english']){meta[language].snapshotId=snapshot;json[language]=JSON.stringify(meta[language]);}
         const provenance=structuredClone(before.info.provenance);
+        if(shorthands.length)provenance.shorthands={format:'kmeow-shorthands-v1',words:shorthands};
+        else delete provenance.shorthands;
+        if(inputExclusions.length)provenance.inputExclusions={format:'kmeow-input-exclusions-v1',words:inputExclusions};
+        else delete provenance.inputExclusions;
         if(pronunciationRules.length)provenance.pronunciations={format:'kmeow-pronunciations-v1',rules:pronunciationRules};
         else delete provenance.pronunciations;
         if(componentChoices.length)provenance.wordComponents={format:'kmeow-word-components-v1',words:componentChoices};

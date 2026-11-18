@@ -23,7 +23,7 @@ fn remaining_components_preserve_previous_readings_and_checked_original_scope() 
             let result = engine.suggest_with_context(input, Default::default(), &Default::default()).unwrap();
             let hit = result.exact_candidates.iter().find(|c| c.khmer == word).unwrap_or_else(|| panic!("{input}: {word}"));
             let index = words.iter().position(|&w| w == word).unwrap();
-            assert_eq!(hit.mapping_id, Some((950000 + index) as u64)); assert_eq!(hit.rank, (index % 7) as u32);
+            assert_eq!(hit.mapping_id, Some((950000 + index) as u64)); assert_eq!(hit.rank, (index % 7) as i32);
         }
     }
     for pair in proof["negativePairs"].as_array().unwrap() {

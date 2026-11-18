@@ -6,13 +6,17 @@ use crate::{compact, Candidate, Suggestion, SuggestionCandidate};
 use serde::Deserialize;
 mod ranking;
 mod browse;
+mod input_pages;
 mod next_letters;
 mod config;
+mod factored;
 mod overrides;
 mod local_vowels;
 mod consonant_counts;
 mod component_words;
 mod read_as;
+mod two_dot;
+mod ending_alternatives;
 use ranking::{Key, Match, match_chunks};
 #[cfg(test)]
 mod ranking_tests;
@@ -192,7 +196,7 @@ struct TerminalReadingUnit {
 #[derive(Deserialize)]
 struct FixedSyllable {
     khmer: String,
-    keys: Vec<Key>,
+    keys: read_as::Keys,
     #[serde(default, rename = "originalSpellingOnly")]
     original_spelling_only: bool,
     #[serde(default)]
@@ -232,7 +236,7 @@ impl FixedSyllable {
 #[serde(rename_all = "camelCase")]
 struct WordReading {
     khmer: String,
-    keys: Vec<Key>,
+    keys: read_as::Keys,
     words: Vec<String>,
     positions: Vec<WordReadingPosition>,
     #[serde(default)]
@@ -301,7 +305,7 @@ impl WordReading {
         word_position_matches(&self.positions,start,end,original_len)
     }
     fn checked_end(&self, word: &str, chars: &[char], start: usize) -> Option<usize> {
-        if self.keys.is_empty() || !self.words.iter().any(|checked| checked == word) {
+        if !self.words.iter().any(|checked| checked == word) || self.keys.is_empty() {
             return None;
         }
         let (end, original_len) = original_part_end(word,chars,start,&self.khmer)?;
@@ -343,6 +347,8 @@ struct GlottalOnset {
     series: String,
     inherent_keys: Vec<Key>,
     optional_onset_keys: BTreeMap<String, Vec<Key>>,
+    #[serde(default)]
+    additional_vowel_keys: BTreeMap<String, Vec<Key>>,
 }
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -414,7 +420,7 @@ struct InitialSamaaGovernance {
 #[serde(rename_all = "camelCase")]
 struct CheckedRootContinuation {
     root: String,
-    keys: Vec<Key>,
+    keys: read_as::Keys,
     words: Vec<String>,
     #[serde(default)]
     preserve_mapped: bool,
@@ -423,7 +429,7 @@ struct CheckedRootContinuation {
 #[serde(rename_all = "camelCase")]
 struct TerminalLexicalUnit {
     khmer: String,
-    keys: Vec<Key>,
+    keys: read_as::Keys,
     #[serde(default)]
     retained_readings: Vec<Vec<Key>>,
     #[serde(default)]
@@ -526,6 +532,8 @@ struct Runtime {
     consonant_count_tolerance: consonant_counts::Settings,
     #[serde(default)]
     initial_carrier_nasal: Option<InitialCarrierNasal>,
+    #[serde(default)]
+    initial_carrier_direct_vowel: Vec<Key>,
     codas: BTreeMap<String, Vec<Key>>,
     word_final_silent_consonants: Vec<String>,
     final_clusters: Vec<FinalCluster>,
@@ -550,6 +558,8 @@ struct Runtime {
     #[serde(default)]
     non_reusable_word_parts: BTreeSet<String>,
     #[serde(default)]
+    pronunciation_defaults: Vec<crate::Pronunciation>,
+    #[serde(default)]
     default_component_parts: Vec<component_words::DefaultPart>,
     #[serde(default)]
     shorthand_readings: Vec<component_words::Reading>,
@@ -559,6 +569,10 @@ struct Runtime {
     word_readings: Vec<WordReading>,
     silent_word_endings: Vec<SilentWordEnding>,
     reviewed_word_final_codas: Vec<ReviewedWordFinalCoda>,
+    #[serde(default)]
+    closed_vowel_alternatives: BTreeMap<String, Vec<Key>>,
+    #[serde(default)]
+    ending_alternatives: ending_alternatives::Settings,
     repeated_initial_presyllable: RepeatedInitialPresyllable,
     short_inherent_before_coda: Vec<ShortInherentBeforeCoda>,
     glottal_onset: GlottalOnset,
@@ -571,6 +585,7 @@ struct Runtime {
     explicit_glottal_bantoc: ExplicitGlottalBantoc,
     terminal_plain_a_sign: TerminalPlainASign,
     terminal_written_same_o_sign: TerminalWrittenSameOSign,
+    short_inherent_sign: two_dot::Rule,
     written_velar_r_boundary: WrittenNhRBoundary,
     unwritten_nasal_r_boundary: WrittenNhRBoundary,
     terminal_nasal_compound_boundary: WrittenNhRBoundary,
@@ -827,6 +842,19 @@ fn vowel_keys(vowel: &str, series: &str) -> Option<Vec<Vec<Key>>> {
     vowel.chars().map(|ch| readings().find(|v| v.khmer == ch.to_string()).map(keys)).collect()
 }
 
+// Apply only after a parsed subscript អ, before the ordinary coda rules.
+// Matching the complete vowel form leaves composite vowels and plain អ alone.
+fn add_glottal_vowel_keys(vowel: &str, mapped: &mut [Vec<Key>]) {
+    let [keys] = mapped else { return; };
+    if let Some(additional) = rules().runtime.glottal_onset.additional_vowel_keys.get(vowel) {
+        for key in additional {
+            let mut key = key.clone();
+            key.prediction_stage = 1;
+            if !keys.contains(&key) { keys.push(key); }
+        }
+    }
+}
+
 // Reviewed combinations require the original written word end.
 // Keep the per-sign mapped fallback at medial or cancellation-exposed ends.
 fn terminal_combined_vowel_keys(vowel: &str, series: &str) -> Option<Vec<Vec<Key>>> {
@@ -1017,9 +1045,11 @@ fn selected_word_reading_at(
 fn selected_word_reading_with_overrides(
     word: &str, chars: &[char], start: usize, include_additive: bool, override_context: overrides::Context<'_>,
 ) -> Option<(&'static WordReading, usize)> {
-    if !override_context.uses_part_boundaries() { return None; }
+    if !override_context.uses_part_boundaries() || !override_context.allows_original_word_rules(word) {
+        return None;
+    }
     rules().runtime.word_readings.iter().find_map(|rule| {
-        if override_context.word!=word && has_shorthand_rule(&rule.khmer) {return None;}
+        if (override_context.skip_shorthands || override_context.word != word) && has_shorthand_rule(&rule.khmer) { return None; }
         // A checked component pair adds its own complete lattice below. Mixing
         // its root with ordinary suffix alternatives would enable unselected inputs.
         if rule.checked_suffix_readings.iter().chain(&rule.checked_prefix_readings)
@@ -1042,15 +1072,15 @@ fn add_terminal_lexical_readings(text: &str, chunks: &mut Vec<Vec<Key>>, overrid
     }
     if override_context.reads_pronunciation() { return; }
     for unit in &rules().runtime.terminal_lexical_units {
-        if override_context.word != text && has_shorthand_rule(&unit.khmer) {
+        if (override_context.skip_shorthands || override_context.word != text) && has_shorthand_rule(&unit.khmer) {
             continue;
         }
         // A standalone ending can also be a reusable part, but only its
         // explicitly reusable keys may cross a pronunciation component cut.
-        let reusable = if !unit.words.is_empty() && !override_context.allows_checked_ending(text) {
+        let reusable = if !unit.words.is_empty() && !override_context.allows_original_word_rules(text) {
             let Some(part) = rules().runtime.component_readings.iter()
                 .find(|part| part.khmer == text && part.khmer == unit.khmer) else { continue; };
-            Some(part.keys.as_slice())
+            Some(override_context.word_part_keys(&part.khmer).unwrap_or(&part.keys))
         } else {
             None
         };
@@ -1089,7 +1119,7 @@ fn add_terminal_lexical_readings(text: &str, chunks: &mut Vec<Vec<Key>>, overrid
                     alternatives.iter().map(move |key| prefix.joined(key))
                 }).collect();
             }
-            for key in &unit.keys {
+            for key in override_context.word_part_keys(&unit.khmer).unwrap_or(&unit.keys) {
                 if !key.is_empty() && !keys.contains(key)
                     && reusable.is_none_or(|allowed| allowed.contains(key)) {
                     keys.push(key.clone());
@@ -1252,7 +1282,8 @@ mod closing_evidence_tests {
         for word in ["បន្ទប់រៀន", "បន្ទប់ដេក", "បន្ទប់ទឹក"] {
             let readings = word_readings(word).unwrap();
             assert_eq!(readings.len(), 2, "{word}");
-            assert_eq!(readings[0][0][0].text, "bontup");
+            assert!(readings[0][0].iter().any(|key|key.text == "bontup"));
+            assert!(readings[0][0].iter().any(|key|key.text == "bontop"));
             assert_ne!(readings[1][0][0].text, "bontup");
         }
         for word in ["ម្ចាស់ដី", "បន្ទប់គេង", "ម្ចាស់ផ្ទះក៍", "បន្ទប់រៀនក៍"] {
@@ -1629,11 +1660,11 @@ mod closing_evidence_tests {
         let proof: serde_json::Value = serde_json::from_str(include_str!("../../test/fixtures/explicit-glottal-bantoc.json")).unwrap();
         for word in proof["selectorYes"].as_array().unwrap() {
             let chars: Vec<_> = word.as_str().unwrap().chars().collect();
-            assert!(explicit_glottal_bantoc_chunks(&chars, true).is_some(), "{word}");
-            assert!(explicit_glottal_bantoc_chunks(&chars, false).is_none(), "exposed: {word}");
+            assert!(explicit_glottal_bantoc_chunks(&chars, true, overrides::Context::bare("")).is_some(), "{word}");
+            assert!(explicit_glottal_bantoc_chunks(&chars, false, overrides::Context::bare("")).is_none(), "exposed: {word}");
         }
         for word in proof["selectorNo"].as_array().unwrap() {
-            assert!(explicit_glottal_bantoc_chunks(&word.as_str().unwrap().chars().collect::<Vec<_>>(), true).is_none(), "outside: {word}");
+            assert!(explicit_glottal_bantoc_chunks(&word.as_str().unwrap().chars().collect::<Vec<_>>(), true, overrides::Context::bare("")).is_none(), "outside: {word}");
         }
     }
 
@@ -1642,11 +1673,11 @@ mod closing_evidence_tests {
         let proof: serde_json::Value = serde_json::from_str(include_str!("../../test/fixtures/written-nasal-glottal-boundary.json")).unwrap();
         for word in proof["proofWords"].as_array().unwrap() {
             let chars: Vec<_> = word.as_str().unwrap().chars().collect();
-            assert!(written_nasal_glottal_chunks(&chars, true).is_some(), "{word}");
-            assert!(written_nasal_glottal_chunks(&chars, false).is_none(), "exposed: {word}");
+            assert!(written_nasal_glottal_chunks(&chars, true, overrides::Context::bare("")).is_some(), "{word}");
+            assert!(written_nasal_glottal_chunks(&chars, false, overrides::Context::bare("")).is_none(), "exposed: {word}");
         }
         for word in proof["selectorNo"].as_array().unwrap() {
-            assert!(written_nasal_glottal_chunks(&word.as_str().unwrap().chars().collect::<Vec<_>>(), true).is_none(), "outside: {word}");
+            assert!(written_nasal_glottal_chunks(&word.as_str().unwrap().chars().collect::<Vec<_>>(), true, overrides::Context::bare("")).is_none(), "outside: {word}");
         }
     }
 
@@ -2171,9 +2202,19 @@ fn governed_onset(text: &str, chars: &[char]) -> Option<usize> {
 struct Word {
     candidate: Candidate,
     readings: Vec<Vec<Vec<Key>>>,
+    graph: Option<factored::Graph>,
+    apostrophe_graph: Option<factored::Graph>,
     recovery_lengths: Vec<(usize, usize)>,
+    // Only shorthand-bearing words need a separate inspection view. Matching
+    // keeps the original lattices, including overlapping shorthand keys.
+    ordinary_readings: Option<Vec<Vec<Vec<Key>>>>,
 }
 
+pub(crate) fn default_shorthands(word:&str)->Vec<String> {
+    rules().runtime.shorthand_readings.iter().filter(|rule|rule.khmer==word)
+        .flat_map(|rule|rule.keys.iter().map(|key|key.text.clone())).collect()
+}
+#[cfg(test)]
 pub(crate) fn shorthand_match(input:&str,word:&str)->bool {
     let normalizer=rules().runtime.consonant_count_tolerance.normalizer();
     rules().runtime.shorthand_readings.iter().any(|rule|rule.khmer==word
@@ -2206,22 +2247,38 @@ fn lexical_part_onsets(word: &str, dictionary: &compact::Dictionary, base: Optio
     }).collect()
 }
 impl Word {
+    fn ordinary_readings(&self) -> &[Vec<Vec<Key>>] {
+        self.ordinary_readings.as_deref().unwrap_or(&self.readings)
+    }
     fn new(candidate: Candidate, readings: Vec<Vec<Vec<Key>>>) -> Self {
         let recovery_lengths = readings.iter().map(|reading| reading.iter().fold((0, 0), |(min, max), keys|
             (min + keys.iter().map(|key| key.len()).min().unwrap_or(0),
              max + keys.iter().map(|key| key.len()).max().unwrap_or(0)))).collect();
-        Self { candidate, readings, recovery_lengths }
+        let graph=factored::has_paths(&readings).then(||factored::Graph::new(&readings));
+        Self { candidate, readings, graph, apostrophe_graph: None, recovery_lengths, ordinary_readings: None }
     }
 }
 pub(crate) struct RankedSuggestion {
     pub suggestion: Suggestion,
     pub priority: i64,
 }
+
+/// Completion witnesses retain their apostrophes. A literal or existing
+/// consonant-count prefix is ordinary; only omitted-apostrophe paths are
+/// deferred when merging independent dictionaries. Saved prefixes stay literal.
+pub(crate) fn omitted_apostrophe_completion(hit:&Suggestion,input:&str)->bool {
+    let Some(key)=&hit.completion else {return false;};
+    if hit.correction.is_some() || !matches!(&hit.candidate,SuggestionCandidate::Khmer(_))
+        || !key.contains('\'') || key.starts_with(input) {return false;}
+    !rules().runtime.consonant_count_tolerance.normalizer().is_some_and(|n|
+        n.input(key).zip(n.input(input)).is_some_and(|(key,input)|key.starts_with(&input)))
+}
 #[derive(Default)]
 pub(crate) struct Index {
     words: Vec<Word>,
     prefixes: BTreeMap<String, Vec<usize>>,
     count_prefixes: BTreeMap<String, Vec<usize>>,
+    apostrophe_prefixes: BTreeMap<String, Vec<usize>>,
     has_rank_priorities: bool,
     has_so: bool,
     dictionary: Option<compact::Dictionary>,
@@ -2232,38 +2289,74 @@ struct PartPolicy {
     source: compact::Dictionary,
     index: Box<Index>,
 }
+pub(crate) fn has_pronunciation_default(word: &str) -> bool {
+    read_as::owns(word) || rules().runtime.pronunciation_defaults.iter().any(|rule| rule.word == word)
+}
+
 pub(crate) fn validate_pronunciation_boundaries(rules:&[crate::Pronunciation])->Result<(),String> {
     read_as::configured(rules).map(|_|())
 }
 pub(crate) fn pronunciation_inputs(text:&str)->Vec<String> {
-    browse::display_inputs(&word_readings_in_context(text,false,overrides::Context::new(text).for_pronunciation()).unwrap_or_default(),64).0
+    let mut readings=word_readings_in_context(text,false,overrides::Context::new(text).for_pronunciation()).unwrap_or_default();
+    ending_alternatives::append(&mut readings);
+    browse::display_inputs(&readings,64).0
+}
+
+struct PronunciationPaths {
+    readings: Vec<Vec<Vec<Key>>>,
+    preserves_checked_neighbors: bool,
 }
 
 // Read a configured alternate in isolation, then join reading lattices at
 // complete component boundaries. Re-parsing joined Khmer would change its
 // vowels again and could turn a valid parent's readings into an empty set.
 fn pronunciation_readings(word:&str,pronunciations:&[crate::Pronunciation],
-    parts:Option<&crate::components::ReadingSplits>,context:overrides::Context<'_>,depth:usize)
-    ->Option<Vec<Vec<Vec<Key>>>> {
+    parts:Option<&crate::components::ReadingSplits>,context:overrides::Context<'_>,depth:usize,
+    checked_parent: bool,
+) -> Option<PronunciationPaths> {
     if let Some(rule)=pronunciations.iter().find(|rule|rule.word==word) {
         if depth > 0 && rules().runtime.non_reusable_word_parts.contains(word) {
             return None;
         }
-        return word_readings_in_context(&rule.read_as, false,
-            overrides::Context::new(&rule.read_as).for_pronunciation());
+        let readings = read_as::pronunciation_paths(&rule.read_as)?;
+        let preserves_checked_neighbors = !checked_parent || depth == 0
+            || component_words::agrees_with_checked_neighbor(context.word, word, &readings);
+        return Some(PronunciationPaths { readings, preserves_checked_neighbors });
     }
     if depth>=32 || context.whole(word).is_some()
-        || depth==0 && component_words::protected_parent(word)
-            && !component_words::agrees_with_checked_neighbors(word,pronunciations)
         || !pronunciations.iter().any(|rule|word.contains(&rule.word)) {return None;}
-    let components=parts?.parts(word)?;
-    let mut changed=false;
-    let mut paths=vec![Vec::new()];
+    let parts = parts?;
+    let components = parts.parts(word)?;
+    let chars: Vec<_> = word.chars().collect();
+    let cuts: Vec<_> = components.iter().skip(1).map(|part| part.start).collect();
+    // A complete dictionary split can still cut through a reviewed parser
+    // unit. Keep the original parser path when the two boundaries conflict.
+    if context.with_original(overrides::original_view(word)).crosses_reviewed_part(&chars, &cuts) {
+        return None;
+    }
+    let mut changed = false;
+    let mut preserves_checked_neighbors = true;
+    let mut paths = vec![Vec::new()];
     for part in components {
         let child = context.part(part.start,part.end).as_pronunciation_component();
-        let choices=if let Some(readings)=pronunciation_readings(&part.text,pronunciations,parts,child,depth+1) {
-            changed=true;readings
-        } else {word_readings_in_context(&part.text,false,child)?};
+        let mut choices = if let Some(result) = pronunciation_readings(
+            &part.text, pronunciations, Some(parts), child, depth + 1, checked_parent,
+        ) {
+            changed = true;
+            preserves_checked_neighbors &= result.preserves_checked_neighbors;
+            result.readings
+        } else {
+            let child = if parts.is_standalone(&part.text) {
+                child.with_stock_pronunciations()
+            } else {
+                child
+            };
+            let mut readings = word_readings_in_context(&part.text, false, child).unwrap_or_default();
+            component_words::append_scoped_part(&part.text, child, &mut readings);
+            if readings.is_empty() { return None; }
+            readings
+        };
+        ending_alternatives::append(&mut choices);
         let mut next=Vec::new();
         'paths: for prefix in &paths {
             for choice in &choices {
@@ -2276,7 +2369,19 @@ fn pronunciation_readings(word:&str,pronunciations:&[crate::Pronunciation],
         if next.is_empty() {return None;}
         paths=next;
     }
-    changed.then_some(paths)
+    if !changed {
+        return None;
+    }
+    if depth == 0 && preserves_checked_neighbors {
+        // Keep the approved full-word root reading beside a customized
+        // component path. A direct edit of the full word returns above.
+        if let Some(checked) = checked_terminal_root(word, context.with_stock_pronunciations()) {
+            if !paths.contains(&checked) {
+                paths.push(checked);
+            }
+        }
+    }
+    Some(PronunciationPaths { readings: paths, preserves_checked_neighbors })
 }
 impl Index {
     pub(crate) fn new(dictionary: &compact::Dictionary) -> Self {
@@ -2286,10 +2391,27 @@ impl Index {
     }
     fn new_with_parts(dictionary: &compact::Dictionary, base: Option<&compact::Dictionary>) -> Self {
         let mut index = Self::default();
-        let configured_pronunciations=base.map_or(dictionary.pronunciations.as_ref(),|base|base.pronunciations.as_ref());
-        let prepared=read_as::configured(configured_pronunciations).expect("validated pronunciation settings");
-        let pronunciations:Vec<_>=configured_pronunciations.iter().filter(|rule|!read_as::owns(&rule.word)).cloned().collect();
-        let components=(rules().runtime.word_rule_reuse.enabled || !pronunciations.is_empty())
+        let overrides = base.map_or(&dictionary.pronunciations, |base| &base.pronunciations);
+        let configured_pronunciations: Vec<_> = rules().runtime.pronunciation_defaults.iter()
+            .filter(|stock| !overrides.iter().any(|rule| rule.word == stock.word))
+            .chain(overrides.iter()).filter(|rule| {
+                let blocked = |source: &compact::Dictionary| {
+                    source.sound_map_disabled(&rule.word) || source.excluded_khmer.contains(&rule.word)
+                };
+                !blocked(dictionary) && !base.is_some_and(blocked)
+            }).cloned().collect();
+        let prepared = read_as::configured(&configured_pronunciations).expect("validated pronunciation settings");
+        // Stock migrations already retain their original parser cases and scopes.
+        // Only explicit edits rebuild whole component paths; rebuilding them
+        // for every stock part would discard checked neighboring readings.
+        let pronunciations:Vec<_>=overrides.iter().filter(|rule|
+            configured_pronunciations.iter().any(|active| active.word == rule.word)
+                && !read_as::owns(&rule.word)
+                // Saving a stock spelling must retain its scoped paths,
+                // rather than switching to whole-component reconstruction.
+                && !rules().runtime.pronunciation_defaults.iter().any(|stock|
+                    stock.word == rule.word && stock.read_as == rule.read_as)).cloned().collect();
+        let components=(rules().runtime.word_rule_reuse.enabled || rules().runtime.ending_alternatives.enabled || !pronunciations.is_empty())
             .then(||crate::components::ReadingSplits::new(dictionary,base));
         let mut cursor = dictionary.khmer.cursor(0);
         while let Some(row) = cursor.next().expect("validated dictionary") {
@@ -2297,20 +2419,70 @@ impl Index {
                 continue;
             }
             let onsets = lexical_part_onsets(row.key,dictionary,base);
-            let context = overrides::Context::new(row.key)
-                .with_read_as(&prepared.syllables)
-                .with_word_part_pronunciations(&prepared.word_parts)
-                .with_word_part_onsets(&onsets);
-            let custom=(!pronunciations.is_empty()).then(||pronunciation_readings(row.key,&pronunciations,components.as_ref(),context,0)).flatten();
+            let standalone = base.and_then(|source| source.component_definitions.get(row.key))
+                .or_else(|| dictionary.component_definitions.get(row.key))
+                .is_some_and(Vec::is_empty);
+            let shorthand_override=base.and_then(|base|base.shorthands.get(row.key)).or_else(||dictionary.shorthands.get(row.key));
+            let shorthand_inputs=dictionary.shorthand_inputs(row.key,base);
+            let mut context = overrides::Context::new(row.key).with_word_part_onsets(&onsets);
+            if shorthand_override.is_some() {context=context.without_shorthands();}
+            if !standalone {
+                context = context.with_read_as(&prepared.syllables)
+                    .with_word_part_pronunciations(&prepared.word_parts);
+            } else if read_as::owns(row.key) {
+                // A direct edit of the standalone word still applies.
+                context = context.with_read_as(&prepared.syllables);
+            }
+            let direct_default = rules().runtime.pronunciation_defaults.iter().find(|rule|rule.word == row.key
+                && configured_pronunciations.iter().any(|active|active.word == rule.word)
+                && !overrides.iter().any(|edit| edit.word == row.key && edit.read_as != rule.read_as));
+            let direct = direct_default.and_then(|rule| read_as::pronunciation_paths(&rule.read_as));
+            let custom = direct.or_else(|| (!pronunciations.is_empty()).then(|| {
+                pronunciation_readings(row.key, &pronunciations, components.as_ref(), context, 0,
+                    component_words::protected_parent(row.key))
+            }).flatten().filter(|result| result.preserves_checked_neighbors)
+                .map(|result| result.readings));
             let customized=custom.is_some();
             let mut readings=custom.unwrap_or_else(||word_readings_in_context(row.key,false,context).unwrap_or_default());
-            if !customized {
+            if !customized && (rules().runtime.word_rule_reuse.enabled || rules().runtime.ending_alternatives.enabled) {
                 if let Some(components)=&components {component_words::append(row.key,components,&prepared.components,context,&mut readings);}
             }
+            let mut ordinary_readings = if shorthand_inputs.is_empty() { None }
+                else if shorthand_override.is_some() || customized { Some(readings.clone()) }
+                else {
+                    // Built-in shorthands can enter through the parser itself.
+                    // Inspect that parser without them rather than subtracting
+                    // key text that may also have a genuine phonetic path.
+                    let context=context.without_shorthands();
+                    let mut ordinary=word_readings_in_context(row.key,false,context).unwrap_or_default();
+                    if rules().runtime.word_rule_reuse.enabled || rules().runtime.ending_alternatives.enabled {
+                        if let Some(components)=&components {component_words::append(row.key,components,&prepared.components,context,&mut ordinary);}
+                    }
+                    Some(ordinary)
+                };
+            // End alternatives derive only from phonetic paths, never shorthands.
+            let additions=ending_alternatives::alternatives(ordinary_readings.as_deref().unwrap_or(&readings));
+            readings.extend(additions.clone());
+            if let Some(ordinary)=&mut ordinary_readings {ordinary.extend(additions);}
+            // Read as replaces phonetic paths, not this word's independent
+            // shorthand. Explicit empty overrides still remove stock shortcuts.
+            if shorthand_override.is_some() || customized {
+                let keys:Vec<Key>=shorthand_override.map(|inputs|inputs.iter().cloned().map(Key::from).collect())
+                    .unwrap_or_else(||rules().runtime.shorthand_readings.iter().filter(|rule|rule.khmer==row.key)
+                        .flat_map(|rule|rule.keys.iter().cloned()).collect());
+                if !keys.is_empty() {readings.push(vec![keys]);}
+            }
             if readings.is_empty() { continue; }
-            index.has_so |= row.key.contains('ស') || configured_pronunciations.iter().any(|rule|rule.read_as.contains('ស'));
+            index.has_so |= row.key.contains('ស') || configured_pronunciations.iter()
+                .any(|rule|rule.read_as.spellings().iter().any(|spelling|spelling.contains('ស')));
             let mut prefixes = BTreeSet::new();
             let mut count_prefixes = BTreeSet::new();
+            if factored::has_paths(&readings) {
+                let graph=factored::Graph::new(&readings);
+                graph.prefixes(None,&mut prefixes);
+                if let Some(n)=rules().runtime.consonant_count_tolerance.normalizer() {graph.prefixes(Some(n),&mut count_prefixes);}
+                index.has_rank_priorities=true;
+            }
             for reading in &readings {
                 collect_prefixes(reading, 0, String::new(), &mut prefixes);
                 if let Some(normalizer) = rules().runtime.consonant_count_tolerance.normalizer() {
@@ -2325,7 +2497,7 @@ impl Index {
             for prefix in count_prefixes {
                 index.count_prefixes.entry(prefix).or_default().push(id);
             }
-            let prepared=Word::new(
+            let mut prepared=Word::new(
                 Candidate {
                     mapping_id: Some(row.id),
                     mapping_ids: Vec::new(),
@@ -2334,9 +2506,16 @@ impl Index {
                 },
                 readings,
             );
+            prepared.ordinary_readings=ordinary_readings;
+            prepared.apostrophe_graph=factored::Graph::apostrophe_completions(prepared.ordinary_readings());
+            if let Some(graph)=&prepared.apostrophe_graph {
+                let mut prefixes=BTreeSet::new();graph.optional_apostrophe_prefixes(None,&mut prefixes);
+                if let Some(n)=rules().runtime.consonant_count_tolerance.normalizer() {graph.optional_apostrophe_prefixes(Some(n),&mut prefixes);}
+                for prefix in prefixes {index.apostrophe_prefixes.entry(prefix).or_default().push(id);}
+            }
             index.words.push(prepared);
         }
-        for ids in index.prefixes.values_mut().chain(index.count_prefixes.values_mut()) {
+        for ids in index.prefixes.values_mut().chain(index.count_prefixes.values_mut()).chain(index.apostrophe_prefixes.values_mut()) {
             ids.sort_by_key(|&i| {
                 (
                     index.words[i].candidate.rank,
@@ -2353,7 +2532,7 @@ impl Index {
         let base = base?;
         let dictionary = self.dictionary.as_ref()?;
         if dictionary.same_reading_policy(base)
-            || (!self.has_so && !rules().runtime.word_rule_reuse.enabled) { return None; }
+            || (!self.has_so && !rules().runtime.word_rule_reuse.enabled && !rules().runtime.ending_alternatives.enabled && base.pronunciations.is_empty() && base.shorthands.is_empty()) { return None; }
         let mut cached = self.part_policy.lock().unwrap_or_else(|poisoned|poisoned.into_inner());
         if cached.as_ref().is_none_or(|view|!view.source.same_reading_policy(base)) {
             let mut index = Self::new_with_parts(dictionary,Some(base));
@@ -2390,6 +2569,9 @@ impl Index {
         ids.iter().filter_map(|&id| {
             let word = &self.words[id];
             if !Self::allows(word, base_policy) { return None; }
+            if let Some(graph)=&word.graph {
+                return graph.matching(input,None,false).is_some_and(|hit|hit.exact).then(||word.candidate.clone());
+            }
             word.readings.iter().zip(&word.recovery_lengths).any(|(reading, &(min, max))| {
                 if input.len() < min || input.len() > max { return false; }
                 scratch.resize((reading.len() + 1) * (input.len() + 1), 0);
@@ -2437,7 +2619,12 @@ impl Index {
         }
         let normalizer = rules().runtime.consonant_count_tolerance.normalizer();
         let normalized = normalizer.and_then(|n|n.input(input));
-        let ids = self.matching_ids(input,normalized.as_deref());
+        let mut ids = self.matching_ids(input,normalized.as_deref());
+        if completions {
+            let mut seen:BTreeSet<_>=ids.iter().copied().collect();
+            ids.extend(self.apostrophe_prefixes.get(&input[..input.len().min(3)]).into_iter().flatten()
+                .copied().filter(|id|seen.insert(*id)));
+        }
         let mut exact = Vec::new();
         let mut prefixes = Vec::new();
         let mut count_completions = Vec::new();
@@ -2446,13 +2633,16 @@ impl Index {
             // A metadata-only personal copy cannot revive a base-disabled
             // generated word. Filter before
             // ranking/limits; saved aliases use a separate index and survive.
-            if !Self::allows(word, base_policy) {
+            if !Self::allows(word, base_policy)
+                || self.dictionary.as_ref().is_some_and(|d| d.input_excluded(input, &word.candidate.khmer))
+                || base_policy.is_some_and(|d| d.input_excluded(input, &word.candidate.khmer)) {
                 continue;
             }
             let mut matched: Option<Match> = None;
             let need_completions = completions && (self.has_rank_priorities || context.is_some()
                 || prefixes.len() < limit);
-            for (reading, &(min_length, max_length)) in word.readings.iter().zip(&word.recovery_lengths) {
+            if let Some(graph)=&word.graph {matched=graph.matching(input,None,false);}
+            else { for (reading, &(min_length, max_length)) in word.readings.iter().zip(&word.recovery_lengths) {
                 // Once enough ordinary prefixes are kept, only exact matches
                 // can affect the result. Prove impossible lengths before any
                 // lattice search, while retaining every exact alternative.
@@ -2463,18 +2653,19 @@ impl Index {
                         matched = Some(hit);
                     }
                 }
-            }
+            }}
             let mut count_match = false;
             // A strict component fallback must still yield to an older
             // consonant-count path, retaining that path's preferred spelling.
             if !matched.as_ref().is_some_and(|hit|hit.exact && hit.priority>component_words::FALLBACK_CEILING) {
                 if let (Some(normalizer),Some(normalized)) = (normalizer,normalized.as_deref()) {
                     let mut alternative: Option<Match> = None;
-                    for reading in &word.readings {
+                    if let Some(graph)=&word.graph {alternative=graph.matching(normalized,Some(normalizer),false);}
+                    else { for reading in &word.readings {
                         if let Some(hit) = normalizer.match_chunks(reading,normalized) {
                             if alternative.as_ref().is_none_or(|old|hit.better_than(old)) { alternative = Some(hit); }
                         }
-                    }
+                    }}
                     // Preserve an existing prefix witness unless the alternate
                     // count completes this word. New prefixes cannot crowd out
                     // original completions before their normal limit is met.
@@ -2486,19 +2677,25 @@ impl Index {
                     }
                 }
             }
+            let omitted_apostrophe=matched.is_none() && completions;
+            if omitted_apostrophe {
+                matched=word.apostrophe_graph.as_ref().and_then(|graph|
+                    graph.matching_optional_apostrophes(input,None).or_else(||
+                        normalizer.and_then(|n|graph.matching_optional_apostrophes(input,Some(n)))));
+            }
             let Some(hit) = matched else {
                 continue;
             };
             let suggestion = RankedSuggestion {
-                suggestion: Suggestion { tap_only: shorthand_match(&hit.key,&word.candidate.khmer),
+                suggestion: Suggestion { tap_only: false,
                     preferred_input: (count_match && hit.exact).then(||hit.key.clone()),
                     candidate: SuggestionCandidate::Khmer(word.candidate.clone()),
-                    completion: (!hit.exact).then_some(hit.key),
+                    completion: (!hit.exact || omitted_apostrophe).then_some(hit.key),
                     correction: None,
                 },
-                priority: hit.priority.saturating_add(if count_match {consonant_counts::FALLBACK_PRIORITY} else {0}),
+                priority: if omitted_apostrophe {i64::MIN} else {hit.priority.saturating_add(if count_match {consonant_counts::FALLBACK_PRIORITY} else {0})},
             };
-            if hit.exact {
+            if hit.exact && !omitted_apostrophe {
                 exact.push(suggestion);
             } else if count_match && completions && (self.has_rank_priorities || context.is_some()
                 || count_completions.len() < limit) {
@@ -2522,6 +2719,35 @@ impl Index {
         prefixes.truncate(limit.saturating_sub(exact.len()));
         exact.extend(prefixes);
         exact
+    }
+    /// Existing paths exclude only choices explicitly marked as additive.
+    /// Single/double consonant matches remain existing inputs as well.
+    pub(crate) fn existing_exact_words(&self, input: &str,
+        base_policy: Option<&compact::Dictionary>) -> BTreeSet<String> {
+        if input.is_empty() || !input.is_ascii() { return BTreeSet::new(); }
+        if let Some(prepared) = self.part_policy(base_policy) {
+            return prepared.as_ref().unwrap().index.existing_exact_words(input, base_policy);
+        }
+        let normalizer = rules().runtime.consonant_count_tolerance.normalizer();
+        let normalized = normalizer.and_then(|normalizer| normalizer.input(input));
+        self.matching_ids(input, normalized.as_deref()).into_iter().filter_map(|id| {
+            let word = &self.words[id];
+            if !Self::allows(word, base_policy) { return None; }
+            if let Some(graph)=&word.graph {
+                let existing=graph.matching(input,None,true).is_some_and(|hit|hit.exact)
+                    || normalizer.zip(normalized.as_deref()).is_some_and(|(n,input)|graph.matching(input,Some(n),true).is_some_and(|hit|hit.exact));
+                return existing.then(||word.candidate.khmer.clone());
+            }
+            let existing = word.readings.iter().any(|reading| {
+                let reading: Vec<Vec<Key>> = reading.iter().map(|keys|
+                    keys.iter().filter(|key| !key.preserve_existing).cloned().collect()).collect();
+                let mut scratch = vec![0; (reading.len() + 1) * (input.len() + 1)];
+                exact_recovery(&reading, input, 0, 0, &mut scratch)
+                    || normalizer.zip(normalized.as_deref()).is_some_and(|(normalizer, normalized)|
+                        normalizer.match_chunks(&reading, normalized).is_some_and(|hit| hit.exact))
+            });
+            existing.then(|| word.candidate.khmer.clone())
+        }).collect()
     }
     /// Context must not promote a fallback over a neutral Sound map/alias
     /// match. Avoid a second lookup altogether for the ordinary neutral map.
@@ -2547,6 +2773,9 @@ pub(crate) fn exact_word_priority(input: &str, word: &str) -> usize {
         .map_or(0, |words| words.iter().position(|value| value == word).unwrap_or(words.len()))
 }
 fn exact_recovery(reading: &[Vec<Key>], input: &str, unit: usize, offset: usize, memo: &mut [u8]) -> bool {
+    if unit==0 && offset==0 && reading.iter().flatten().any(|key|key.paths.is_some()) {
+        return factored::Graph::new(&[reading.to_vec()]).matching(input,None,false).is_some_and(|hit|hit.exact);
+    }
     if unit == reading.len() { return offset == input.len(); }
     let state = unit * (input.len() + 1) + offset;
     if memo[state] != 0 { return memo[state] == 2; }
@@ -2586,6 +2815,16 @@ fn word_readings_in_context(text: &str, for_repetition: bool, override_context: 
     // Keep paired lexical selections separate from every earlier full path.
     // The checked suffix cannot combine with another root or suffix variant.
     readings.extend(checked_component_pair_readings(text, for_repetition,override_context));
+    // Add the shared mark path beside every existing lattice. The empty key
+    // carries the same preservation policy as other additive vowel choices.
+    if rules().runtime.short_inherent_sign.enabled && !override_context.uses_shared_sign() && text.contains('ៈ') {
+        if let Some(mut shared) = mapped_chunks_in_context(text, true, override_context.with_shared_sign()) {
+            if !readings.contains(&shared) {
+                shared.insert(0, vec![Key::additive_path(rules().runtime.short_inherent_sign.additional_path_priority)]);
+                readings.push(shared);
+            }
+        }
+    }
     (!readings.is_empty()).then_some(readings)
 }
 fn checked_component_pair_readings(text: &str, for_repetition: bool, override_context: overrides::Context<'_>) -> Vec<Vec<Vec<Key>>> {
@@ -2596,9 +2835,7 @@ fn checked_component_pair_readings(text: &str, for_repetition: bool, override_co
     // These paths store explicit lexical choices. A general Read as edit may
     // change the mapped path, but must not rewrite a checked neighbor or unit.
     // Keep stock boundary matching and original offsets/static scoped rules.
-    let override_context = override_context
-        .with_read_as(read_as::stock_syllables())
-        .with_word_part_pronunciations(&[]);
+    let override_context = override_context.with_stock_pronunciations();
     let mut readings = Vec::new();
     for unit in &rules().runtime.word_readings {
         if !unit.preserve_mapped
@@ -2692,7 +2929,7 @@ fn collect_prefixes(
 // prefix independently; never strip signs generally or apply the root inside
 // a different/longer word. The index separately retains mapped paths when asked.
 fn checked_terminal_root(text: &str, override_context: overrides::Context<'_>) -> Option<Vec<Vec<Key>>> {
-    if !override_context.allows_checked_ending(text)
+    if !override_context.allows_original_word_rules(text)
         || !override_context.uses_part_boundaries() { return None; }
     let unit = rules().runtime.checked_terminal_roots.iter()
         .find(|unit| unit.words.iter().any(|word| word == text))?;
@@ -2706,7 +2943,12 @@ fn checked_terminal_root(text: &str, override_context: overrides::Context<'_>) -
     let mut result = if prefix.is_empty() { Vec::new() } else {
         chunks_in_context(prefix,override_context.part(0,split))?
     };
-    result.extend(override_context.part(split,chars.len()).component(&unit.root,&unit.keys)?);
+    // A standalone-only source keeps its own pronunciation; it cannot
+    // replace a separately scoped terminal rule on the same spelling.
+    let keys = if rules().runtime.non_reusable_word_parts.contains(&unit.root) {
+        &unit.keys[..]
+    } else { override_context.word_part_keys(&unit.root).unwrap_or(&unit.keys) };
+    result.extend(override_context.part(split,chars.len()).component(&unit.root,keys)?);
     Some(result)
 }
 
@@ -2723,7 +2965,7 @@ fn chunks_in_context(text: &str, override_context: overrides::Context<'_>) -> Op
 
 // A written-aa glottal syllable with one shortened final keeps its existing
 // A-series a key. Bare vowels and longer/cancelled spellings stay outside scope.
-fn explicit_glottal_bantoc_chunks(chars: &[char], original: bool) -> Option<Vec<Vec<Key>>> {
+fn explicit_glottal_bantoc_chunks(chars: &[char], original: bool, context: overrides::Context<'_>) -> Option<Vec<Vec<Key>>> {
     let rule = &rules().runtime.explicit_glottal_bantoc;
     if !original || !chars.last().is_some_and(|&ch| rule.mark.starts_with(ch)) {
         return None;
@@ -2747,13 +2989,13 @@ fn explicit_glottal_bantoc_chunks(chars: &[char], original: bool) -> Option<Vec<
     // Removing the final mark strictly shortens this bounded call, so it cannot
     // select itself. The loaded word and its identity retain their original spelling.
     let unmarked: String = chars[..chars.len() - 1].iter().collect();
-    mapped_chunks(&unmarked)
+    mapped_chunks_in_context(&unmarked, true, context.independent(&unmarked))
 }
 
 // In this original two-syllable frame, the nasal closes the first pair and
 // subscript អ starts a glottal syllable. Keep its apostrophe and later mapped
 // vowel/final keys; shortening marks and longer spellings stay outside scope.
-fn written_nasal_glottal_chunks(chars: &[char], original: bool) -> Option<Vec<Vec<Key>>> {
+fn written_nasal_glottal_chunks(chars: &[char], original: bool, context: overrides::Context<'_>) -> Option<Vec<Vec<Key>>> {
     let rule = &rules().runtime.written_nasal_glottal_boundary;
     if !original || chars.len() < 5 || !rule.initials.contains(&chars[0].to_string())
         || !rule.clusters.iter().any(|cluster| segment_end(chars, 1, cluster) == Some(4)) {
@@ -2775,12 +3017,12 @@ fn written_nasal_glottal_chunks(chars: &[char], original: bool) -> Option<Vec<Ve
     let first = consonant(chars[0])?;
     if first.series != "a" || first.onset_keys.is_empty() { return None; }
     let mut reading = vec![first.onset_keys.clone(), rules().runtime.closed_inherent.get("a")?.clone(),
-        coda_keys(chars[1])?, rules().runtime.glottal_onset.keys.clone()];
+        coda_keys(chars[1])?, rules().runtime.glottal_onset.keys.to_vec()];
     // After its onset, this inspected syllable is exactly a complete written
     // vowel and at most one final. Reuse the simple អ-led vowel/final parser;
     // អ is outside this selector, so this bounded call cannot select itself.
     let second: String = std::iter::once('អ').chain(chars[4..].iter().copied()).collect();
-    reading.extend(mapped_chunks(&second)?);
+    reading.extend(mapped_chunks_in_context(&second, true, context.independent(&second).with_glottal_carrier())?);
     Some(reading)
 }
 
@@ -2925,12 +3167,26 @@ fn terminal_written_same_o_sign_chunks(
     let mut result = vec![first.onset_keys.clone()];
     result.extend(vowel_keys(&vowel, &rule.series)?);
     result.push(last.onset_keys.clone());
-    result.push(rule.keys.clone());
+    result.push(rule.keys.to_vec());
     Some(result)
 }
 
 fn mapped_chunks(text: &str) -> Option<Vec<Vec<Key>>> {
     mapped_chunks_with_word_readings(text, true)
+}
+fn initial_carrier_direct_vowel_keys(
+    chars: &[char], context: overrides::Context<'_>,
+) -> Option<&'static Vec<Key>> {
+    let ['អ', next, vowel, ..] = chars else { return None; };
+    // Match the original opening. An attached written vowel must immediately
+    // follow the next consonant, so a coeng, shifter or standalone mark fails.
+    if !context.original || context.offset != 0 || consonant(*next).is_none()
+        || !('\u{17b6}'..='\u{17c5}').contains(vowel)
+        || !context.word.chars().take(3).eq(chars[..3].iter().copied()) {
+        return None;
+    }
+    let keys = &rules().runtime.initial_carrier_direct_vowel;
+    (!keys.is_empty()).then_some(keys)
 }
 fn initial_carrier_nasal_keys(chars: &[char], original: bool) -> Option<&'static Vec<Key>> {
     // Change only the unwritten first vowel. The nasal, subscript onset and
@@ -2966,8 +3222,20 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
     // Match a reviewed complete original ending before cancellation. Its
     // independently parsed retained form supplies the same local vowel rule.
     let terminal_unit = rules().runtime.terminal_reading_units.iter().find_map(|unit| {
-        if spelling != text || !unit.words.iter().any(|word| word == text) { return None; }
+        if spelling != text { return None; }
         let prefix = text.strip_suffix(&unit.khmer)?;
+        let in_scope = if override_context.allows_original_word_rules(text) {
+            unit.words.iter().any(|word| word == text)
+        } else {
+            override_context.original
+                && override_context.end == override_context.word.chars().count()
+                && unit.words.iter().any(|word| word == override_context.word)
+                && override_context.word.strip_suffix(&unit.khmer).is_some_and(|outer_prefix| {
+                    !outer_prefix.ends_with('្')
+                        && outer_prefix.chars().count() == override_context.offset + prefix.chars().count()
+                })
+        };
+        if !in_scope { return None; }
         if prefix.ends_with('្') || unit.retained.chars().count() >= unit.khmer.chars().count() { return None; }
         Some((prefix.chars().count(), unit))
     });
@@ -3002,7 +3270,7 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                 .find(|r| r.whole_word != Some(false) && r.series == base.series && r.ending == ending)
             {
                 if !base.onset_keys.is_empty() && !rhyme.keys.is_empty() {
-                    return Some(vec![base.onset_keys.clone(), rhyme.keys.clone()]);
+                    return Some(vec![base.onset_keys.clone(), rhyme.keys.to_vec()]);
                 }
             }
         }
@@ -3016,18 +3284,18 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
         && !independent_y.keys.is_empty()
         && rules().independent_vowels.iter()
             .any(|v| v.khmer == chars[0].to_string() && !v.keys.is_empty()) {
-        // The reviewed vowel+coeng-y units use oy. Standalone ao and other
+        // The reviewed vowel+coeng-y units accept oy and aoy. Standalone vowels and other
         // attached, medial, shifted or cancellation-exposed groups stay mapped
         // separately; this is never a saved word alias.
-        return Some(vec![independent_y.keys.clone()]);
+        return Some(vec![independent_y.keys.to_vec()]);
     }
-    if let Some(reading) = terminal_written_same_o_sign_chunks(&chars, original_terminal && !has_override) {
+    if let Some(reading) = terminal_written_same_o_sign_chunks(&chars, original_terminal && !has_override && !override_context.uses_shared_sign()) {
         return Some(reading);
     }
-    if let Some(reading) = explicit_glottal_bantoc_chunks(&chars, original_terminal && !has_override) {
+    if let Some(reading) = explicit_glottal_bantoc_chunks(&chars, original_terminal && !has_override, override_context) {
         return Some(reading);
     }
-    if let Some(reading) = written_nasal_glottal_chunks(&chars, original_terminal && !has_override) {
+    if let Some(reading) = written_nasal_glottal_chunks(&chars, original_terminal && !has_override, override_context) {
         return Some(reading);
     }
     if let Some(reading) = terminal_nasal_compound_chunks(&chars, original_terminal && !has_override) {
@@ -3037,7 +3305,9 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
     let pair_reading = pair_vowel_reading(&chars);
     let nasal_pair = nasal_pair_governance(&chars, original_terminal);
     let governed = (pair_reading.is_some() || nasal_pair).then_some(3)
-        .or_else(|| governed_onset(text, &chars));
+        .or_else(|| governed_onset(text, &chars))
+        .or_else(|| (override_context.uses_shared_sign() && original_terminal)
+            .then(||two_dot::governed_onset(text, &chars)).flatten());
     let weak_r_second_series = weak_r_second_vowel_series(&chars, original_terminal);
     // A reviewed weak first syllable, not a rule that splits every repeated
     // consonant. Use the original word guard even after terminal silence.
@@ -3143,7 +3413,7 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                 }
                 i += 1;
                 if glottal {
-                    result.push(glottal_rule.keys.clone());
+                    result.push(glottal_rule.keys.to_vec());
                     i += 2;
                 }
             }
@@ -3175,7 +3445,8 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                 if clustered {
                     return None;
                 }
-                if mark == '៉' && matches!(initial, 'ង' | 'ញ' | 'ម' | 'យ' | 'រ' | 'វ')
+                if mark == '៉' && (matches!(initial, 'ង' | 'ញ' | 'ម' | 'យ' | 'រ' | 'វ')
+                    || (initial == 'ល' && override_context.uses_shared_sign()))
                 {
                     series = "a";
                 } else if mark == '៊' && matches!(initial, 'ស' | 'ហ' | 'ប' | 'អ') {
@@ -3195,8 +3466,16 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                     riya_governed = Some(target);
                 }
                 if let Some((rhyme, end)) = syllable_marked_rhyme_at(&chars, onset_start, series, original_terminal) {
-                    result.push(rhyme.keys.clone());
+                    result.push(rhyme.keys.to_vec());
                     i = end;
+                    continue;
+                }
+            }
+            if !glottal && (override_context.uses_shared_sign() || override_context.reads_pronunciation()) {
+                if let Some(keys) = two_dot::keys(&chars, onset_start, i, series, original_terminal,
+                    override_context.reads_pronunciation()) {
+                    result.push(keys);
+                    i += 1;
                     continue;
                 }
             }
@@ -3232,11 +3511,15 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                 // root, without consuming that root's initial as a coda.
                 vec![rules().runtime.closed_inherent.get(series)?.clone()]
             } else if onset_start == 0 && start == 1 {
-                vec![initial_carrier_nasal_keys(&chars, original_terminal)
+                vec![initial_carrier_direct_vowel_keys(&chars, override_context)
+                    .or_else(|| initial_carrier_nasal_keys(&chars, original_terminal))
                     .unwrap_or(rules().runtime.inherent.get(series)?).clone()]
             } else {
                 vec![rules().runtime.inherent.get(series)?.clone()]
             };
+            if glottal || (onset_start == 0 && initial == 'អ' && override_context.has_glottal_carrier()) {
+                add_glottal_vowel_keys(&vowel, &mut mapped_vowels);
+            }
             let mut keys = mapped_vowels.remove(0);
             if repeated_initial && i == 1 && !explicit {
                 // Read the first consonant with its inherent vowel, then let
@@ -3336,7 +3619,8 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                         || pair_before_subscript(series, &chars, i, nasal_pair).unwrap_or(false)
                 } else { false };
                 let after = i + 1 + usize::from(chars.get(i + 1) == Some(&'់'));
-                let next_marked_onset = chars.get(after).and_then(|&ch| consonant(ch))
+                let next_marked_onset = (override_context.reads_pronunciation() && override_context.uses_shared_sign() && original_terminal
+                    && two_dot::has_onset(&chars, after)) || chars.get(after).and_then(|&ch| consonant(ch))
                     .is_some_and(|base| {
                         let series = if governed == Some(after) { "a" } else { &base.series };
                         syllable_marked_rhyme_at(&chars, after, series, original_terminal).is_some()
@@ -3377,7 +3661,7 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                             rule.consonant.starts_with(chars[i]) && rule.words.iter().any(|word| word == text)
                         }) {
                             let mapped = endings;
-                            endings = rule.keys.clone();
+                            endings = rule.keys.to_vec();
                             if rule.retain_mapped_keys {
                                 for key in mapped {
                                     if !endings.contains(&key) { endings.push(key); }
@@ -3443,7 +3727,7 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                                         && rule.series == series
                                         && rule.coda == chars[i - 1].to_string()
                                 }) {
-                                rule.keys.clone()
+                                rule.keys.to_vec()
                             } else {
                                 rules().runtime.short_inherent.get(series)?.clone()
                             };
@@ -3466,6 +3750,13 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
                 keys = selection.keys();
                 if selection.joins_consonants() && i + 1 == selection.end { coda = None; }
             }
+            // Reuse the parser's closing decision. Open syllables and the
+            // earlier silent-final branch have no coda, so retain their keys.
+            if coda.as_ref().is_some_and(|endings|endings.iter().any(|key|!key.text.is_empty())) {
+                if let Some(additional)=rules().runtime.closed_vowel_alternatives.get(&vowel) {
+                    for key in additional {if !keys.contains(key) {keys.push(key.clone());}}
+                }
+            }
             result.push(keys);
             result.extend(mapped_vowels);
             if let Some(keys) = coda {
@@ -3479,7 +3770,7 @@ fn mapped_chunks_in_context(text: &str, include_additive: bool, override_context
             if v.keys.is_empty() {
                 return None;
             }
-            result.push(v.keys.clone());
+            result.push(v.keys.to_vec());
             i += 1;
             // One bare final consonant closes this vowel instead of starting
             // an extra inherent-vowel syllable. Attached vowels, marks and

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {createEngine} from '../../dist/public/node.js';
-import {exampleWords,exampleTopics,exampleParagraph,examplePage,initialExample,customExampleTopics,loadExample,saveExample,addExample,convertExample,trackExampleInput,exampleChanged,exampleWordAt,exampleDisplayParts,exampleSuggestions,chooseExampleWord,EXAMPLES_KEY} from '../examples.js';
+import {exampleWords,exampleTopics,exampleParagraph,examplePage,initialExample,customExampleTopics,loadExample,saveExample,addExample,convertExample,trackExampleInput,exampleChanged,exampleWordAt,exampleDisplayParts,exampleSuggestions,chooseExampleWord,EXAMPLES_KEY,renderParagraph,paragraphSuggestion} from '../examples.js';
 import {suggestionReading} from '../suggestion-view.js';
 import {wordList,wordPage,wordPageLinks,wordLetters,wordsForLetter,romanizedKeys,wordsWithoutRomanized} from '../word-list.js';
 
@@ -50,7 +50,7 @@ function examplesUI(hash='#words',{core=null,storage={getItem:()=>null,setItem()
   const windowListeners={};
   const location={hash},document={},window={scrollY:0,scrollTo({top}){this.scrollY=top;},history:{replaceState(_state,_title,hash){location.hash=hash;}},addEventListener(name,listener){windowListeners[name]=listener;}};
   const context=vm.createContext({...i18n,Error,$,el:(tag,text,className)=>Object.assign(new Element(),{tag,textContent:text,className}),
-    $$:selector=>selector==='.page'?pages:tabs,location,document,window,examplePage,exampleTopics,initialExample,customExampleTopics,loadExample,saveExample,addExample,convertExample,trackExampleInput,exampleChanged,exampleWordAt,exampleDisplayParts,exampleSuggestions,chooseExampleWord,suggestionReading,
+    $$:selector=>selector==='.page'?pages:tabs,location,document,window,examplePage,exampleTopics,initialExample,customExampleTopics,loadExample,saveExample,addExample,convertExample,trackExampleInput,exampleChanged,exampleWordAt,exampleDisplayParts,exampleSuggestions,chooseExampleWord,suggestionReading,renderParagraph,paragraphSuggestion,
     wordList,wordPage,wordPageLinks,wordLetters,wordsForLetter,romanizedKeys,wordsWithoutRomanized,engine:core,localStorage:storage,errorMessage:error=>error.message,busy:false,damagedWords:null,legacyWords:[]});
   const source=readFileSync(new URL('../app.js',import.meta.url),'utf8');
   const layoutStart=source.indexOf('// Only presentation follows the viewport;');
@@ -59,7 +59,7 @@ function examplesUI(hash='#words',{core=null,storage={getItem:()=>null,setItem()
   return {$,pages,tabs,location,document,window,windowListeners,run:code=>vm.runInContext(code,context)};
 }
 
-test('Pronunciation opens as a Sound map subpage and Back restores the entry point',()=>{
+test('Read-As opens as a Sound map subpage and browser Back restores the entry point',()=>{
   const page=examplesUI('#soundmap');
   page.$('#sound-search').value='silent endings';
   page.$('#sound-group').value='rules';
@@ -69,7 +69,7 @@ test('Pronunciation opens as a Sound map subpage and Back restores the entry poi
   page.windowListeners.hashchange({type:'hashchange',oldURL:'http://localhost/#soundmap'});
   assert.deepEqual(page.pages.filter(node=>!node.hidden).map(node=>node.id),['pronunciation']);
   assert.equal(page.tabs.find(node=>node.dataset.page==='soundmap').attributes['aria-current'],'page');
-  assert.equal(page.document.title,'Pronunciation · Kmeow Engine');
+  assert.equal(page.document.title,'Read-As · Kmeow Engine');
   assert.equal(page.document.activeElement,page.$('#pronunciation-title'));
   assert.equal(page.window.scrollY,0);
   page.$('#pronunciation-search').value='met';
@@ -83,6 +83,29 @@ test('Pronunciation opens as a Sound map subpage and Back restores the entry poi
   assert.equal(page.$('#pronunciation-search').value,'met');
   const direct=examplesUI('#soundmap/pronunciation');
   assert.deepEqual(direct.pages.filter(node=>!node.hidden).map(node=>node.id),['pronunciation']);
+});
+
+test('the Read-As back link returns to Word list and preserves its selected page and filters',()=>{
+  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+  const header=html.match(/<div class="pronunciation-header">([\s\S]*?)<\/div>/)[1];
+  const destination=header.match(/<a\b[^>]*href="([^"]+)"/)[1];
+  assert.equal(destination,'#words');
+  assert.match(header,/data-i18n="Word list"/);
+  const page=examplesUI('#words');
+  page.$('#personal-search').value='existing filter';
+  page.run("wordPageIndex=3;wordLetter='ស';missingRomanized=true;");
+  page.location.hash='#soundmap/pronunciation';
+  page.windowListeners.hashchange({type:'hashchange',oldURL:'http://localhost/#soundmap'});
+  page.$('#pronunciation-search').value='សាស្ត្រ';
+  page.location.hash=destination;
+  page.windowListeners.hashchange({type:'hashchange',oldURL:'http://localhost/#soundmap/pronunciation'});
+  assert.deepEqual(page.pages.filter(node=>!node.hidden).map(node=>node.id),['words']);
+  assert.equal(page.tabs.find(node=>node.dataset.page==='words').attributes['aria-current'],'page');
+  assert.equal(page.document.activeElement,page.$('#word-results'));
+  assert.equal(page.$('#personal-search').value,'existing filter');
+  assert.equal(page.run('wordPageIndex'),3);assert.equal(page.run('wordLetter'),'ស');
+  assert.equal(page.run('missingRomanized'),true);
+  assert.equal(page.$('#pronunciation-search').value,'សាស្ត្រ');
 });
 
 test('Example opens topics, each topic shows Romanized above Khmer, and Back preserves Word list',()=>{

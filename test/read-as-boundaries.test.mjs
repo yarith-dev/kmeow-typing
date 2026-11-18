@@ -7,11 +7,11 @@ initSync({module:read('wasm/khmer_engine_bg.wasm')});
 const proof=JSON.parse(read('test/fixtures/read-as-boundaries.json'));
 const config=JSON.parse(read('data/khmer-sound-map.json'));
 test('migrated Read as defaults preserve the exact scoped cases and compound suggestions in Wasm',()=>{
-  assert.deepEqual(config.pronunciationSyllables,proof.defaults);
-  assert(!config.runtime.wordParts.some(part=>part.khmer==='កម្ម'));
-  const scoped=config.runtime.wordParts.find(part=>part.khmer==='សាស្ត្រ');
+  assert.deepEqual(config.pronunciationSyllables.filter(rule=>proof.defaults.some(old=>old.word===rule.word)),proof.defaults);
+  assert(!(config.runtime.wordParts??[]).some(part=>part.khmer==='កម្ម'));
+  const scoped=config.runtime.pronunciationParts.find(part=>part.word==='សាស្ត្រ');
   assert.equal(scoped.reusableAsComponent,false);
-  assert.deepEqual(scoped.cases,proof.movedParts[1].cases.filter(row=>row.kind==='scoped'));
+  assert.deepEqual(scoped.cases.map(({order,...scope})=>scope),proof.movedParts[1].cases.filter(row=>row.kind==='scoped').map(({order,...scope})=>scope));
   const core=WasmEngine.fromAppData(read('compiled-data/khmer.kmd'),read('compiled-data/english.kmd'));
   try{
     const rules=JSON.parse(core.appDataInfo()).provenance.pronunciations.rules;

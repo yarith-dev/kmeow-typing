@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {WasmEngine,initSync} from '../wasm/khmer_engine.js';
 initSync({module:readFileSync(new URL('../wasm/khmer_engine_bg.wasm',import.meta.url))});
 
-test('component alternatives are shared across native/Wasm boundaries and shorthands require selection',()=>{
+test('component alternatives are shared across native/Wasm boundaries and shorthands follow normal acceptance',()=>{
   for(const [word,input] of [['កិច្ចកា','kichka'],['កាកិច្ច','kakich'],['កាកិច្ចខា','kakichkha']]){
     const core=new WasmEngine(JSON.stringify({schemaVersion:2,mappings:[],words:
       ['កា','ខា','កិច្ច',word].map((khmer,i)=>({id:99000+i,khmer,rank:i,status:'approved'}))}));
@@ -17,7 +17,7 @@ test('component alternatives are shared across native/Wasm boundaries and shorth
   const core=WasmEngine.fromAppData(readFileSync(new URL('../compiled-data/khmer.kmd',import.meta.url)),readFileSync(new URL('../compiled-data/english.kmd',import.meta.url)));
   try{
     const result=JSON.parse(core.suggestWithContext('nh','{}','{}'));
-    assert(result.candidates.some(c=>c.khmer==='ខ្ញុំ'&&c.tapOnly));
+    assert(result.candidates.some(c=>c.khmer==='ខ្ញុំ'&&!c.tapOnly));
     for(const input of ['khnhom','khnyom']){
       const hit=JSON.parse(core.suggestWithContext(input,'{}','{}')).candidates.find(c=>c.khmer==='ខ្ញុំ');
       assert(hit&&!hit.tapOnly,input);

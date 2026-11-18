@@ -10,6 +10,46 @@ fn text(hit: &khmer_engine::Suggestion) -> &str {
 }
 
 #[test]
+fn merged_personal_prefixes_do_not_evict_english_contractions_before_the_cap() {
+    for (input,contraction) in [("im","I'm"),("youre","you're")] {
+        let prefix_words = |suffix| (b'a'..=b't').map(|letter|
+            format!("{input}{suffix}{}",char::from(letter))).collect::<Vec<_>>();
+        let base_words=prefix_words('a');let extra_words=prefix_words('b');
+        let base=engine(&base_words.iter().map(String::as_str).collect::<Vec<_>>());
+        let extra=Engine::from_personal_words_json(&json!(extra_words.iter().map(|word|
+            json!({"word":word,"language":"english"})).collect::<Vec<_>>()).to_string()).unwrap();
+        let before=(base.to_binary(),extra.to_binary());
+        let restored=(Engine::from_binary(before.0.clone()).unwrap(),Engine::from_binary(before.1.clone()).unwrap());
+        for (base,extra) in [(&base,&extra),(&restored.0,&restored.1)] {
+            for completion in [true,false] {
+                let features=SuggestionFeatures {mode:TypingMode::English,english_autocorrection:true,
+                    english_completion:completion,..Default::default()};
+                for (base,extra) in [(base,extra),(extra,base)] {
+                    let result=base.suggest_with_extension_ranking(extra,input,features,&Default::default(),&Default::default()).unwrap();
+                    assert_eq!(text(&result.baseline.result.candidates[0]),contraction);
+                    assert_eq!(result.baseline.result.candidates[0].correction.as_deref(),Some(contraction));
+                    let order=result.ranking.groups.iter().flat_map(|group|
+                        group.candidates.iter().map(|candidate|candidate.id)).collect::<Vec<_>>();
+                    let display=result.ranking.apply_order(&order).unwrap();
+                    assert_eq!(text(&display[0]),contraction);
+                    assert!(result.baseline.result.candidates.len()<=20);
+                }
+            }
+            let features=SuggestionFeatures {mode:TypingMode::English,english_autocorrection:false,..Default::default()};
+            let result=base.suggest_with_extension(extra,input,features,&Default::default()).unwrap();
+            assert_eq!(result.result.candidates.len(),20);
+            assert!(result.result.candidates.iter().all(|hit|hit.correction.is_none()));
+            let literal=Engine::from_personal_words_json(&json!([{"word":input,"language":"english"}]).to_string()).unwrap();
+            let result=base.suggest_with_extension(&literal,input,
+                SuggestionFeatures {english_autocorrection:true,..features},&Default::default()).unwrap();
+            assert_eq!(text(&result.result.candidates[0]),input);
+            assert!(result.result.candidates.iter().all(|hit|hit.correction.is_none()));
+        }
+        assert_eq!((base.to_binary(),extra.to_binary()),before);
+    }
+}
+
+#[test]
 fn ordinary_spelling_edits_cover_swaps_missing_extra_and_wrong_letters() {
     let core = engine(&["the", "receive", "world", "keyboard", "because", "friend", "hello",
         "spelling", "language", "tomorrow", "separate", "definitely", "and", "that", "their", "with", "student", "until"]);

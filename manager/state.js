@@ -18,13 +18,19 @@ export function wordExport(catalog){
     return catalog[language].map(row=>({word:row.word,language,rank:row.rank,spellings:row.romanizations??[],
       ...(row.soundMapEnabled!==undefined?{soundMapEnabled:row.soundMapEnabled}:{}),
       ...(row.components!==undefined?{components:row.components}:{}),
+      ...(row.excludedInputs!==undefined?{excludedInputs:row.excludedInputs}:{}),
+      ...(row.shorthands!==undefined?{shorthands:row.shorthands}:{}),
       ...(row.commonnessLevel!==undefined&&levels.get(row.word).size===1?{commonnessLevel:row.commonnessLevel}:{})}));
   });
   return JSON.stringify({format:'kmeow-dictionary-words-v1',...(catalog.sharedWords?.length?{sharedWords:catalog.sharedWords}:{}),words},null,2)+'\n';
 }
 export async function dictionaryRequest(fetcher,url,options){
   const response=await fetcher(url,options);
-  if(!response.ok){let detail;try{detail=(await response.json()).error;}catch{}throw new Error(detail??`Dictionary request failed (${response.status}).`);}
+  if(!response.ok){
+    let detail;
+    try{detail=(await response.json()).error;}catch{}
+    throw Object.assign(new Error(detail??`Dictionary request failed (${response.status}).`),{status:response.status});
+  }
   return response;
 }
 // Fetch both files against one revision. A concurrent save is retried as a
@@ -45,5 +51,22 @@ export async function loadSharedDictionary({fetcher=fetch,createEngine,words=[],
   }
 }
 export async function saveSharedDictionary({fetcher=fetch,catalog,request}){
-  return (await dictionaryRequest(fetcher,'/api/words',{method:'POST',headers:{'Content-Type':'application/json','X-Kmeow-Token':catalog.token,'If-Match':catalog.revision},body:JSON.stringify(request)})).json();
+  const body=JSON.stringify(request);
+  const save=async token=>{
+    const response=await dictionaryRequest(fetcher,'/api/words',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Kmeow-Token':token,'If-Match':catalog.revision},
+      body,
+    });
+    return response.json();
+  };
+  try{
+    return await save(catalog.token);
+  }catch(error){
+    if(error.status!==403)throw error;
+    // The manager issues a new token after restart. Keep the revision the edit was based on.
+    const current=await (await dictionaryRequest(fetcher,'/api/words',{cache:'no-store'})).json();
+    if(!current.token||current.token===catalog.token)throw error;
+    return save(current.token);
+  }
 }

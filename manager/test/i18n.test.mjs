@@ -88,7 +88,7 @@ test('the live language switch preserves the typing language, draft, selection a
   const document={documentElement:{lang:'en',dataset:{theme:'dark'}},querySelectorAll:()=>[]};
   const draft={text:'hello កូន',input:'books',start:2,end:5,direction:'backward'},original=JSON.stringify(draft);
   $('#typing-input').value='books';$('#message').value=draft.text;$('#personal-search').value='existing filter';
-  const context=vm.createContext({...i18n,$,$$:()=>controls,settings,document,localStorage:{setItem:(key,value)=>saved.push([key,value])},route(){},appearance(){},renderWordList(){},suggest(){},renderPronunciations(){},renderMap(options){mapRenders.push(options.preserveDetails);},engine:{},map:{},draft});
+  const context=vm.createContext({...i18n,$,$$:()=>controls,settings,document,localStorage:{setItem:(key,value)=>saved.push([key,value])},route(){},appearance(){},renderWordList(){},suggest(){},renderPronunciations(){},renderMap(options){mapRenders.push(options.preserveDetails);},engine:{},map:{},draft,sentenceConverter:null});
   const source=readFileSync(new URL('../app.js',import.meta.url),'utf8');
   vm.runInContext(source.slice(source.indexOf('function applyUiLanguage('),source.indexOf('function readingFor(')),context);
   try{

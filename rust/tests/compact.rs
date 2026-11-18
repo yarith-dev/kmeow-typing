@@ -132,7 +132,7 @@ fn streaming_compilation_matches_regular_compilation_and_rejects_duplicates() {
                 char::from(b'a' + ((i / 26) % 26) as u8),
                 char::from(b'a' + (i % 26) as u8)
             ),
-            rank: (i % 701) as u32,
+            rank: (i % 701) as i32,
             status: ApprovedStatus::Approved,
         })
         .collect();

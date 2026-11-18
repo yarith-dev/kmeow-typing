@@ -10,7 +10,7 @@ async function startup({stored=null,loaded=true}={}){
     return nodes.get(id);
   };
   let synced=false;
-  const context=vm.createContext({...i18n,navigator:{language:'en'},applyUiLanguage(){},$,WORDS_KEY:'legacy',localStorage:{getItem:()=>stored},legacyWords:[],damagedWords:null,map:null,
+  const context=vm.createContext({...i18n,navigator:{language:'en'},document:{},attachRomanizedConverter:()=>({refresh(){},setActive(){}}),applyUiLanguage(){},$,WORDS_KEY:'legacy',localStorage:{getItem:()=>stored},legacyWords:[],damagedWords:null,map:null,
     language(){},parseImport:JSON.parse,announce:(message='')=>{$('#status').textContent=message;},
     loadWordList:async()=>{if(!loaded)$('#status').textContent='Dictionary unavailable';return loaded;},
     syncEditor(){synced=true;},fetch:async()=>({ok:true,json:async()=>({})}),renderMap(){},renderPronunciations(){},el(){},errorMessage:error=>error.message});

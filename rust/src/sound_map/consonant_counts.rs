@@ -32,12 +32,15 @@ impl Settings {
 #[derive(Clone, Copy)]
 pub(super) struct Normalizer { mask: u32 }
 #[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
-struct State { last: u8, count: u8 }
+pub(super) struct State { last: u8, count: u8 }
 impl Normalizer {
-    fn piece(self, text: &str, mut state: State) -> Option<(String, State)> {
+    pub(super) fn tolerates(self, byte:u8)->bool {
+        byte.is_ascii_lowercase() && self.mask & (1 << (byte - b'a')) != 0
+    }
+    pub(super) fn piece(self, text: &str, mut state: State) -> Option<(String, State)> {
         let mut result = String::new();
         for byte in text.bytes() {
-            if byte.is_ascii_lowercase() && self.mask & (1 << (byte - b'a')) != 0 {
+            if self.tolerates(byte) {
                 if byte == state.last {
                     if state.count == 2 { return None; }
                     state.count += 1;
@@ -77,10 +80,10 @@ impl Normalizer {
         }
         self.suffix(chunks,input,0,0,State::default(),&ceilings,&mut BTreeMap::new())
     }
-    pub(super) fn next_mask(self, chunks: &[Vec<Key>], input: &str) -> u32 {
-        self.mask_suffix(chunks,input,0,0,State::default(),&mut BTreeMap::new())
+    pub(super) fn next_mask(self, chunks: &[Vec<Key>], input: &str, max_stage: u8) -> u32 {
+        self.mask_suffix(chunks,input,0,0,State::default(),max_stage,&mut BTreeMap::new())
     }
-    fn mask_suffix(self, chunks: &[Vec<Key>], input: &str, unit: usize, offset: usize, state: State,
+    fn mask_suffix(self, chunks: &[Vec<Key>], input: &str, unit: usize, offset: usize, state: State, max_stage: u8,
         memo: &mut BTreeMap<(usize,usize,State),u32>) -> u32 {
         if unit == chunks.len() { return if offset == input.len() {crate::next_letters::STOP} else {0}; }
         let memo_key = (unit,offset,state);
@@ -88,9 +91,10 @@ impl Normalizer {
         let rest = &input[offset..];
         let mut mask = 0;
         for key in &chunks[unit] {
+            if key.prediction_stage > max_stage { continue; }
             let Some((text,next)) = self.piece(&key.text,state) else { continue; };
             if rest.starts_with(&text) {
-                mask |= self.mask_suffix(chunks,input,unit + 1,offset + text.len(),next,memo);
+                mask |= self.mask_suffix(chunks,input,unit + 1,offset + text.len(),next,max_stage,memo);
             } else if text.starts_with(rest) {
                 mask |= crate::next_letters::letter_bit(text.as_bytes()[rest.len()]);
             }
@@ -158,7 +162,7 @@ mod tests {
         let mut prefixes = BTreeSet::new();
         normalizer.collect_prefixes(&chunks(&["l","l","erthi"]),&mut prefixes);
         assert_eq!(prefixes,BTreeSet::from(["l".into(),"le".into(),"ler".into()]));
-        let reading = vec![vec![Key {text:"lertthi".into(),priority:-2},Key::from("lerthi")]];
+        let reading = vec![vec![Key {text:"lertthi".into(),priority:-2,preserve_existing:false,prediction_stage:0,paths:None},Key::from("lerthi")]];
         let hit = normalizer.match_chunks(&reading,"lerthi").unwrap();
         assert_eq!(hit.key,"lerthi");assert_eq!(hit.priority,0);
         let reading = vec![vec![Key::from("bba"),Key::from("kka")];60];

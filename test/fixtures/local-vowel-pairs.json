@@ -155,9 +155,10 @@
         "lae"
       ],
       "yes": [
-        "laeknasambat"
+        "laeknasombat"
       ],
       "no": [
+        "loknasombat",
         "loknasambat"
       ]
     },
@@ -273,7 +274,8 @@
     {
       "word": "ធម្មតា",
       "inputs": [
-        "thommota"
+        "thommota",
+        "tommota"
       ]
     }
   ]

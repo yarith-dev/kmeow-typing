@@ -14,7 +14,7 @@ fn unwritten_nasal_aspirated_boundary_keeps_keys_guards_and_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -27,7 +27,7 @@ fn unwritten_nasal_aspirated_boundary_keeps_keys_guards_and_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {

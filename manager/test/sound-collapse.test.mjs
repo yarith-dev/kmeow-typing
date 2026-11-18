@@ -68,7 +68,7 @@ test('the nh row renders under Shorthands rather than Word-part readings',()=>{
   const shorthand=families.find(node=>node.getAttribute('data-sound-detail')==='family/shorthands');
   const parts=families.find(node=>node.getAttribute('data-sound-detail')==='family/parts');
   assert(shorthand.textContent.includes('ខ្ញុំ'));assert(shorthand.textContent.includes('nh'));
-  assert(!parts.textContent.includes('ខ្ញុំ'));
+  assert.equal(parts,undefined);
   const row=shorthand.querySelectorAll('button').find(button=>button.textContent.includes('ខ្ញុំ'));
   assert(row);row.onclick();assert.equal(page.$('#rule-details').open,true);
   assert(page.$('#rule-detail-content').textContent.includes('nh'));
@@ -113,7 +113,7 @@ test('all rule fields remain reachable without nested disclosures or changing th
   for(const button of list.querySelectorAll('button')){button.onclick();visit();page.$('#rule-detail-close').onclick();}
   const rendered=text.join(' ');
   function leaves(value){return value&&typeof value==='object'?Object.values(value).flatMap(leaves):[value];}
-  for(const value of leaves(map.runtime)){
+  for(const value of leaves(Object.fromEntries(Object.entries(map.runtime).filter(([id])=>id!=='pronunciationParts')))){
     const expected=value===null?'Not set':value===true?'Yes':value===false?'No':String(value);
     assert(rendered.includes(expected),expected);
   }
@@ -147,8 +147,8 @@ test('language switches preserve open and closed character and family groups',()
   }finally{i18n.setUiLanguage('en');}
 });
 
-test('filtered word-part details keep their path and return focus when switching languages',()=>{
-  const map=fixture();map.runtime={wordParts:[
+test('filtered shorthand details keep their path and return focus when switching languages',()=>{
+  const map=fixture();map.runtime={shorthands:[
     {khmer:'ក',cases:[{kind:'scoped',words:['កាត']}]},
     {khmer:'ខ',cases:[{kind:'scoped',words:['ពាក្យ']}]},
   ]};
@@ -159,11 +159,11 @@ test('filtered word-part details keep their path and return focus when switching
     const item=cards.querySelectorAll('button').find(node=>node.querySelector('.rule-link-title')?.textContent==='ខ');
     item.onclick();const key=item.getAttribute('data-rule-trigger');
     page.$('#rule-detail-content').querySelector('button').onclick();
-    assert.equal(page.run('ruleDetailPath.at(-1).value'),map.runtime.wordParts[1].cases[0]);
+    assert.equal(page.run('ruleDetailPath.at(-1).value'),map.runtime.shorthands[1].cases[0]);
     i18n.setUiLanguage('en');page.run('renderMap({preserveDetails:true});');
     const remaining=cards.querySelectorAll('button').find(node=>node.getAttribute('data-rule-trigger')===key);
     assert(remaining);assert.equal(page.$('#rule-details').open,true);assert.equal(page.$('#rule-details').shows,1);
-    assert.equal(page.run('ruleDetailPath.at(-1).value'),map.runtime.wordParts[1].cases[0]);
+    assert.equal(page.run('ruleDetailPath.at(-1).value'),map.runtime.shorthands[1].cases[0]);
     assert.equal(page.$('#rule-detail-title').textContent,'Selected words and positions');
     page.$('#rule-detail-back').onclick();assert.equal(page.$('#rule-detail-title').textContent,'ខ');
     page.$('#rule-detail-close').onclick();assert.equal(page.document.activeElement,remaining);
@@ -172,8 +172,8 @@ test('filtered word-part details keep their path and return focus when switching
   }finally{i18n.setUiLanguage('en');}
 });
 
-test('word-part dialogs retain standalone, scoped and overview examples from existing readings',()=>{
-  const map=fixture();map.runtime={wordParts:[
+test('shorthand dialogs retain standalone, scoped and overview examples from existing readings',()=>{
+  const map=fixture();map.runtime={shorthands:[
     {khmer:'សាស្ត្រ',keys:['sah','sas'],cases:[{kind:'syllable'}]},
     {khmer:'កម្ម',keys:['kam'],cases:[{kind:'scoped',words:['សកម្ម','អសកម្ម']}]},
   ]};
@@ -195,9 +195,9 @@ test('word-part dialogs retain standalone, scoped and overview examples from exi
   assert.deepEqual(examples().map(row=>row.querySelector('.example-khmer').textContent),['កម្ម','សកម្ម','អសកម្ម']);
   assert.equal(examples()[0].querySelector('.example-inputs').textContent,'kam');
   page.$('#rule-detail-close').onclick();
-  const overview=cards.querySelectorAll('button').find(node=>node.getAttribute('data-rule-trigger')==='rule/wordParts/examples');assert(overview);
+  const overview=cards.querySelectorAll('button').find(node=>node.getAttribute('data-rule-trigger')==='rule/shorthands/examples');assert(overview);
   overview.onclick();
-  const expected=rules.soundRules(map.runtime,'',catalog).find(rule=>rule.id==='wordParts').examples;
+  const expected=rules.soundRules(map.runtime,'',catalog).find(rule=>rule.id==='shorthands').examples;
   assert.deepEqual(examples().map(row=>row.querySelector('.example-khmer').textContent),expected.map(row=>row.word));
   assert.equal(page.$('#rule-detail-content').querySelector('.rule-fields'),undefined);
   assert(!page.$('#rule-detail-content').textContent.includes('None configured'));
@@ -206,7 +206,7 @@ test('word-part dialogs retain standalone, scoped and overview examples from exi
     assert.equal(page.$('#rule-detail-title').textContent,i18n.t('Examples'));
     assert.deepEqual(examples().map(row=>row.querySelector('.example-khmer').textContent),expected.map(row=>row.word));
     page.$('#rule-detail-close').onclick();
-    assert.equal(page.document.activeElement.getAttribute('data-rule-trigger'),'rule/wordParts/examples');
+    assert.equal(page.document.activeElement.getAttribute('data-rule-trigger'),'rule/shorthands/examples');
     assert.equal(JSON.stringify({map,catalog}),snapshot);
   }finally{i18n.setUiLanguage('en');}
 });

@@ -29,7 +29,7 @@ fn recurring_components_keep_previous_inputs_and_exact_scopes() {
                 .unwrap_or_else(|| panic!("{q}: {word}"));
             let index = words.iter().position(|&w| w == word).unwrap();
             assert_eq!(hit.mapping_id, Some((780000 + index) as u64));
-            assert_eq!(hit.rank, (index % 7) as u32);
+            assert_eq!(hit.rank, (index % 7) as i32);
             assert!(!engine.suggest_with_context(q, SuggestionFeatures { sound_map: false,
                 ..Default::default() }, &Default::default()).unwrap().exact_candidates.iter().any(|c| c.khmer == word));
         }

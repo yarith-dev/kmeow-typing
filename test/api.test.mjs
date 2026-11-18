@@ -11,6 +11,74 @@ const inputs = ['', 's', 'sa', 'sievphov', 'siev phov', 'angkor', 'niyom', 'niyu
   'tropsambat', 'kaeknitsah', "l'ar", 'sabbay', 'ស', 'ក្ត', 'សៀវ', 'Hello',
   'bo', 'books', 'im', 'teh', 'recieve', 'lets', 'កង់', 'test ', ' SIEV   PHOV ', 'hello.world'];
 
+test('multiple Read as spellings refresh generated readings and preserve personal spellings',async()=>{
+  const engine=await createEngine({dictionary:{schemaVersion:3,englishWords:[],mappings:[],
+    words:['ដែល','កូន','ដែលកូន'].map((khmer,i)=>({id:i+1,khmer,rank:i,status:'approved'}))}});
+  try{
+    engine.addWords([{word:'ដែល',spellings:['mydel']},{word:'ដែលកូន',spellings:['mycompound']}]);
+    const personal=engine.getWords(),before=engine.suggest('dael',{previousWords:[]});
+    // Warm the component cache before changing the base pronunciation.
+    engine.suggest('daelkon',{previousWords:[]});
+    engine.setPronunciations([{word:'ដែល',readAs:['ដេល','ដែល']}]);
+    assert.deepEqual(engine.previewPronunciation(['ដេល','ដែល','ដេល']),['del','dael']);
+    for(const [input,word] of [['del','ដែល'],['dael','ដែល'],['delkon','ដែលកូន'],['daelkon','ដែលកូន']]){
+      assert(engine.suggest(input,{previousWords:[]}).exactCandidates.some(row=>row.khmer===word),input);
+    }
+    for(const soundMap of [true,false])for(const [input,word] of [['mydel','ដែល'],['mycompound','ដែលកូន']]){
+      assert.equal(engine.convert(input).candidates[0].khmer,word);
+      assert(engine.suggest(input,{soundMap}).candidates.some(row=>row.khmer===word));
+    }
+    assert.deepEqual(engine.getWords(),personal);
+    engine.setPronunciations([]);
+    assert.deepEqual(engine.suggest('dael',{previousWords:[]}),before);
+    assert(!engine.suggest('del',{previousWords:[]}).exactCandidates.some(row=>row.khmer==='ដែល'));
+  }finally{engine.dispose();}
+});
+
+test('an unchanged Khmer prefix precedes a one-edit correction without changing saved spellings',async()=>{
+  const engine=await createEngine();
+  try{
+    const words=engine.getWords(),settings=engine.settings;
+    const result=engine.suggest('broya',{previousWords:[]});
+    const prefix=result.candidates.findIndex(row=>row.khmer==='ប្រយ័ត្ន');
+    const correction=result.candidates.findIndex(row=>row.khmer==='ប្រសា');
+    assert.equal(prefix,0);assert(correction>prefix);
+    assert.equal(result.candidates[prefix].completion,'broyat');
+    assert(!result.candidates[prefix].correction);
+    assert.equal(result.candidates[correction].correction,'brosa');
+    assert.deepEqual(result.exactCandidates,[]);
+    assert(engine.suggest('broyat',{previousWords:[]}).exactCandidates.some(row=>row.khmer==='ប្រយ័ត្ន'));
+    assert(engine.suggest('brosa',{previousWords:[]}).exactCandidates.some(row=>row.khmer==='ប្រសា'));
+    assert.deepEqual(engine.getWords(),words);assert.deepEqual(engine.settings,settings);
+  }finally{engine.dispose();}
+});
+
+test('personal English completions keep im correction available without changing literal personal words',async()=>{
+  const engine=await createEngine({language:'english',correction:true,dictionary:{schemaVersion:3,
+    words:[],mappings:[],englishWords:Array.from({length:20},(_,i)=>({
+      id:i+1,text:`ima${String.fromCharCode(97+i)}`,rank:i,status:'approved'
+    }))
+  }});
+  try{
+    engine.addWords(Array.from({length:20},(_,i)=>({word:`imb${String.fromCharCode(97+i)}`,language:'english'})));
+    const words=engine.getWords(),settings=engine.settings;
+    for(const completion of [true,false]){
+      const result=engine.suggest('im',{completion,previousWords:[]});
+      assert.equal(result.candidates[0].text,"I'm");
+      assert.equal(result.candidates[0].correction,"I'm");
+      assert(result.candidates.length<=20);
+    }
+    const uncorrected=engine.suggest('im',{correction:false});
+    assert.equal(uncorrected.candidates.length,20);
+    assert(uncorrected.candidates.every(row=>!row.correction));
+    assert.deepEqual(engine.getWords(),words);assert.deepEqual(engine.settings,settings);
+    engine.addWords([{word:'im',language:'english'}]);
+    const literal=engine.suggest('im',{previousWords:[]});
+    assert.equal(literal.candidates[0].text,'im');
+    assert(literal.candidates.every(row=>!row.correction));
+  }finally{engine.dispose();}
+});
+
 test('unrelated custom ranks retain contextual exact and prefix ordering across dictionary layers',async()=>{
   const initialized=await createEngine();initialized.dispose();
   for(const saved of [false,true]){

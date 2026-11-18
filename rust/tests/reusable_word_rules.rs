@@ -55,7 +55,7 @@ fn standalone_shorthands_never_propagate_as_components() {
     assert!(!has(&core,"nhkich","ខ្ញុំកិច្ច"));
     assert!(!has(&core,"nhkech","ខ្ញុំកិច្ច"));
     let result=core.suggest_with_context("nh",Default::default(),&Default::default()).unwrap();
-    assert!(result.result.candidates.iter().any(|s|s.tap_only
+    assert!(result.result.candidates.iter().any(|s|!s.tap_only
         && matches!(&s.candidate,khmer_engine::SuggestionCandidate::Khmer(c) if c.khmer=="ខ្ញុំ")));
     let special=engine(&["ស","កម្ម","សកម្ម"],serde_json::json!([]));
     assert!(has(&special,"sakkam","សកម្ម"));

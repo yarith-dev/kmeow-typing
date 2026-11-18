@@ -1,29 +1,106 @@
 {
   "pairs": [
-    ["កកាយ", "korkay", "koakay"],
-    ["ក្អក", "k'ork", "k'oak"],
-    ["គាំ", "korm", "koam"],
-    ["មាន់", "moan", "morn"],
-    ["គាប់", "koap", "korp"],
-    ["រាល់", "roal", "rorl"],
-    ["វាស់", "voas", "vors"],
-    ["ជ័រ", "joa", "jor"],
-    ["ធម៌", "thoa", "thor"],
-    ["ពណ៌", "poa", "por"],
-    ["ព័ន្ធ", "poan", "porn"],
-    ["ប្រព័ន្ធ", "bropoan", "broporn"],
-    ["រដ្ឋ", "roat", "rort"],
-    ["ចិត្ត", "jittor", "jittoa"],
-    ["កិច្ច", "kijjor", "kijjoa"],
-    ["សព្ទ", "sorpto", "soapto"],
-    ["ច្បាស់លាស់", "jbasloas", "jbaslors"],
-    ["គាត់", "koat", "kort"]
+    [
+      "កកាយ",
+      "korkay",
+      "koakay"
+    ],
+    [
+      "ក្អក",
+      "k'ork",
+      "k'oak"
+    ],
+    [
+      "គាំ",
+      "korm",
+      "koam"
+    ],
+    [
+      "មាន់",
+      "moan",
+      "morn"
+    ],
+    [
+      "គាប់",
+      "koap",
+      "korp"
+    ],
+    [
+      "រាល់",
+      "roal",
+      "rorl"
+    ],
+    [
+      "វាស់",
+      "voas",
+      "vors"
+    ],
+    [
+      "ជ័រ",
+      "joa",
+      "jor"
+    ],
+    [
+      "ធម៌",
+      "thoa",
+      "thor"
+    ],
+    [
+      "ពណ៌",
+      "poa",
+      "por"
+    ],
+    [
+      "ព័ន្ធ",
+      "poan",
+      "porn"
+    ],
+    [
+      "ប្រព័ន្ធ",
+      "bropoan",
+      "broporn"
+    ],
+    [
+      "រដ្ឋ",
+      "roat",
+      "rort"
+    ],
+    [
+      "ច្បាស់លាស់",
+      "jbasloas",
+      "jbaslors"
+    ],
+    [
+      "គាត់",
+      "koat",
+      "kort"
+    ]
   ],
   "consonantR": [
-    ["គរ", "kor", "koa"],
-    ["ពរ", "por", "poa"],
-    ["ជរ", "jor", "joa"],
-    ["បរទេស", "borteh", "boateh"],
-    ["អក្សរ", "arksor", "arksoa"]
+    [
+      "គរ",
+      "kor",
+      "koa"
+    ],
+    [
+      "ពរ",
+      "por",
+      "poa"
+    ],
+    [
+      "ជរ",
+      "jor",
+      "joa"
+    ],
+    [
+      "បរទេស",
+      "borteh",
+      "boateh"
+    ],
+    [
+      "អក្សរ",
+      "aksor",
+      "aksoa"
+    ]
   ]
 }

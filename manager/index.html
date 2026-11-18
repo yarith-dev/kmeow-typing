@@ -4,8 +4,7 @@
 <body>
 <a class="skip" href="#main"><span data-i18n="Skip to content">Skip to content</span></a>
 <aside class="sidebar">
-  <a class="brand" href="#typing"><span class="brand-mark" lang="km">ក</span><span>Kmeow<span class="brand-subtitle"><span data-i18n="ENGINE MANAGER">ENGINE MANAGER</span></span></span></a>
-  <p class="nav-label"><span data-i18n="WORKSPACE">WORKSPACE</span></p>
+  <a class="brand" href="#typing"><span>Kmeow<span class="brand-subtitle"><span data-i18n="ENGINE MANAGER">ENGINE MANAGER</span></span></span></a>
   <nav aria-label="Main navigation" data-i18n-aria-label="Main navigation">
     <a href="#typing" data-page="typing"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 9h.01M11 9h.01M15 9h.01M7 12h.01M11 12h.01M15 12h.01M7 16h10"/></svg><span data-i18n="Typing">Typing</span></a>
     <a href="#soundmap" data-page="soundmap"><svg viewBox="0 0 24 24"><path d="M3 5h12M9 3v2M5 5c0 6 6 10 9 11M13 5C12 12 7 15 3 17M14 21l4-10 4 10M16 17h4"/></svg><span data-i18n="Sound map">Sound map</span></a>
@@ -18,31 +17,43 @@
   <main id="main" tabindex="-1">
     <div id="status" role="status" class="notice"></div>
     <section id="typing" class="page" aria-label="Typing" data-i18n-aria-label="Typing">
-      <div class="typing-layout">
+      <div id="typing-layout" class="typing-layout">
         <div class="panel editor-panel"><div class="panel-header"><h2><span data-i18n="Typing pad">Typing pad</span></h2><div class="segmented" aria-label="Typing language" data-i18n-aria-label="Typing language"><button data-language="khmer" aria-pressed="true"><span data-i18n="Khmer">Khmer</span></button><button data-language="english" aria-pressed="false"><span data-i18n="English">English</span></button></div></div>
+          <div class="typing-toolbar">
+          <div id="typing-mode" class="segmented typing-mode" aria-label="Typing mode" data-i18n-aria-label="Typing mode"><button id="mode-typing" type="button" aria-pressed="true" data-i18n="Typing">Typing</button><button id="mode-converter" type="button" aria-pressed="false" data-i18n="Converter">Converter</button></div>
+            <div id="typing-options" class="typing-options"><button id="typing-options-toggle" class="typing-options-button" type="button" aria-expanded="false" aria-controls="typing-options-menu"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16M8 4v6m8 4v6"/></svg><span data-i18n="Typing options">Typing options</span><svg class="options-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></button><div id="typing-options-menu" hidden class="typing-options-menu" role="group" aria-label="Typing options" data-i18n-aria-label="Typing options"><p class="muted"><span data-i18n="These controls apply to this playground.">These controls apply to this playground.</span></p><div id="settings"></div><label class="setting-row" for="suggestion-acceptance"><span data-i18n="Insert suggestions">Insert suggestions</span><select id="suggestion-acceptance" aria-describedby="acceptance-help"><option value="auto" data-i18n="Auto">Auto</option><option value="manual" data-i18n="Manual">Manual</option></select></label><p id="acceptance-help" class="helper"><span data-i18n="Auto: Space accepts a match or eligible completion. Manual: choose a suggestion yourself. Words marked “Select explicitly” always need Enter or a click.">Auto: Space accepts a match or eligible completion. Manual: choose a suggestion yourself. Words marked “Select explicitly” always need Enter or a click.</span></p></div></div>
+          </div>
+          <div id="typing-pad">
           <label class="pad-label" for="typing-input"><span data-i18n="Romanized or Khmer input">Romanized or Khmer input</span></label><input id="typing-input" class="typing-input" placeholder="Try sievphov" autocomplete="off" spellcheck="false" maxlength="512" disabled>
           <div class="results-heading"><span><span data-i18n="Suggestions">Suggestions</span></span><span id="result-count" class="muted"></span></div><div id="suggestions" class="suggestions" aria-live="polite"><p class="empty"><span data-i18n="Your suggestions will appear here.">Your suggestions will appear here.</span></p></div>
           <div id="suggestion-legend" class="suggestion-legend" aria-label="Suggestion status colors" data-i18n-aria-label="Suggestion status colors"></div>
-          <span id="suggestion-help" class="helper"><span data-i18n="Right-click a suggestion to manage it.">Right-click a suggestion to manage it.</span></span>
-          <div class="message-toolbar"><h2><span data-i18n="Message">Message</span></h2><button id="undo" aria-label="Undo last edit" disabled data-i18n-aria-label="Undo last edit"><span data-i18n="Undo">Undo</span></button><button id="redo" aria-label="Redo last edit" disabled data-i18n-aria-label="Redo last edit"><span data-i18n="Redo">Redo</span></button><button id="copy-message" disabled><span data-i18n="Copy">Copy</span></button></div>
-          <label class="sr-only" for="message"><span data-i18n="Your message">Your message</span></label><textarea id="message" rows="6" maxlength="20000" spellcheck="false" placeholder="Your message grows here. You can also type or paste directly…" disabled data-i18n-placeholder="Your message grows here. You can also type or paste directly…"></textarea>
+          <label class="sr-only" for="message"><span data-i18n="Your message">Your message</span></label><textarea id="message" rows="6" maxlength="20000" spellcheck="false" disabled></textarea>
           <div class="message-position"><span id="message-count">0 / 20,000</span></div>
+          </div>
+          <div id="romanized-converter" hidden>
+            <div class="converter-boxes">
+              <section class="panel example-paragraph" aria-labelledby="converter-input-label"><h3 id="converter-input-label"><label for="converter-input" data-i18n="Romanized">Romanized</label></h3><textarea id="converter-input" class="paragraph-editor" rows="4" maxlength="20000" lang="km-Latn" autocomplete="off" autocapitalize="none" spellcheck="false" disabled></textarea></section>
+              <section class="panel example-paragraph" aria-labelledby="converter-output-label"><h3 id="converter-output-label"><label for="converter-output" data-i18n="Khmer">Khmer</label></h3><textarea id="converter-output" class="paragraph-editor paragraph-khmer" rows="4" lang="km" spellcheck="false" readonly disabled></textarea></section>
+            </div>
+            <div class="converter-toolbar"><span id="converter-count" class="muted">0 / 20,000</span></div>
+            <p id="converter-error" class="error" role="status"></p>
+            <div id="converter-suggestion-panel" hidden><div id="converter-suggestion-title" class="results-heading"></div><div id="converter-suggestions" class="suggestions" aria-live="polite"></div><div id="converter-legend" class="suggestion-legend" aria-label="Suggestion status colors" data-i18n-aria-label="Suggestion status colors"></div></div>
+          </div>
         </div>
-        <details class="panel controls" id="typing-options" open><summary class="controls-summary"><span><span data-i18n="Typing options">Typing options</span></span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary><div class="controls-body"><p class="muted"><span data-i18n="These controls apply to this playground.">These controls apply to this playground.</span></p><div id="settings"></div><label class="setting-row"><span><span data-i18n="Space inserts exact match">Space inserts exact match</span></span><input id="space-commits" type="checkbox" checked></label><p class="helper"><span data-i18n="Longer completions and words marked “Select explicitly” need Enter or a click. Context comes from your message cursor.">Longer completions and words marked “Select explicitly” need Enter or a click. Context comes from your message cursor.</span></p></div></details>
       </div>
     </section>
     <section id="soundmap" class="page" aria-label="Sound map" hidden data-i18n-aria-label="Sound map">
       <div class="panel filters"><label><span data-i18n="Search letters, keys or rules">Search letters, keys or rules</span><input id="sound-search" type="search" placeholder="Try ក, kh, or silent endings" data-i18n-placeholder="Try ក, kh, or silent endings"></label><label><span data-i18n="Show">Show</span><select id="sound-group"><option value="all" data-i18n="">All groups</option><option value="consonants" data-i18n="">Consonants</option><option value="dependentVowels" data-i18n="">Dependent vowels</option><option value="additionalVowelForms" data-i18n="">Vowel combinations</option><option value="independentVowels" data-i18n="">Independent vowels</option><option value="rules" data-i18n="">Rules</option></select></label></div>
       <p class="helper"><span data-i18n="A and O indicate consonant series. The dotted circle ◌ shows where a mark attaches.">A and O indicate consonant series. The dotted circle ◌ shows where a mark attaches.</span></p>
-      <div id="sound-cards"><a id="pronunciation-open" class="rule-link pronunciation-link" href="#soundmap/pronunciation"><span class="rule-link-title" data-i18n="Pronunciation">Pronunciation</span><span class="rule-link-arrow" aria-hidden="true">›</span></a></div>
+      <div id="sound-cards"><a id="pronunciation-open" class="rule-link pronunciation-link" href="#soundmap/pronunciation"><span class="rule-link-title" data-i18n="Read-As">Read-As</span><span class="rule-link-arrow" aria-hidden="true">›</span></a></div>
     </section>
     <section id="pronunciation" class="page" aria-labelledby="pronunciation-title" hidden>
       <div class="pronunciation-header">
-        <a class="examples-back" href="#soundmap"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg><span data-i18n="Sound map">Sound map</span></a>
-        <h2 id="pronunciation-title" tabindex="-1" data-i18n="Pronunciation">Pronunciation</h2>
+        <a class="examples-back" href="#words"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg><span data-i18n="Word list">Word list</span></a>
+        <h2 id="pronunciation-title" tabindex="-1" data-i18n="Read-As">Read-As</h2>
       </div>
       <div class="panel pronunciation-section">
-        <label for="pronunciation-search" data-i18n="Search pronunciations">Search pronunciations</label>
+        <label for="pronunciation-search" data-i18n="Search Read-As rules">Search Read-As rules</label>
         <input id="pronunciation-search" type="search" autocomplete="off">
         <div id="pronunciation-editor"></div>
       </div>
@@ -56,7 +67,7 @@
       </nav><div class="word-list-add"><button id="add-word" class="primary" disabled><span data-i18n="＋ Add word">＋ Add word</span></button></div></div>
     </section>
     <section id="examples" class="page examples-page" aria-labelledby="examples-title" hidden>
-      <div class="examples-header"><a id="examples-back" class="examples-back" href="#words"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg><span data-i18n="Back">Back</span></a><h2 id="examples-title" tabindex="-1"><span data-i18n="Examples">Examples</span></h2><button id="example-add" class="primary" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="Add example">Add example</span></button><div id="example-navigation" class="example-navigation" hidden><button id="example-previous" type="button" aria-label="Previous example" title="Previous example" data-i18n-aria-label="Previous example" data-i18n-title="Previous example"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><button id="example-next" type="button" aria-label="Next example" title="Next example" data-i18n-aria-label="Next example" data-i18n-title="Next example"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button></div><button id="example-edit" type="button" hidden><span data-i18n="Edit">Edit</span></button></div>
+      <div class="examples-header"><a id="examples-back" class="examples-back" href="#words"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg><span data-i18n="Back">Back</span></a><h2 id="examples-title" tabindex="-1"><span data-i18n="Examples">Examples</span></h2><button id="example-add" class="primary" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="Add example">Add example</span></button><div class="example-header-actions"><div id="example-navigation" class="example-navigation" hidden><button id="example-previous" type="button" aria-label="Previous example" title="Previous example" data-i18n-aria-label="Previous example" data-i18n-title="Previous example"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><button id="example-next" type="button" aria-label="Next example" title="Next example" data-i18n-aria-label="Next example" data-i18n-title="Next example"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button></div><button id="example-edit" type="button" hidden><span data-i18n="Edit">Edit</span></button></div></div>
       <div id="example-topics" class="example-topics" aria-label="Example topics" data-i18n-aria-label="Example topics"></div>
       <p id="example-list-error" class="error" role="alert"></p><article id="example-reading" class="example-reading" hidden>
         <label id="example-title-field" class="example-title-field" hidden><span data-i18n="Title">Title</span><input id="example-title" maxlength="120" autocomplete="off" required></label>
@@ -82,11 +93,27 @@
     <input id="word-spellings" placeholder="mybook, myspelling" autocomplete="off" data-i18n-placeholder="mybook, myspelling" aria-describedby="spellings-help">
     <div id="spellings-help" class="field-help-tooltip" role="tooltip" popover="manual" hidden data-i18n="Separate saved spellings with commas. Generated Sound map spellings stay unchanged.">Separate saved spellings with commas. Generated Sound map spellings stay unchanged.</div>
   </div>
+  <div id="shorthand-field" class="word-field">
+    <div class="field-label"><label for="word-shorthands" data-i18n="Shorthand">Shorthand</label><button type="button" class="field-help" aria-label="About shorthand" data-i18n-aria-label="About shorthand" aria-controls="shorthand-help" aria-describedby="shorthand-help" aria-expanded="false"><span aria-hidden="true">?</span></button></div>
+    <input id="word-shorthands" placeholder="nh" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="shorthand-help">
+    <div id="shorthand-help" class="field-help-tooltip" role="tooltip" popover="manual" hidden data-i18n="Separate short inputs with commas. Exact shorthand matches follow normal typing acceptance. It is never reused in compounds. Clear the field to remove its shorthands.">Separate short inputs with commas. Exact shorthand matches follow normal typing acceptance. It is never reused in compounds. Clear the field to remove its shorthands.</div>
+  </div>
+  <div id="excluded-inputs-field" class="word-field">
+    <div class="field-label"><label for="word-excluded-inputs" data-i18n="Excluded Romanized inputs">Excluded Romanized inputs</label><button type="button" class="field-help" aria-label="About excluded inputs" data-i18n-aria-label="About excluded inputs" aria-controls="excluded-inputs-help" aria-describedby="excluded-inputs-help" aria-expanded="false"><span aria-hidden="true">?</span></button></div>
+    <input id="word-excluded-inputs" placeholder="ke, myspelling" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="excluded-inputs-help">
+    <div id="excluded-inputs-help" class="field-help-tooltip" role="tooltip" popover="manual" hidden data-i18n="Separate inputs with commas. Hide this word for these exact inputs, including Sound map, Read-As, saved spellings and shorthand. Remove an input to allow it again.">Separate inputs with commas. Hide this word for these exact inputs, including Sound map, Read-As, saved spellings and shorthand. Remove an input to allow it again.</div>
+  </div>
   <div id="word-sound-map-field" class="setting-row">
     <div class="field-label"><label for="word-sound-map" data-i18n="Use default Sound map">Use default Sound map</label><button type="button" class="field-help" aria-label="About Sound map" data-i18n-aria-label="About Sound map" aria-controls="sound-map-help" aria-describedby="sound-map-help" aria-expanded="false"><span aria-hidden="true">?</span></button></div>
     <input id="word-sound-map" type="checkbox" checked aria-describedby="sound-map-help">
     <div id="sound-map-help" class="field-help-tooltip" role="tooltip" popover="manual" hidden data-i18n="Turn off to use only saved Romanized spellings. Khmer word completion stays available.">Turn off to use only saved Romanized spellings. Khmer word completion stays available.</div>
   </div>
+  <section id="word-generated-field" class="word-field" aria-labelledby="word-generated-label" hidden>
+    <span id="word-generated-label" class="word-generated-label" data-i18n="Default Sound map spellings">Default Sound map spellings</span>
+    <div id="word-generated-inputs" class="word-generated-inputs" role="region" aria-labelledby="word-generated-label" tabindex="0"></div>
+    <p id="word-generated-status" class="error" role="status"></p>
+    <button id="word-generated-more" type="button" class="quiet" hidden data-i18n="Show more">Show more</button>
+  </section>
   <div class="word-field">
     <div class="field-label"><label for="word-level" data-i18n="Word level">Word level</label><button type="button" class="field-help" aria-label="About word level" data-i18n-aria-label="About word level" aria-controls="level-help" aria-describedby="level-help" aria-expanded="false"><span aria-hidden="true">?</span></button></div>
     <select id="word-level" aria-describedby="level-help"><option value="" data-i18n="Unrated">Unrated</option><option value="1" data-i18n="1 · Super common">1 · Super common</option><option value="2" data-i18n="2 · Very common">2 · Very common</option><option value="3" data-i18n="3 · Common">3 · Common</option><option value="4" data-i18n="4 · Uncommon">4 · Uncommon</option><option value="5" data-i18n="5 · Academic">5 · Academic</option></select>
@@ -107,7 +134,7 @@
   <label id="review-field" class="setting-row"><span><span data-i18n="I reviewed this new word for dictionary suitability.">I reviewed this new word for dictionary suitability.</span></span><input id="word-reviewed" type="checkbox"></label>
   <div class="word-field">
     <div class="field-label"><label for="word-rank" data-i18n="Rank">Rank</label><button type="button" class="field-help" aria-label="About rank" data-i18n-aria-label="About rank" aria-controls="rank-help" aria-describedby="rank-help" aria-expanded="false"><span aria-hidden="true">?</span></button></div>
-    <input id="word-rank" type="number" min="0" max="1000000" step="1" value="1" required aria-describedby="rank-help">
+    <input id="word-rank" type="number" min="-1000000" max="1000000" step="1" value="1" required aria-describedby="rank-help">
     <div id="rank-help" class="field-help-tooltip" role="tooltip" popover="manual" hidden data-i18n="Lower numbers appear first.">Lower numbers appear first.</div>
   </div>
   <p id="form-error" class="error" role="alert"></p>

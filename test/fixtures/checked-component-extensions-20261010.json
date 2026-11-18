@@ -189,11 +189,11 @@
       "ភោគលាភ"
     ],
     [
-      "rohsanha",
+      "rohsanhnhea",
       "រស្សសញ្ញា"
     ],
     [
-      "rossanha",
+      "rossanhnhea",
       "រស្សសញ្ញា"
     ],
     [
@@ -533,8 +533,8 @@
     {
       "word": "រស្សសញ្ញា",
       "inputs": [
-        "rohsanha",
-        "rossanha"
+        "rohsanhnhea",
+        "rossanhnhea"
       ]
     },
     {
@@ -644,11 +644,11 @@
   ],
   "compatibility": [
     [
-      "orreyosngkho",
+      "akreyosngkho",
       "អរិយសង្ឃ"
     ],
     [
-      "orriyosngkho",
+      "akriyosngkho",
       "អរិយសង្ឃ"
     ],
     [

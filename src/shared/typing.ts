@@ -56,7 +56,7 @@ export type Suggestion = (Candidate & { tapOnly?: boolean; text?: never; complet
 };
 export interface SuggestionResult extends Omit<ConversionResult, "candidates"> {
   candidates: Suggestion[];
-  /** Present on context-aware queries; Space may only commit these complete words. */
+  /** Complete-word matches on context-aware queries, separate from longer completions. */
   exactCandidates?: Candidate[];
   /** Context-aware offline touch priors, 0–1000 per ASCII letter; not word ranks. */
   nextLetterWeights?: Record<string, number>;

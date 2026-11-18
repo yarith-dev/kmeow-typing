@@ -1,6 +1,6 @@
 {
   "date": "2026-11-15",
-  "selection": "Owner-selected ោះ series split: A-series oh/os, O-series uh/us. Use the existing effective syllable-series rules, including supported clusters and register marks. Saved whole-input aliases and other vowel combinations retain independent choices.",
+  "selection": "Owner-selected ោះ series split: A-series oh/os, O-series uh/us. Use the existing effective syllable-series rules, including supported clusters and register marks. Saved whole-input aliases and other vowel combinations retain independent choices. The November 18 selection sets ៃ to A-series ai/ay and O-series ey/ei; explicit saved ai aliases remain independent.",
   "cases": [
     {
       "word": "ចន្លោះ",
@@ -293,6 +293,140 @@
         "surstei",
         "surstey"
       ]
+    },
+    {
+      "word": "ខ្លះ",
+      "yes": [
+        "khlah",
+        "khlas"
+      ],
+      "no": [
+        "khleas"
+      ]
+    },
+    {
+      "word": "ផ្ទះបាយ",
+      "yes": [
+        "phteahbay",
+        "phteasbay"
+      ],
+      "no": [
+        "phtasbay"
+      ]
+    },
+    {
+      "word": "កុះ",
+      "yes": [
+        "koh",
+        "kos"
+      ],
+      "no": [
+        "kuh",
+        "kus"
+      ]
+    },
+    {
+      "word": "គុះ",
+      "yes": [
+        "kuh",
+        "kus"
+      ],
+      "no": [
+        "kos",
+        "koh"
+      ]
+    },
+    {
+      "word": "កៃ",
+      "yes": [
+        "kai",
+        "kay"
+      ],
+      "no": [
+        "key",
+        "kei"
+      ]
+    },
+    {
+      "word": "គៃ",
+      "yes": [
+        "key",
+        "kei"
+      ],
+      "no": [
+        "kai",
+        "kay"
+      ]
+    },
+    {
+      "word": "ម៉ៃ",
+      "yes": [
+        "mai",
+        "may"
+      ],
+      "no": [
+        "mey",
+        "mei"
+      ]
+    },
+    {
+      "word": "ស៊ៃ",
+      "yes": [
+        "sey",
+        "sei"
+      ],
+      "no": [
+        "sai",
+        "say"
+      ]
+    },
+    {
+      "word": "ដៃ",
+      "yes": [
+        "dai",
+        "day"
+      ],
+      "no": [
+        "dey",
+        "dei"
+      ]
+    },
+    {
+      "word": "ព្រៃ",
+      "yes": [
+        "prey",
+        "prei"
+      ],
+      "no": [
+        "prai",
+        "pray"
+      ]
+    },
+    {
+      "word": "ក្រៃ",
+      "yes": [
+        "krai",
+        "kray"
+      ],
+      "no": [
+        "krey",
+        "krei"
+      ]
+    },
+    {
+      "word": "ថ្ងៃ",
+      "yes": [
+        "thngai",
+        "thngay",
+        "tngai",
+        "tngay"
+      ],
+      "no": [
+        "thngey",
+        "thngei",
+        "tngey",
+        "tngei"
+      ]
     }
   ],
   "unrelated": [
@@ -304,26 +438,6 @@
       ],
       "no": [
         "ottuh"
-      ]
-    },
-    {
-      "word": "កុះ",
-      "yes": [
-        "koh"
-      ],
-      "no": [
-        "kos",
-        "kuh"
-      ]
-    },
-    {
-      "word": "គុះ",
-      "yes": [
-        "kuh"
-      ],
-      "no": [
-        "kos",
-        "koh"
       ]
     },
     {

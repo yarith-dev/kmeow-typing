@@ -56,7 +56,7 @@ fn default_sur_reading_preserves_words_aliases_and_feature_controls() {
             .position(|w| w.as_str() == Some(word))
             .unwrap();
         assert_eq!(hit.mapping_id, Some(74000 + position as u64));
-        assert_eq!(hit.rank, position as u32);
+        assert_eq!(hit.rank, position as i32);
         assert!(
             core.convert(input).unwrap().candidates.is_empty(),
             "Generated unit is not a saved alias"

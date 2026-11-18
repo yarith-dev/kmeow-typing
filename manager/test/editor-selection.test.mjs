@@ -11,7 +11,7 @@ import {createEngine} from '../../dist/public/node.js';
 
 // Run the page's actual event handlers with DOM event targets. Browser gestures
 // are checked separately; these tests protect native events from interception.
-function editorPage(engine={suggest:()=>({candidates:[{mappingId:1,khmer:'កូន'},{mappingId:2,khmer:'សៀវភៅ'}],exactCandidates:[{mappingId:1,khmer:'កូន'}]})}){
+function editorPage(engine={suggest:()=>({candidates:[{mappingId:1,khmer:'កូន'},{mappingId:2,khmer:'សៀវភៅ'}],exactCandidates:[{mappingId:1,khmer:'កូន'}]})},localStorage){
   const document={activeElement:null};
   const timers=new Map();let timerId=0;
   const schedule=fn=>{const id=++timerId;timers.set(id,fn);return id;},cancel=id=>timers.delete(id);
@@ -32,7 +32,7 @@ function editorPage(engine={suggest:()=>({candidates:[{mappingId:1,khmer:'កូ
   const el=(tag,text,className)=>Object.assign(new Element(),{tag,textContent:text,className});
   const context=vm.createContext({...i18n,...composer,...suggestionView,suggestionWord,
     suggestionGesture:(button,actions)=>suggestionGesture(button,{...actions,schedule,cancel}),
-    dictionaryWords:{},busy:false,damagedWords:null,readingFor:(candidate,result)=>suggestionView.suggestionReading(candidate,result??{},'khmer'),engine,document,$,$$,el,settings:{language:'khmer'},announce:message=>{throw new Error(message);},language(){},openWord(row){$('#word-dialog').row=row;$('#word-dialog').showModal();},removeWord(){}});
+    dictionaryWords:{},busy:false,damagedWords:null,readingFor:(candidate,result)=>suggestionView.suggestionReading(candidate,result??{},'khmer'),engine,document,$,$$,el,localStorage,settings:{language:'khmer'},announce:message=>{throw new Error(message);},language(){},openWord(row){$('#word-dialog').row=row;$('#word-dialog').showModal();},removeWord(){}});
   const source=readFileSync(new URL('../app.js',import.meta.url),'utf8');
   vm.runInContext(source.slice(source.indexOf('const editor=history();'),source.indexOf('let dictionaryWords=')),context);
   vm.runInContext(source.slice(source.indexOf('function showWordDetails('),source.indexOf('async function loadWordList(')),context);
@@ -114,22 +114,22 @@ test('Space rechecks the current exact ordering when blur supplies a different K
     const page=editorPage(core),message=page.$('#message'),input=page.$('#typing-input');
     page.run("editor.push(replace(editor.current,'សញ្ញា',{mappingId:3}));syncEditor(true);");
     input.value='bat';input.emit('input');assert.equal(page.run('result.exactCandidates[0].khmer'),'បត្រ');
-    message.setSelectionRange(0,0);message.emit('blur');page.$('#space-commits').checked=true;
+    message.setSelectionRange(0,0);message.emit('blur');
     const fresh=core.suggest('bat',{previousWords:[]});assert.equal(fresh.exactCandidates[0].khmer,'បាទ');
     input.emit('keydown',{key:' '});assert.equal(message.value,'បាទសញ្ញា');
     input.emit('keydown',{key:'z',ctrlKey:true});assert.equal(message.value,'សញ្ញា');assert.equal(input.value,'bat');
   }finally{core.dispose();}
 });
 
-test('fresh context still protects explicit-selection flags on Space',()=>{
-  for(const flag of ['tapOnly','manualOnly','completion']){
+test('fresh context still protects explicit-selection and disabled correction flags on Space',()=>{
+  for(const flag of ['tapOnly','manualOnly','correction']){
     const word={mappingId:1,khmer:'កូន'};
-    const core={suggest:(input,options)=>({candidates:[options.before?word:{...word,[flag]:flag==='completion'?'abcde':true}],exactCandidates:!options.before&&flag==='completion'?[]:[word]})};
+    const core={suggest:(input,options)=>({candidates:[options.before?word:{...word,[flag]:flag==='correction'?'abcde':true}],exactCandidates:!options.before&&flag==='correction'?[]:[word]})};
     const page=editorPage(core),message=page.$('#message'),input=page.$('#typing-input');
     page.run("settings.language='english';");
     message.value='prefix';message.setSelectionRange(6,6);message.focus();message.emit('input');
     input.value='abc';input.emit('input');message.setSelectionRange(0,0);message.emit('blur');
-    page.$('#space-commits').checked=true;input.emit('keydown',{key:' '});
+    input.emit('keydown',{key:' '});
     assert.equal(message.value,'abc prefix',flag);
   }
 });
@@ -153,7 +153,7 @@ test('undo restores forward and backward selections after click, Enter and Space
     message.value='hello world';message.setSelectionRange(6,11);message.focus();message.emit('input');
     // Changing only direction must be recorded without adding an undo step.
     message.setSelectionRange(6,11,direction);message.emit('select');
-    input.value='s';input.emit('input');page.$('#space-commits').checked=true;
+    input.value='s';input.emit('input');
     if(method==='click')page.$('#suggestions').children[0].onclick();else input.emit('keydown',{key:method});
     assert.equal(message.value,'hello កូន');assert.equal(message.selectionDirection,'none');
     input.emit('keydown',{key:'z',ctrlKey:true});
@@ -256,7 +256,7 @@ test('alternate consonant counts insert by click, Enter or Space and undo restor
       for(const method of ['click','Enter',' ']){
         const page=editorPage(core),message=page.$('#message'),input=page.$('#typing-input');
         message.value='hello world';message.setSelectionRange(6,11,'backward');message.emit('input');
-        input.value=typed;input.emit('input');page.$('#space-commits').checked=true;
+        input.value=typed;input.emit('input');
         const button=page.$('#suggestions').children.find(button=>button.children[0].textContent===word);
         assert(button,typed);assert.equal(button.children[2].textContent,preferred);
         if(method==='click')button.onclick();else input.emit('keydown',{key:method});
@@ -270,10 +270,150 @@ test('alternate consonant counts insert by click, Enter or Space and undo restor
   }finally{core.dispose();}
 });
 
+test('Auto completes outeaho on Space at the current selection, with exact undo and redo',async()=>{
+  const core=await createEngine();
+  try{
+    const before=core.suggest('outeaho',{previousWords:[]});
+    const page=editorPage(core),input=page.$('#typing-input'),message=page.$('#message');
+    message.value='hello world!';message.setSelectionRange(6,11,'backward');message.emit('input');
+    input.value='outeaho';input.emit('input');
+    assert.equal(page.$('#suggestion-acceptance').value,'auto');
+    assert.equal(input.emit('keydown',{key:' '}).prevented,true);
+    assert.equal(message.value,'hello ឧទាហរណ៍!');assert.equal(input.value,'');
+    input.emit('keydown',{key:'z',ctrlKey:true});
+    assert.equal(message.value,'hello world!');assert.equal(input.value,'outeaho');
+    assert.equal(message.selectionStart,6);assert.equal(message.selectionEnd,11);assert.equal(message.selectionDirection,'backward');
+    input.emit('keydown',{key:'z',ctrlKey:true,shiftKey:true});assert.equal(message.value,'hello ឧទាហរណ៍!');
+    input.emit('keydown',{key:'z',ctrlKey:true});input.emit('keydown',{key:' '});
+    assert.equal(message.value,'hello outeaho !');assert.equal(input.value,'');
+    assert.deepEqual(core.suggest('outeaho',{previousWords:[]}),before);
+  }finally{core.dispose();}
+});
+
+test('Auto Space accepts the arrow-highlighted English or Khmer completion with reversible selection replacement',async()=>{
+  const dictionary={schemaVersion:3,
+    mappings:[{id:11,romanized:'kon',khmer:'កូន',rank:0,status:'approved'},{id:12,romanized:'konsis',khmer:'កូនសិស្ស',rank:1,status:'approved'}],
+    words:[{id:1,khmer:'កូន',rank:0,status:'approved'},{id:2,khmer:'កូនសិស្ស',rank:1,status:'approved'}],
+    englishWords:[{id:3,text:'book',rank:0,status:'approved'},{id:4,text:'boot',rank:1,status:'approved'}]};
+  const core=await createEngine({dictionary});
+  try{
+    const before=['bo','ko'].map(input=>core.suggest(input));
+    for(const [language,typed,word]of [['english','bo','boot'],['khmer','ko','កូនសិស្ស']]){
+      const page=editorPage(core),input=page.$('#typing-input'),message=page.$('#message');
+      page.run(`settings.language=${JSON.stringify(language)};settings.soundMap=false;`);
+      message.value='hello old';message.setSelectionRange(6,9,'backward');message.emit('input');
+      input.value=typed;input.emit('input');input.emit('keydown',{key:'ArrowDown'});
+      assert.equal(page.run('result.candidates[active].text??result.candidates[active].khmer'),word);
+      input.emit('keydown',{key:' '});const expected='hello '+word+(language==='english'?' ':'');
+      assert.equal(message.value,expected);
+      input.emit('keydown',{key:'z',ctrlKey:true});
+      assert.equal(message.value,'hello old');assert.equal(input.value,typed);
+      assert.equal(message.selectionStart,6);assert.equal(message.selectionEnd,9);assert.equal(message.selectionDirection,'backward');
+      input.emit('keydown',{key:'z',ctrlKey:true,shiftKey:true});assert.equal(message.value,expected);
+    }
+    assert.deepEqual(['bo','ko'].map(input=>core.suggest(input)),before);
+  }finally{core.dispose();}
+});
+
+test('Manual preserves the first and repeated spaces after Khmer with undo and redo',async()=>{
+  const core=await createEngine({dictionary:{schemaVersion:2,mappings:[],words:[{id:1,khmer:'កូន',rank:0,status:'approved'}]}});
+  try{
+    const page=editorPage(core),input=page.$('#typing-input'),message=page.$('#message');
+    page.$('#suggestion-acceptance').value='manual';input.value='កូន';input.emit('input');
+    input.emit('keydown',{key:' '});assert.equal(message.value,'កូន ');assert.equal(input.value,'');
+    input.emit('keydown',{key:' '});assert.equal(message.value,'កូន  ');
+    input.emit('keydown',{key:'z',ctrlKey:true});assert.equal(message.value,'កូន ');
+    input.emit('keydown',{key:'z',ctrlKey:true});assert.equal(message.value,'');assert.equal(input.value,'កូន');
+    input.emit('keydown',{key:'z',ctrlKey:true,shiftKey:true});assert.equal(message.value,'កូន ');
+    input.emit('keydown',{key:'z',ctrlKey:true,shiftKey:true});assert.equal(message.value,'កូន  ');
+  }finally{core.dispose();}
+});
+
+test('a protected highlighted completion never falls back to a different automatic word',()=>{
+  for(const flag of ['tapOnly','manualOnly','correction']){
+    const core={suggest:input=>({input,candidates:[{khmer:'កូន',completion:'kon'},
+      {khmer:'កូនសិស្ស',completion:'konsis',[flag]:flag==='correction'?'konsis':true}],exactCandidates:[]})};
+    const page=editorPage(core),input=page.$('#typing-input');
+    input.value='ko';input.emit('input');input.emit('keydown',{key:'ArrowDown'});input.emit('keydown',{key:' '});
+    assert.equal(page.$('#message').value,'ko ',flag);
+  }
+});
+
+test('Manual keeps exact matches and completions literal on Space but still accepts explicit choices',async()=>{
+  const core=await createEngine();
+  try{
+    for(const typed of ['outeaho','outeahor']){
+      const page=editorPage(core),input=page.$('#typing-input');
+      page.$('#suggestion-acceptance').value='manual';input.value=typed;input.emit('input');
+      input.emit('keydown',{key:' '});assert.equal(page.$('#message').value,typed+' ');
+      input.emit('keydown',{key:'z',ctrlKey:true});assert.equal(input.value,typed);
+      input.emit('keydown',{key:'Enter'});assert.equal(page.$('#message').value,'ឧទាហរណ៍');
+    }
+  }finally{core.dispose();}
+});
+
+test('Auto keeps rare completions, Khmer typo recovery, Shift+Space and IME input explicit',()=>{
+  for(const candidate of [{khmer:'កូន',completion:'kon',tapOnly:true},{khmer:'កូន',completion:'kon',manualOnly:true},{khmer:'កូន',completion:'kon',correction:'kon'}]){
+    const page=editorPage({suggest:input=>({input,candidates:[candidate],exactCandidates:[]})}),input=page.$('#typing-input');
+    input.value='ko';input.emit('input');
+    assert.equal(input.emit('keydown',{key:' ',shiftKey:true}).prevented,false);
+    assert.equal(input.emit('keydown',{key:' ',isComposing:true}).prevented,false);
+    input.emit('keydown',{key:' ',repeat:true});assert.equal(page.$('#message').value,'');
+    input.emit('keydown',{key:' '});assert.equal(page.$('#message').value,'ko ');
+  }
+});
+
+test('English Auto accepts completions and enabled corrections with one trailing space',async()=>{
+  const core=await createEngine();
+  try{
+    for(const [typed,correction,expected]of [['bo',false,'both '],['Bo',false,'Both '],['BO',false,'BOTH '],['im',true,"I'm "],['iM',true,'iM '],['adn',true,'and '],['adn',false,'adn ']]){
+      const page=editorPage(core),input=page.$('#typing-input');
+      page.run(`settings.language='english';settings.correction=${correction};`);
+      input.value=typed;input.emit('input');input.emit('keydown',{key:' '});
+      assert.equal(page.$('#message').value,expected,typed);
+      input.emit('keydown',{key:'z',ctrlKey:true});assert.equal(page.$('#message').value,'');assert.equal(input.value,typed);
+    }
+  }finally{core.dispose();}
+});
+
+test('Auto/Manual is remembered locally and storage failures leave Auto usable',()=>{
+  const stored=new Map(),storage={getItem:key=>stored.get(key),setItem:(key,value)=>stored.set(key,value)};
+  const page=editorPage(undefined,storage),select=page.$('#suggestion-acceptance');
+  assert.equal(select.value,'auto');select.value='manual';select.emit('change');
+  assert.equal(editorPage(undefined,storage).$('#suggestion-acceptance').value,'manual');
+  const blocked={getItem(){throw new Error('Blocked');},setItem(){throw new Error('Blocked');}};
+  const fallback=editorPage(undefined,blocked);assert.equal(fallback.$('#suggestion-acceptance').value,'auto');
+  assert.doesNotThrow(()=>fallback.$('#suggestion-acceptance').emit('change'));
+  assert.equal(editorPage(undefined,{getItem:()=> 'invalid'}).$('#suggestion-acceptance').value,'auto');
+});
+
 test('a changed query cancels an in-progress hold',()=>{
   const page=editorPage(),input=page.$('#typing-input');
   input.value='s';input.emit('input');
   page.$('#suggestions').children[0].emit('pointerdown',{pointerId:1,button:0,clientX:20,clientY:20});
   input.value='sa';input.emit('input');page.hold();
   assert.equal(page.$('#word-details').open,undefined);assert.equal(page.$('#message').value,'');
+});
+
+test('exact shorthands accept Space, Enter and clicks after Read as edits, with undo and redo',async()=>{
+  const core=await createEngine({dictionary:{schemaVersion:2,mappings:[],words:['ខ្ញុំ','ទៀត'].map((khmer,index)=>({id:99600+index,khmer,rank:0,status:'approved'}))}});
+  try{
+    core.setShorthands([{word:'ទៀត',inputs:['tt']}]);
+    core.setPronunciations([{word:'ខ្ញុំ',readAs:'មិត'}]);
+    for(const [typed,word]of [['nh','ខ្ញុំ'],['tt','ទៀត'],['met','ខ្ញុំ']]){
+      for(const method of ['click','Enter',' ']){
+        const page=editorPage(core),message=page.$('#message'),input=page.$('#typing-input');
+        message.value='hello world';message.setSelectionRange(6,11,'backward');message.emit('input');
+        input.value=typed;input.emit('input');
+        const hit=page.run('result.candidates').find(hit=>hit.khmer===word);assert(hit,typed);assert(!hit.tapOnly);
+        const button=page.$('#suggestions').children.find(button=>button.children[0].textContent===word);assert(button,typed);
+        if(method==='click')button.onclick();else input.emit('keydown',{key:method});
+        assert.equal(message.value,`hello ${word}`,`${typed}: ${method}`);
+        input.emit('keydown',{key:'z',ctrlKey:true});
+        assert.equal(message.value,'hello world');assert.equal(input.value,typed);
+        assert.equal(message.selectionStart,6);assert.equal(message.selectionEnd,11);assert.equal(message.selectionDirection,'backward');
+        input.emit('keydown',{key:'z',ctrlKey:true,shiftKey:true});assert.equal(message.value,`hello ${word}`);
+      }
+    }
+  }finally{core.dispose();}
 });

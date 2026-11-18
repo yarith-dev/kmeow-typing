@@ -7,11 +7,12 @@ initSync({module:read('wasm/khmer_engine_bg.wasm')});
 const proof=JSON.parse(read('test/fixtures/word-part-read-as-migration.json'));
 
 test('safe reading moves to Read as while the checked scoped case stays intact',()=>{
-  const parts=JSON.parse(read('data/khmer-sound-map.json')).runtime.wordParts;
-  assert(!parts.some(p=>p.khmer===proof.movedPart.khmer));
-  const scoped=structuredClone(parts.find(p=>p.khmer===proof.reuseDisabled));
+  const runtime=JSON.parse(read('data/khmer-sound-map.json')).runtime;
+  assert(!(runtime.wordParts??[]).some(p=>p.khmer===proof.movedPart.khmer));
+  const scoped=structuredClone(runtime.pronunciationParts.find(p=>p.word===proof.reuseDisabled));
   assert.equal(scoped.reusableAsComponent,false);delete scoped.reusableAsComponent;
-  assert.deepEqual(scoped,proof.keptScopedDefinition);
+  assert.equal(scoped.readAs,'បណ្ឌិត');
+  assert.deepEqual(scoped.cases.map(({order,...scope})=>scope),proof.keptScopedDefinition.cases.map(({order,...scope})=>scope));
   const core=WasmEngine.fromAppData(read('compiled-data/khmer.kmd'),read('compiled-data/english.kmd'));
   try{
     assert(JSON.parse(core.appDataInfo()).provenance.pronunciations.rules.some(rule=>rule.word===proof.pronunciation.word&&rule.readAs===proof.pronunciation.readAs));

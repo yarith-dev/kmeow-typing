@@ -15,6 +15,132 @@ fn engines() -> (Engine, Engine) {
 }
 
 #[test]
+fn new_vowel_alternatives_do_not_displace_saved_exact_spellings_in_either_layer() {
+    let generated = Engine::from_json(&json!({"schemaVersion":3,"mappings":[],"englishWords":[],
+        "words":[{"id":1,"khmer":"ផ្ទះ","rank":0,"status":"approved"},
+            {"id":2,"khmer":"ចុះហត្ថលេខា","rank":0,"status":"approved"}]}).to_string()).unwrap();
+    let saved = Engine::from_personal_words_json(&json!([
+        {"word":"សៀវភៅ","spellings":["phteas","joshatlekha"]}
+    ]).to_string()).unwrap();
+    let before = [generated.to_binary(), saved.to_binary()];
+    for (base, extension) in [(&generated, &saved), (&saved, &generated)] {
+        for (input, alternative) in [("phteas", "ផ្ទះ"), ("joshatlekha", "ចុះហត្ថលេខា")] {
+            let result = base.suggest_with_extension(extension, input, SuggestionFeatures::default(), &TypingContext::default()).unwrap();
+            let exact: Vec<_> = result.exact_candidates.iter().map(|word| word.khmer.as_str()).collect();
+            assert_eq!(exact, ["សៀវភៅ", alternative], "{input}");
+            assert!(matches!(&result.result.candidates[0].candidate, SuggestionCandidate::Khmer(word) if word.khmer == "សៀវភៅ"));
+        }
+    }
+    assert_eq!([generated.to_binary(), saved.to_binary()], before);
+}
+
+#[test]
+fn additive_endings_preserve_existing_count_matches_with_context_and_custom_ranks() {
+    // A synthetic word isolates an existing doubled-consonant reading jjos.
+    let old_word = "ច្ចុស";
+    let words = ["ចុះ", "សុខ", "សប្បាយ", "សុខសប្បាយ"];
+    let base = Engine::from_json(&json!({"schemaVersion":3,"mappings":[],"englishWords":[],
+        "words":words.iter().enumerate().map(|(i,word)|json!({
+            "id":i+1,"khmer":word,"rank":0,"status":"approved"
+        })).collect::<Vec<_>>()}).to_string()).unwrap();
+    let personal = Engine::from_personal_words_json(&json!([
+        {"word":old_word,"spellings":["my-jjos"]}
+    ]).to_string()).unwrap();
+    let before = [base.to_binary(), personal.to_binary()];
+    for rank in [None, Some(0), Some(20)] {
+        let personal = match rank {
+            Some(rank) => personal.with_typing_overrides_json(&json!([
+                {"language":"khmer","word":old_word,"rank":rank}
+            ]).to_string()).unwrap(),
+            None => Engine::from_personal_words_json(&json!([
+                {"word":old_word,"spellings":["my-jjos"]}
+            ]).to_string()).unwrap(),
+        };
+        for (base, extension) in [(&base,&personal),(&personal,&base)] {
+            for previous_words in [vec![],vec!["សុខ".into()]] {
+                let context = TypingContext {previous_words,..Default::default()};
+                let result = base.suggest_with_extension(extension,"jos",Default::default(),&context).unwrap();
+                let exact: Vec<_> = result.exact_candidates.iter().map(|word|word.khmer.as_str()).collect();
+                assert_eq!(exact,[old_word,"ចុះ"],"rank {rank:?}, {context:?}");
+                let displayed: Vec<_> = result.result.candidates.iter().filter_map(|hit|match &hit.candidate {
+                    SuggestionCandidate::Khmer(word) if hit.completion.is_none() && hit.correction.is_none() => Some(word.khmer.as_str()),
+                    _ => None,
+                }).collect();
+                assert_eq!(displayed,exact,"rank {rank:?}, {context:?}");
+                let saved = base.suggest_with_extension(extension,"my-jjos",
+                    SuggestionFeatures {sound_map:false,..Default::default()},&context).unwrap();
+                assert_eq!(saved.exact_candidates[0].khmer,old_word);
+            }
+        }
+    }
+    assert_eq!([base.to_binary(),personal.to_binary()],before);
+}
+
+#[test]
+fn multiple_additive_endings_share_one_display_and_exact_order() {
+    // Synthetic words isolate two new endings against a single/double match.
+    let words = ["កះកះ", "កះកះកា", "សុខ", "សប្បាយ", "សុខសប្បាយ"];
+    let base = Engine::from_json(&json!({"schemaVersion":3,"mappings":[],"englishWords":[],
+        "words":words.iter().enumerate().map(|(i,word)|json!({
+            "id":i+1,"khmer":word,"rank":0,"status":"approved"
+        })).collect::<Vec<_>>()}).to_string()).unwrap();
+    let personal = Engine::from_personal_words_json(r#"[{"word":"ក្កាសកះ","spellings":["personal-reading"]}]"#).unwrap();
+    let before = [base.to_binary(),personal.to_binary()];
+    for rank in [None,Some(0),Some(20)] {
+        let extra = match rank {
+            Some(rank) => personal.with_typing_overrides_json(&json!([
+                {"language":"khmer","word":"ក្កាសកះ","rank":rank}
+            ]).to_string()).unwrap(),
+            None => Engine::from_personal_words_json(r#"[{"word":"ក្កាសកះ","spellings":["personal-reading"]}]"#).unwrap(),
+        };
+        for (base,extension) in [(&base,&extra),(&extra,&base)] {
+            for previous_words in [vec![],vec!["សុខ".into()]] {
+                let context = TypingContext {previous_words,..Default::default()};
+                let result = base.suggest_with_extension(extension,"kaskas",Default::default(),&context).unwrap();
+                let exact: Vec<_> = result.exact_candidates.iter().map(|word|word.khmer.as_str()).collect();
+                assert_eq!(exact,["កះកះ","ក្កាសកះ"],"rank {rank:?}, {context:?}");
+                let displayed: Vec<_> = result.result.candidates.iter().filter_map(|hit|match &hit.candidate {
+                    SuggestionCandidate::Khmer(word) if hit.completion.is_none() && hit.correction.is_none() => Some(word.khmer.as_str()),
+                    _ => None,
+                }).collect();
+                assert_eq!(displayed,exact,"rank {rank:?}, {context:?}");
+                assert!(result.result.candidates.iter().any(|hit|hit.completion.as_deref()==Some("kaskaska")));
+                let tolerated = result.result.candidates.iter().find(|hit|matches!(&hit.candidate,
+                    SuggestionCandidate::Khmer(word) if word.khmer=="ក្កាសកះ")).unwrap();
+                assert_eq!(tolerated.preferred_input.as_deref(),Some("kkaskas"));
+                assert_eq!(base.suggest_with_extension(extension,"personal-reading",Default::default(),&context)
+                    .unwrap().exact_candidates[0].khmer,"ក្កាសកះ");
+            }
+        }
+    }
+    assert_eq!([base.to_binary(),personal.to_binary()],before);
+}
+
+#[test]
+fn older_signed_priorities_keep_their_merge_order_with_personal_aliases() {
+    let words = ["រាំ", "គាំ", "នាំ", "ប៉ុស្តិ៍"];
+    let base = Engine::from_json(&json!({"schemaVersion":3,"englishWords":[],
+        "mappings":[{"id":5,"romanized":"poh","khmer":"ប៉ុស្តិ៍","rank":0,"status":"approved"}],
+        "words":words.iter().enumerate().map(|(i,word)|json!({
+            "id":i+1,"khmer":word,"rank":0,"status":"approved"
+        })).collect::<Vec<_>>()}).to_string()).unwrap();
+    let personal = Engine::from_personal_words_json(&json!([
+        {"word":"សៀវភៅ","spellings":["roam","koam","noam","poh"]}
+    ]).to_string()).unwrap();
+    let before = [base.to_binary(), personal.to_binary()];
+    for (input, word) in [("roam","រាំ"),("koam","គាំ"),("noam","នាំ"),("poh","ប៉ុស្តិ៍")] {
+        for (base, extension, expected) in [(&base,&personal,vec![word,"សៀវភៅ"]),
+            (&personal,&base,vec!["សៀវភៅ",word])] {
+            let result = base.suggest_with_extension(extension,input,Default::default(),&Default::default()).unwrap();
+            assert_eq!(result.exact_candidates.iter().map(|word|word.khmer.as_str()).collect::<Vec<_>>(),expected,"{input}");
+            assert!(matches!(&result.result.candidates[0].candidate,
+                SuggestionCandidate::Khmer(word) if word.khmer == expected[0]));
+        }
+    }
+    assert_eq!([base.to_binary(), personal.to_binary()], before);
+}
+
+#[test]
 fn personal_lookup_preserves_base_and_exact_identities_and_never_promotes_prefixes() {
     let (base, extra) = engines();
     let before = base.to_binary();

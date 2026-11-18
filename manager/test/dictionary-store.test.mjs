@@ -162,7 +162,7 @@ test('repeated rank saves retain only the current pair and preserve unrelated re
   await assertNoSavedHistory(root);
 });
 
-test('HTTP saves require the local token, origin and revision; another client loads the saved dictionary',async t=>{
+test('HTTP saves recover after a token change and still require a local origin and matching revision',async t=>{
   const root=await fixture(t),server=managerServer({dictionaryRoot:root});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>server.close(resolve)));
   const base=`http://127.0.0.1:${server.address().port}`,fetcher=(url,options)=>fetch(base+url,options);
@@ -173,12 +173,21 @@ test('HTTP saves require the local token, origin and revision; another client lo
     const request=spellingChange([...catalog.khmer.find(word=>word.word==='សៀវភៅ').romanizations,'httpbook']);
     assert.equal((await fetcher('/api/words',{method:'POST',body:'{}'})).status,403);
     assert.equal((await fetcher('/api/words',{method:'POST',headers:{'X-Kmeow-Token':catalog.token,Origin:'https://other.example','Content-Type':'application/json'},body:JSON.stringify(request)})).status,403);
-    const saved=await saveSharedDictionary({fetcher,catalog,request});assert.notEqual(saved.revision,catalog.revision);
+    const calls=[];
+    const browserFetch=(url,options)=>{
+      calls.push([url,options?.method??'GET']);
+      return fetcher(url,options?.method==='POST'?{
+        ...options,headers:{...options.headers,Origin:base,'Sec-Fetch-Site':'same-origin'},
+      }:options);
+    };
+    const expired={...catalog,token:'expired-manager-token'};
+    const saved=await saveSharedDictionary({fetcher:browserFetch,catalog:expired,request});assert.notEqual(saved.revision,catalog.revision);
+    assert.deepEqual(calls,[['/api/words','POST'],['/api/words','GET'],['/api/words','POST']]);
     assert.equal((await fetcher('/compiled-data/khmer.kmd?revision='+catalog.revision)).status,409);
     const other=await loadSharedDictionary({fetcher,createEngine});
     try{assert.equal(other.engine.convert('httpbook').candidates[0].khmer,'សៀវភៅ');assert.deepEqual(other.engine.getWords(),[]);}
     finally{other.engine.dispose();}
-    await assert.rejects(saveSharedDictionary({fetcher,catalog,request}),/Refresh/);
+    await assert.rejects(saveSharedDictionary({fetcher:browserFetch,catalog:expired,request}),error=>error.status===409&&/Refresh/.test(error.message));
     assert.equal(loaded.engine.convert('browserbook').candidates[0].khmer,'សៀវភៅ');
     const exported=parseImport(wordExport(saved));assert.equal(exported.length,saved.khmer.length+saved.english.length);
   }finally{loaded.engine.dispose();}
@@ -308,5 +317,94 @@ test('component imports resolve parents listed before reviewed children and keep
   const row=imported.catalog.khmer.find(row=>row.word==='កូនសិស្ស');
   const last=await store.save({type:'import',words:[{word:row.word,language:'khmer',components:[]},{word:row.word,language:'khmer',components:row.components}]},imported.revision);
   assert.deepEqual(last.bytes,imported.bytes,'the final explicit choice wins without leaving an intermediate override');
+  await assertNoSavedHistory(root);
+});
+
+test('exact input exclusions persist without changing words, aliases or unrelated typing and can be cleared',async t=>{
+  const root=await fixture(t),store=dictionaryStore(root),before=await store.snapshot();
+  const row=before.catalog.khmer.find(row=>row.word==='សៀវភៅ');
+  const inputs=[...new Set([row.romanizations[0],row.soundMapInputs[0]].filter(Boolean))].sort();
+  assert(inputs.length>0);
+  const original=await createEngine({dictionary:before.files,words:[{word:row.word,spellings:inputs}]});
+  try{
+    for(const input of inputs)assert(original.suggest(input).candidates.some(hit=>hit.khmer===row.word));
+    await assert.rejects(store.save({type:'save',word:{word:row.word,excludedInputs:['!bad']}},before.revision),/excluded inputs/);
+    assert.deepEqual((await store.snapshot()).bytes,before.bytes);
+    const after=await store.save({type:'save',word:{word:row.word,excludedInputs:inputs.map(input=>' '+input.toUpperCase()+' ')}},before.revision);
+    assert.deepEqual(after.source,before.source);
+    for(const language of ['khmer','english'])assert.deepEqual(after.metadata[language].words,before.metadata[language].words);
+    assert.deepEqual(after.catalog.khmer.find(item=>item.word===row.word).excludedInputs,inputs);
+    const restarted=await dictionaryStore(root).snapshot(),engine=await createEngine({dictionary:restarted.files,words:[{word:row.word,spellings:inputs}]});
+    try{
+      for(const input of inputs){
+        assert(!engine.suggest(input).candidates.some(hit=>hit.khmer===row.word));
+        assert(!engine.convert(input).candidates.some(hit=>hit.khmer===row.word));
+        assert(!engine.suggest(input,{previousWords:[]}).candidates.some(hit=>hit.khmer===row.word));
+      }
+      for(const input of ['ke','angkor','nih','niyom','tusna','ក','សៀវភៅ'])assert.deepEqual(engine.suggest(input,{previousWords:[]}),original.suggest(input,{previousWords:[]}),input);
+      for(const input of ['book','books','lets','children','wrote'])assert.deepEqual(engine.suggest(input,{language:'english',previousWords:[]}),original.suggest(input,{language:'english',previousWords:[]}),input);
+      const exported=parseImport(wordExport(restarted.catalog));
+      assert.deepEqual(exported.find(item=>item.word===row.word).excludedInputs,inputs);
+      assert.equal((await store.save({type:'import',words:exported,reviewed:true},after.revision)).revision,after.revision);
+      const cleared=await store.save({type:'save',word:{word:row.word,excludedInputs:[]}},after.revision);
+      assert.deepEqual(cleared.source,before.source);
+      const restored=await createEngine({dictionary:cleared.files,words:[{word:row.word,spellings:inputs}]});
+      try{for(const input of inputs)assert.deepEqual(restored.suggest(input),original.suggest(input));}
+      finally{restored.dispose();}
+    }finally{engine.dispose();}
+    await assertNoSavedHistory(root);
+  }finally{original.dispose();}
+});
+
+test('shorthand edits persist, keep aliases and words, export and restore the built-in nh reading',async t=>{
+  const root=await fixture(t),store=dictionaryStore(root),before=await store.snapshot();
+  assert.deepEqual(before.catalog.khmer.find(row=>row.word==='ខ្ញុំ').shorthands,['nh']);
+  const original=await createEngine({dictionary:before.files});
+  try{
+    const after=await store.save({type:'import',words:[{word:'ខ្ញុំ',shorthands:[]},{word:'សៀវភៅ',shorthands:[' SB ']}]},before.revision);
+    assert.deepEqual(after.source,before.source);
+    for(const lang of ['khmer','english'])assert.deepEqual(after.metadata[lang].words,before.metadata[lang].words);
+    assert.deepEqual(after.catalog.khmer.find(row=>row.word==='ខ្ញុំ').shorthands,[]);
+    assert.deepEqual(after.catalog.khmer.find(row=>row.word==='សៀវភៅ').shorthands,['sb']);
+    const restarted=await dictionaryStore(root).snapshot(),core=await createEngine({dictionary:restarted.files});
+    try{
+      assert(!core.suggest('nh').candidates.some(hit=>hit.khmer==='ខ្ញុំ'&&hit.completion===undefined));
+      assert(core.suggest('sb').candidates.some(hit=>hit.khmer==='សៀវភៅ'&&!hit.tapOnly));
+      assert(!core.convert('sb').candidates.some(hit=>hit.khmer==='សៀវភៅ'));
+      for(const input of ['khnhom','khnyom','sievphov','ke','kon'])assert.deepEqual(core.suggest(input),original.suggest(input),input);
+      const exported=parseImport(wordExport(restarted.catalog));assert.deepEqual(exported.find(row=>row.word==='សៀវភៅ').shorthands,['sb']);
+      assert.equal((await store.save({type:'import',words:exported,reviewed:true},after.revision)).revision,after.revision);
+      const restored=await store.save({type:'import',words:[{word:'ខ្ញុំ',shorthands:['nh']},{word:'សៀវភៅ',shorthands:[]}]},after.revision);
+      assert.deepEqual(restored.source,before.source);
+      const final=await createEngine({dictionary:restored.files});
+      try{assert.deepEqual(final.suggest('nh'),original.suggest('nh'));}finally{final.dispose();}
+    }finally{core.dispose();}
+    await assertNoSavedHistory(root);
+  }finally{original.dispose();}
+});
+
+test('signed rank saves survive restart and export without losing any word or alias',async t=>{
+  const root=await fixture(t),store=dictionaryStore(root),before=await store.snapshot();
+  const word='ជិត',old=before.source.words.find(row=>row.khmer===word);assert(old);
+  const after=await store.save({type:'save',word:{word,rank:-1}},before.revision);
+  assert.deepEqual(after.source.words,before.source.words.map(row=>row.khmer===word?{...row,rank:-1}:row));
+  assert.deepEqual(after.source.englishWords,before.source.englishWords);
+  assert.deepEqual(after.source.mappings,before.source.mappings.map(row=>row.khmer===word?{...row,rank:-1}:row));
+  for(const language of ['khmer','english'])assert.deepEqual(after.metadata[language].words,before.metadata[language].words);
+  const restarted=await dictionaryStore(root).snapshot();assert.equal(restarted.revision,after.revision);
+  assert.equal(restarted.catalog.khmer.find(row=>row.word===word).rank,-1);
+  const exported=parseImport(wordExport(restarted.catalog));assert.equal(exported.find(row=>row.word===word).rank,-1);
+  assert.equal((await store.save({type:'import',words:exported,reviewed:true},restarted.revision)).revision,restarted.revision);
+  const core=await createEngine({dictionary:restarted.files});
+  try{
+    for(const input of ['chet','chit','jet','jit'])assert.equal(core.suggest(input,{previousWords:[]}).candidates.find(hit=>hit.khmer===word)?.rank,-1,input);
+  }finally{core.dispose();}
+  const restored=await store.save({type:'save',word:{word,rank:old.rank}},restarted.revision);
+  assert.deepEqual(restored.source,before.source);
+  const original=await createEngine({dictionary:before.files}),reverted=await createEngine({dictionary:restored.files});
+  try{for(const input of ['chet','chit','jet','jit','ke','nh','tt','kon'])assert.deepEqual(reverted.suggest(input),original.suggest(input),input);}
+  finally{original.dispose();reverted.dispose();}
+  await assert.rejects(store.save({type:'save',word:{word,rank:-1000001}},restored.revision),/Rank must/);
+  assert.equal((await store.snapshot()).revision,restored.revision);
   await assertNoSavedHistory(root);
 });

@@ -103,6 +103,10 @@
     {
       "word": "ស្ថានីយទូរទស្សន៍",
       "inputs": [
+        "staniytourotuh",
+        "staniytourotus",
+        "staniyturotuh",
+        "staniyturotus",
         "sthaniytourotuh",
         "sthaniytourotus",
         "sthaniyturotuh",
@@ -157,18 +161,22 @@
         "tuhnokejjar",
         "tuhnokejjoa",
         "tuhnokejjor",
+        "tuhnokex",
         "tuhnokich",
         "tuhnokijjar",
         "tuhnokijjoa",
         "tuhnokijjor",
+        "tuhnokix",
         "tusnokech",
         "tusnokejjar",
         "tusnokejjoa",
         "tusnokejjor",
+        "tusnokex",
         "tusnokich",
         "tusnokijjar",
         "tusnokijjoa",
-        "tusnokijjor"
+        "tusnokijjor",
+        "tusnokix"
       ],
       "removed": [
         "tohnokech",
@@ -253,11 +261,16 @@
     },
     {
       "word": "នៈ",
-      "inputs": []
+      "inputs": [
+        "neak"
+      ]
     },
     {
       "word": "ទស្សនៈម",
-      "inputs": []
+      "inputs": [
+        "tuhneakmo",
+        "tusneakmo"
+      ]
     },
     {
       "word": "ទស្សនៈម៍",
@@ -269,7 +282,10 @@
     },
     {
       "word": "ទស្សមៈ",
-      "inputs": []
+      "inputs": [
+        "tuhmeak",
+        "tusmeak"
+      ]
     },
     {
       "word": "សន្ទស្សន៍",
@@ -312,8 +328,8 @@
     {
       "word": "ឧស្សាហ៍",
       "inputs": [
-        "ossa",
-        "ussa"
+        "oukssa",
+        "oussa"
       ]
     }
   ]

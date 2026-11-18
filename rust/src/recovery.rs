@@ -7,7 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 const MAX_RECOVERIES: usize = 8;
 
 /// One insertion, deletion, substitution or adjacent transposition. Apostrophes
-/// stay structural: a typo cannot manufacture or remove a required coeng អ key.
+/// stay structural here; optional apostrophes use a separate completion view.
 fn edits(input: &str) -> BTreeSet<String> {
     let mut result = BTreeSet::new();
     if !(4..=32).contains(&input.len()) || input.starts_with('\'') || input.contains("''")
@@ -119,7 +119,8 @@ impl Engine {
         // saved alias over a generated path, then the existing rank and identity.
         let mut recovered: BTreeMap<String, (bool, String, Candidate)> = BTreeMap::new();
         let mut recover = |generated: bool, key: &str, candidate: Candidate| {
-            if existing.contains(&candidate.khmer) || !self.dictionary.khmer.contains(&candidate.khmer)
+            if self.input_excluded(&result.normalized_input, &candidate.khmer, base_policy)
+                || existing.contains(&candidate.khmer) || !self.dictionary.khmer.contains(&candidate.khmer)
                 || contains_profanity(&candidate.khmer, ProfanityLanguage::Khmer) { return; }
             let replacement = (generated, key.to_owned(), candidate);
             match recovered.entry(replacement.2.khmer.clone()) {
@@ -146,22 +147,23 @@ impl Engine {
         result.candidates.extend(recovered.into_iter().take(MAX_RECOVERIES).map(|(_, key, candidate)| Suggestion { tap_only: false, preferred_input: None,
             candidate: SuggestionCandidate::Khmer(candidate), completion: Some(key.clone()), correction: Some(key),
         }));
-        self.place_recoveries(&mut result.candidates, None);
+        self.place_recoveries(&mut result.candidates, None, crate::TypingMode::Khmer, &result.normalized_input);
     }
 
-    /// User-selected order: Super common / Very common, recoveries, then Common
-    /// / Uncommon / Academic / unrated. Stable within each ordinary match group.
-    pub(crate) fn place_recoveries(&self, candidates: &mut Vec<Suggestion>, extension: Option<&Engine>) {
+    /// Khmer keeps unchanged prefixes before corrections. English retains its
+    /// correction band before the cap, so merged contractions remain available.
+    /// Both preserve the Super / Very common prefix tier and stable tie order.
+    pub(crate) fn place_recoveries(&self, candidates: &mut Vec<Suggestion>, extension: Option<&Engine>, mode: crate::TypingMode, input:&str) {
         if !candidates.iter().any(|hit| hit.correction.is_some()) { return; }
+        let prefix_first = mode == crate::TypingMode::Khmer;
         candidates.sort_by_key(|hit| {
-            if hit.correction.is_some() { return 1; }
-            // Unique personal words retain their own reviewed level. Shared
-            // spellings keep the base level, just as they keep base identities.
+            if hit.correction.is_some() { return if prefix_first { 3 } else { 1 }; }
+            if prefix_first && crate::sound_map::omitted_apostrophe_completion(hit,input) {return 2;}
             let source = match (&hit.candidate, extension) {
                 (SuggestionCandidate::Khmer(c), Some(extra)) if !self.dictionary.khmer.contains(&c.khmer) => extra,
                 _ => self,
             };
-            if source.suggestion_level(hit) <= 2 { 0 } else { 2 }
+            if source.suggestion_level(hit) <= 2 { 0 } else if prefix_first { 1 } else { 2 }
         });
         // Base and personal dictionaries recover independently; the merged
         // group shares the same limit, before ordinary display slots are cut.

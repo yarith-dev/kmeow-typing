@@ -24,7 +24,7 @@ fn owner_selected_vowel_keys_follow_effective_series_and_keep_saved_aliases() {
                 assert_eq!(hit.is_some(), field == "yes", "{field}: {input}: {word}");
                 if let Some(hit) = hit {
                     assert_eq!(hit.mapping_id, Some(98000+i as u64));
-                    assert_eq!(hit.rank, i as u32);
+                    assert_eq!(hit.rank, i as i32);
                     for features in [SuggestionFeatures { sound_map: false, ..Default::default() },
                         SuggestionFeatures { romanized: false, ..Default::default() },
                         SuggestionFeatures { mode: TypingMode::English, ..Default::default() }] {
@@ -38,11 +38,14 @@ fn owner_selected_vowel_keys_follow_effective_series_and_keep_saved_aliases() {
     }
     assert_eq!(core.to_binary(), binary);
     data.mappings.push(ApprovedMapping { id: 99001, romanized: "koh".into(), khmer: "កោះ".into(), rank: 77, status: ApprovedStatus::Approved });
+    data.mappings.push(ApprovedMapping { id: 99002, romanized: "kai".into(), khmer: "គៃ".into(), rank: 77, status: ApprovedStatus::Approved });
     let saved = Engine::new(data).unwrap();
     for features in [Default::default(), SuggestionFeatures { sound_map: false, ..Default::default() }] {
-        let result = saved.suggest_with_context("koh", features, &Default::default()).unwrap();
-        let alias = result.exact_candidates.iter().find(|candidate| candidate.mapping_id == Some(99001)).unwrap();
-        assert_eq!(alias.khmer, "កោះ");
-        assert_eq!(alias.rank, 77);
+        for (input, id, word) in [("koh", 99001, "កោះ"), ("kai", 99002, "គៃ")] {
+            let result = saved.suggest_with_context(input, features, &Default::default()).unwrap();
+            let alias = result.exact_candidates.iter().find(|candidate| candidate.mapping_id == Some(id)).unwrap();
+            assert_eq!(alias.khmer, word);
+            assert_eq!(alias.rank, 77);
+        }
     }
 }

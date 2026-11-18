@@ -22,7 +22,7 @@ fn independent_ov_selection_keeps_other_keys_and_explicit_saved_aliases() {
             if let Some(hit) = hit {
                 let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
                 assert_eq!(hit.mapping_id, Some(99500 + index as u64));
-                assert_eq!(hit.rank, index as u32);
+                assert_eq!(hit.rank, index as i32);
                 for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
                     SuggestionFeatures {romanized: false, ..Default::default()},
                     SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -45,7 +45,7 @@ fn independent_ov_selection_keeps_other_keys_and_explicit_saved_aliases() {
     for row in proof["savedAliasControls"].as_array().unwrap() {
         data.mappings.push(ApprovedMapping {
             id: row["id"].as_u64().unwrap(), romanized: row["input"].as_str().unwrap().into(),
-            khmer: row["word"].as_str().unwrap().into(), rank: row["rank"].as_u64().unwrap() as u32,
+            khmer: row["word"].as_str().unwrap().into(), rank: row["rank"].as_u64().unwrap() as i32,
             status: ApprovedStatus::Approved,
         });
     }
@@ -55,7 +55,7 @@ fn independent_ov_selection_keeps_other_keys_and_explicit_saved_aliases() {
             let query = saved.suggest_with_context(row["input"].as_str().unwrap(), features, &Default::default()).unwrap();
             assert_eq!(query.exact_candidates[0].khmer, row["word"].as_str().unwrap());
             assert_eq!(query.exact_candidates[0].mapping_id, row["id"].as_u64());
-            assert_eq!(query.exact_candidates[0].rank, row["rank"].as_u64().unwrap() as u32);
+            assert_eq!(query.exact_candidates[0].rank, row["rank"].as_u64().unwrap() as i32);
         }
     }
 }

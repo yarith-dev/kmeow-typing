@@ -1,5 +1,7 @@
 // Original example paragraphs. Inputs use the existing MIT typing dictionary;
 // these examples do not add words, aliases or conversion rules.
+import {t,getUiLanguage} from './i18n.js';
+import {suggestionStatus,suggestionReading} from './suggestion-view.js';
 export const exampleWords={
   'សួស្តី':'sursdey','អ្នក':'neak','សុខសប្បាយ':'soksabbay','ទេ':'te',
   'ខ្ញុំ':'khnhom','រីករាយ':'rikreay','ដែល':'dael','បាន':'ban','ជួប':'jurp',
@@ -8,8 +10,8 @@ export const exampleWords={
   'ទៅ':'tov','ផ្សារ':'phsa','ជាមួយ':'jeamury','ប្អូន':"b'on",'សាលារៀន':'salarean',
   'ពេល':'pel','ព្រឹក':'prerk','រៀន':'rean','ភាសា':'pheasa','ខ្មែរ':'khmae',
   'មិត្តភក្តិ':'mittophkti','គ្រូ':'kru','ជួយ':'jury','អាន':'an','សរសេរ':'sorse',
-  'អក្សរ':'orksor','ចូលចិត្ត':'joljet','សៀវភៅ':'sievphov','ញ៉ាំ':'nham','បាយ':'bay',
-  'ត្រី':'trey','បន្លែ':'bonlae','អាហារ':'ahar','នេះ':'nih','ឆ្ងាញ់':'chnganh',
+  'អក្សរ':'aksor','ចូលចិត្ត':'joljet','សៀវភៅ':'sievphov','ញ៉ាំ':'nham','បាយ':'bay',
+  'ត្រី':'trey','បន្លែ':'bonlae','អាហារ':'aha','នេះ':'nih','ឆ្ងាញ់':'chnganh',
   'ចង់':'jong','ផឹក':'pherk','ទឹក':'terk','ភ្ញាក់':'phnheak','ពី':'pi','គេង':'keng',
   'ហើយ':'hery','ធ្វើការ':'thverka','ល្ងាច':'lngeach','ត្រឡប់':'trolop',
   'ដើរ':'der','លេង':'leng','សួនច្បារ':'surnjba','ផ្កា':'phka','ដើមឈើ':'dermcher',
@@ -24,7 +26,7 @@ export const exampleWords={
   'បិទ':'bet','ភ្លើង':'phlerng','យប់':'yop','បឹង':'berng','តូច':'toch',
   'ឃើញ':'khernh','បក្សី':'boksey','សម្រាក':'somrak','ក្រោម':'kraom',
   'ទិញ':'tenh','អ្នកលក់':'neakluak','ជ្រើសរើស':'jrersrers','ត្រសក់':'trosok',
-  'ស្ពៃ':'spai','តម្លៃ':'tomlai','កាបូប':'kabop','យក':'yok','ច្រើន':'jrern',
+  'ស្ពៃ':'spey','តម្លៃ':'tomlai','កាបូប':'kabop','យក':'yok','ច្រើន':'jrern',
   'ផ្លែឈើ':'phlaecher','ទីក្រុង':'tikrong','ចេញ':'jenh','រថយន្ត':'rothoyntor',
   'ក្បែរ':'kbae','ផ្លូវ':'phlov','សណ្ឋាគារ':'sonthakea','ចាប់ផ្ដើម':'japphderm',
   'កុំព្យូទ័រ':'kompyutoa','ផែនការ':'phaenka','ពិភាក្សា':'pepheaksa','បញ្ចប់':'bonhjop',
@@ -61,7 +63,7 @@ export const exampleWords={
   "សារ":"sa",
   "ប្រាប់":"brap",
   "សិន":"sen",
-  "មិន":"men",
+  "មិន":"min",
   "បាច់":"bach",
   "ចាំ":"jam",
   "ម្សិលមិញ":"mselmenh",
@@ -206,7 +208,7 @@ export const exampleWords={
   "ទទេ":"tote",
   "ក្លាយ":"klay",
   "ចាំបាច់":"jambach",
-  "ឥឡូវ":"elov",
+  "ឥឡូវ":"eilov",
   "ដែរ":"dae",
   "ស្មាន":"sman",
   "ខ្លី":"khlei",
@@ -776,6 +778,51 @@ export function exampleDisplayParts(example,language){
   const parts=[];let cursor=0;
   for(const token of tokens){parts.push({text:example.romanized.slice(cursor,token.start)},{text:token.input,token});cursor=token.end;}
   parts.push({text:example.romanized.slice(cursor)});return parts;
+}
+// Shared paragraph view for saved examples and the free-form Typing converter.
+export function renderParagraph({element,draft,language,identity,engine,selected,disabled=false,suggestionsId,onSelect,el,textField=false}){
+  if(textField){
+    const text=language==='khmer'?draft.khmer:draft.romanized;
+    if(element.value!==text)element.value=text;
+    return;
+  }
+  if(element.exampleDraft!==draft||element.exampleTopic!==identity||element.exampleEngine!==engine){
+    element.replaceChildren();element.exampleDraft=draft;element.exampleTopic=identity;element.exampleEngine=engine;
+    for(const part of exampleDisplayParts(draft,language)){
+      if(!part.text)continue;
+      const selectable=part.token&&engine,node=el(selectable?'button':'span',part.text,selectable?'example-word':undefined);
+      if(selectable){node.type='button';node.exampleToken=part.token;node.setAttribute('aria-controls',suggestionsId);node.onclick=()=>onSelect(part.token);}
+      element.append(node);
+    }
+  }
+  for(const node of element.children)if(node.exampleToken){
+    const token=node.exampleToken;node.disabled=disabled;
+    node.setAttribute('aria-pressed',String(selected?.start===token.start&&selected?.end===token.end));
+    node.title=t('Choose a suggestion for {input}',{input:token.input});
+  }
+}
+export function paragraphWordAt(draft,language,start,end=start){
+  if(language==='romanized')return exampleWordAt(draft,start,end);
+  let offset=0;
+  for(const part of exampleDisplayParts(draft,'khmer')){
+    const next=offset+part.text.length;
+    if(part.token&&start>=offset&&start<=next&&end<=next)return part.token;
+    offset=next;
+  }
+  return null;
+}
+export function paragraphSuggestion(el,candidate,result,target,{statuses=false}={}){
+  const button=el('button',undefined,'candidate'),word=el('span',candidate.khmer,'candidate-word');word.lang='km';
+  button.type='button';button.lang=getUiLanguage();button.append(word);
+  if(statuses){
+    const states=suggestionStatus(candidate,result).states,dots=el('span',undefined,'candidate-statuses');dots.setAttribute('aria-hidden','true');
+    for(const state of states){const dot=el('span',undefined,`status-dot status-${state.kind}`);dot.title=t(state.label);dots.append(dot);}
+    button.dataset.statusCount=String(states.length);button.title=states.map(state=>t(state.label)).join(' · ');button.append(dots);
+  }
+  const reading=el('small',suggestionReading(candidate,result,'khmer')||'—','candidate-reading');reading.lang='en';button.append(reading);
+  button.setAttribute('aria-label',t('Choose {word}',{word:candidate.khmer})+(statuses?`, ${button.title}`:''));
+  const selected=candidate.khmer===target.word;button.setAttribute('aria-pressed',String(selected));if(selected)button.className+=' highlighted';
+  button.addEventListener('mousedown',event=>event.preventDefault());return button;
 }
 export function exampleSuggestions(engine,example,start,end=start){
   const target=exampleWordAt(example,start,end);if(!target||target.input.length>512)return null;

@@ -5,7 +5,9 @@ import {WasmEngine} from '../wasm/khmer_engine.js';
 // and recompiles the recovered source; never use a lossy browse/search export.
 export function readCompactSource(core) {
   const bytes=Buffer.from(core.exportBinary());
-  assert.equal(bytes.subarray(0,8).toString(),'KMEOWC04');
+  const format=bytes.subarray(0,8).toString();
+  assert(['KMEOWC04','KMEOWC05'].includes(format));
+  const signedRanks=format==='KMEOWC05';
   let start=32;
   const sections=Array.from({length:5},(_,i)=>{
     const length=bytes.readUInt32LE(12+i*4), section=bytes.subarray(start,start+length);
@@ -20,7 +22,8 @@ export function readCompactSource(core) {
       const prefix=Number(integer()),length=Number(integer());
       key=Buffer.concat([key.subarray(0,prefix),data.subarray(pos,pos+length)]);pos+=length;
       const delta=integer();id+=Number((delta>>1n)^-(delta&1n));
-      const rank=Number(integer()),target=integer(),source=kind===0?Number(integer()):0;
+      const rankCode=Number(integer()),rank=signedRanks&&rankCode>1000000?1000000-rankCode:rankCode;
+      const target=integer(),source=kind===0?Number(integer()):0;
       return {key:key.toString('utf8'),id,rank,target,source};
     });
   }

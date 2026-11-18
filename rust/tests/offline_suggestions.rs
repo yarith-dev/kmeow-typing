@@ -41,7 +41,7 @@ fn one_edit_recovery_is_manual_preserves_identity_and_does_not_change_conversion
 }
 
 #[test]
-fn recovery_bucket_follows_super_and_very_common_and_precedes_all_lower_tiers() {
+fn genuine_prefixes_precede_corrections_at_every_commonness_level() {
     let entries = [("testa","ក",1), ("testb","ខ",2), ("testc","គ",3), ("testd","ឃ",4), ("teste","ង",5), ("tent","ច",5)];
     let mut engine = Engine::from_json(&json!({"schemaVersion":2,
         "mappings":entries.iter().enumerate().map(|(i,(key,word,_))| json!({"id":i+1,"romanized":key,"khmer":word,"rank":0,"status":"approved"})).collect::<Vec<_>>(),
@@ -51,10 +51,52 @@ fn recovery_bucket_follows_super_and_very_common_and_precedes_all_lower_tiers() 
         "khmer":entries.iter().map(|(_,word,level)|json!({"word":word,"level":level})).collect::<Vec<_>>()}).to_string()).unwrap();
     for previous in [context(&[]), context(&["ក"])] {
         let result = engine.suggest_with_context("test", SuggestionFeatures { sound_map:false, ..Default::default() }, &previous).unwrap();
-        assert_eq!(result.result.candidates.iter().map(output).collect::<Vec<_>>(), ["ក","ខ","ច","គ","ឃ","ង"]);
-        assert_eq!(result.result.candidates[2].correction.as_deref(), Some("tent"));
+        assert_eq!(result.result.candidates.iter().map(output).collect::<Vec<_>>(), ["ក","ខ","គ","ឃ","ង","ច"]);
+        assert_eq!(result.result.candidates[5].correction.as_deref(), Some("tent"));
+        assert!(result.result.candidates[3].tap_only);
+        assert!(result.result.candidates[4].tap_only);
         assert!(result.exact_candidates.is_empty());
     }
+}
+
+#[test]
+fn broya_keeps_the_typed_prefix_ahead_of_generated_recovery_in_either_dictionary() {
+    let words = ["ប្រយ័ត្ន","ប្រសា"];
+    let make = |included: &[&str]| {
+        let mut engine = Engine::from_json(&json!({"schemaVersion":2,
+            "words":included.iter().enumerate().map(|(i,word)|json!({
+                "id":i+1,"khmer":word,"rank":i,"status":"approved"
+            })).collect::<Vec<_>>(),
+            "mappings":if included.contains(&"ប្រយ័ត្ន") {json!([
+                {"id":90,"romanized":"broyat","khmer":"ប្រយ័ត្ន","rank":9,"status":"approved"}
+            ])} else {json!([])}
+        }).to_string()).unwrap();
+        engine.load_word_ranking_json(&json!({"format":"kmeow-word-ranking-v1","english":[],
+            "khmer":included.iter().map(|word|json!({"word":word,"level":3})).collect::<Vec<_>>()
+        }).to_string()).unwrap();
+        engine
+    };
+    let core = make(&words);
+    let prefix = make(&words[..1]);
+    let recovery = make(&words[1..]);
+    let before = (core.to_binary(),prefix.to_binary(),recovery.to_binary());
+    let restored = Engine::from_binary(before.0.clone()).unwrap();
+    for result in [
+        core.suggest_with_context("broya",Default::default(),&context(&[])).unwrap(),
+        restored.suggest_with_context("broya",Default::default(),&context(&[])).unwrap(),
+        prefix.suggest_with_extension(&recovery,"broya",Default::default(),&context(&[])).unwrap(),
+        recovery.suggest_with_extension(&prefix,"broya",Default::default(),&context(&[])).unwrap(),
+    ] {
+        assert_eq!(result.result.candidates.iter().map(output).collect::<Vec<_>>(),words);
+        let first = &result.result.candidates[0];
+        assert_eq!(first.completion.as_deref(),Some("broyat"));
+        assert!(first.correction.is_none());
+        assert_eq!(result.result.candidates[1].correction.as_deref(),Some("brosa"));
+        assert!(result.exact_candidates.is_empty());
+    }
+    assert_eq!(core.convert("broyat").unwrap().candidates[0].khmer,"ប្រយ័ត្ន");
+    assert!(core.convert("broya").unwrap().candidates.is_empty());
+    assert_eq!((core.to_binary(),prefix.to_binary(),recovery.to_binary()),before);
 }
 
 #[test]
@@ -103,7 +145,7 @@ fn a_complete_personal_input_suppresses_base_recovery() {
 }
 
 #[test]
-fn merged_recovery_tiers_precede_the_cap_and_preserve_personal_commonness() {
+fn merged_prefix_matches_precede_corrections_before_the_cap_and_keep_commonness() {
     let mut base = Engine::from_json(&json!({"schemaVersion":2,
         "mappings":[
             {"id":1,"romanized":"testy","khmer":"ខ","rank":0,"status":"approved"},
@@ -126,16 +168,16 @@ fn merged_recovery_tiers_precede_the_cap_and_preserve_personal_commonness() {
     let features = SuggestionFeatures { sound_map:false, ..Default::default() };
     let query = base.suggest_with_extension(&personal, "test", features, &context(&[])).unwrap();
     assert_eq!(query.result.candidates.len(),20);
-    assert_eq!(query.result.candidates.iter().take(3).map(output).collect::<Vec<_>>(), ["គ","ខ","ច"]);
-    assert_eq!(query.result.candidates[2].correction.as_deref(),Some("tent"));
+    assert_eq!(query.result.candidates.iter().take(2).map(output).collect::<Vec<_>>(), ["គ","ខ"]);
+    assert!(query.result.candidates.iter().all(|hit|hit.correction.is_none()));
     personal.load_word_ranking_json(&json!({"format":"kmeow-word-ranking-v1","english":[],
         "khmer":words.iter().enumerate().map(|(i,word)|json!({"word":word,"level":if i<2 {i+1} else {3}})).collect::<Vec<_>>()
     }).to_string()).unwrap();
     let before = (base.to_binary(),personal.to_binary());
     let query = base.suggest_with_extension(&personal, "test", features, &context(&[])).unwrap();
     assert_eq!(query.result.candidates.len(),20);
-    assert_eq!(query.result.candidates.iter().take(5).map(output).collect::<Vec<_>>(), ["កក","កខ","គ","ខ","ច"]);
-    assert_eq!(query.result.candidates[4].correction.as_deref(),Some("tent"));
+    assert_eq!(query.result.candidates.iter().take(4).map(output).collect::<Vec<_>>(), ["កក","កខ","គ","ខ"]);
+    assert!(query.result.candidates.iter().all(|hit|hit.correction.is_none()));
     assert!(query.exact_candidates.is_empty());
     assert_eq!((base.to_binary(),personal.to_binary()),before);
 }
@@ -180,7 +222,7 @@ fn merged_recoveries_share_one_limit_and_leave_room_for_ordinary_completions() {
         .chain([("testy".into(),"គ".into()),("testz".into(),"ឃ".into())]).collect();
     let personal_pairs: Vec<_> = "jklmnopq".chars().enumerate()
         .map(|(i,letter)|(format!("t{letter}st"),format!("ក{}",letters[i+8])))
-        .chain(letters.iter().enumerate().map(|(i,letter)|
+        .chain(letters.iter().take(6).enumerate().map(|(i,letter)|
             (format!("test{}",char::from(b'a'+i as u8)),format!("ខ{letter}")))).collect();
     let mut base = merge_fixture(&base_pairs,1);
     let personal = merge_fixture(&personal_pairs,101);
@@ -193,10 +235,10 @@ fn merged_recoveries_share_one_limit_and_leave_room_for_ordinary_completions() {
     }
     let before = (base.to_binary(),personal.to_binary());
     let result = base.suggest_with_extension(&personal,"test",features,&context(&[])).unwrap();
-    assert_eq!(result.result.candidates.len(),20);
+    assert_eq!(result.result.candidates.len(),16);
     assert_eq!(result.result.candidates.iter().take(2).map(output).collect::<Vec<_>>(),["គ","ឃ"]);
-    assert!(result.result.candidates[2..10].iter().all(|hit|hit.correction.is_some()));
-    assert!(result.result.candidates[10..].iter().all(|hit|hit.correction.is_none()));
+    assert!(result.result.candidates[..8].iter().all(|hit|hit.correction.is_none()));
+    assert!(result.result.candidates[8..].iter().all(|hit|hit.correction.is_some()));
     assert_eq!(result.result.candidates.iter().filter(|hit|hit.correction.is_some()).count(),8);
     assert!(result.exact_candidates.is_empty());
     assert_eq!((base.to_binary(),personal.to_binary()),before);

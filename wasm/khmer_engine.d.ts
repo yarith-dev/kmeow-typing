@@ -9,7 +9,10 @@ export class WasmEngine {
   appDataInfo(): string;
   exportBinary(): Uint8Array;
   static fromAppData(khmer: Uint8Array, english: Uint8Array): WasmEngine;
+  setShorthands(json: string): void;
+  wordShorthands(word: string): string;
   compileAppData(khmer: string, english: string, provenance: string, language: string): Uint8Array;
+  soundMapInputs(word: string, after: string): string;
   loadWordRanking(json: string): void;
   analyzeComponents(word: string): string;
   loadWordMetadata(khmer: string, english: string): void;
@@ -19,6 +22,7 @@ export class WasmEngine {
   browseWordMetadata(request: string): string;
   lookupWordMetadata(language: string, word: string): string;
   static pronunciationInputs(text: string): string;
+  setInputExclusions(json: string): void;
   suggestWithContext(input: string, features_json: string, context_json: string): string;
   suggestWithRanking(input: string, features_json: string, context_json: string, ranking_json: string): string;
   wordTypingSettings(language: string, word: string): string;
@@ -27,8 +31,10 @@ export class WasmEngine {
   convertWithExtension(extension: WasmEngine, input: string): string;
   suggestWithExtension(extension: WasmEngine, input: string, features_json: string, context_json: string): string;
   lookupWordTranslations(language: string, word: string): string;
+  setShorthandsWithExtension(extension: WasmEngine, json: string): void;
   clearComponentExtensionCache(): void;
   analyzeComponentsWithExtension(extension: WasmEngine, word: string): string;
+  setInputExclusionsWithExtension(extension: WasmEngine, json: string): void;
   constructor(dataset_json: string);
   stats(): string;
   convert(input: string): string;
@@ -61,7 +67,12 @@ export interface InitOutput {
   readonly wasmengine_new: (a: number, b: number) => [number, number, number];
   readonly wasmengine_pronunciationInputs: (a: number, b: number) => [number, number, number, number];
   readonly wasmengine_rankingVocabulary: (a: number, b: number, c: number) => [number, number, number, number];
+  readonly wasmengine_setInputExclusions: (a: number, b: number, c: number) => [number, number];
+  readonly wasmengine_setInputExclusionsWithExtension: (a: number, b: number, c: number, d: number) => [number, number];
   readonly wasmengine_setPronunciations: (a: number, b: number, c: number) => [number, number];
+  readonly wasmengine_setShorthands: (a: number, b: number, c: number) => [number, number];
+  readonly wasmengine_setShorthandsWithExtension: (a: number, b: number, c: number, d: number) => [number, number];
+  readonly wasmengine_soundMapInputs: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
   readonly wasmengine_stats: (a: number) => [number, number];
   readonly wasmengine_suggest: (a: number, b: number, c: number) => [number, number, number, number];
   readonly wasmengine_suggestWithContext: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
@@ -69,6 +80,7 @@ export interface InitOutput {
   readonly wasmengine_suggestWithFeatures: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
   readonly wasmengine_suggestWithRanking: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number, number, number];
   readonly wasmengine_withTypingOverrides: (a: number, b: number, c: number) => [number, number, number];
+  readonly wasmengine_wordShorthands: (a: number, b: number, c: number) => [number, number];
   readonly wasmengine_wordTypingSettings: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;

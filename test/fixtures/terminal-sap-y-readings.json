@@ -136,7 +136,7 @@
   ],
   "compatibility": [
     [
-      "sorpto",
+      "sap",
       "សព្ទ"
     ],
     [
@@ -168,11 +168,11 @@
       "គ្រូពេទ្យ"
     ],
     [
-      "peakyo",
+      "peak",
       "ពាក្យ"
     ],
     [
-      "piakyo",
+      "peak",
       "ពាក្យ"
     ],
     [
@@ -192,19 +192,19 @@
       "ពិណពាទ្យ"
     ],
     [
-      "pinityo",
+      "pinit",
       "ពិនិត្យ"
     ],
     [
-      "pinetyo",
+      "pinit",
       "ពិនិត្យ"
     ],
     [
-      "penityo",
+      "pinit",
       "ពិនិត្យ"
     ],
     [
-      "penetyo",
+      "pinit",
       "ពិនិត្យ"
     ],
     [
@@ -216,19 +216,19 @@
       "មេពាក្យ"
     ],
     [
-      "ornokrertyo",
+      "aknokrertyo",
       "អនុក្រឹត្យ"
     ],
     [
-      "ornokroeutyo",
+      "aknokroeutyo",
       "អនុក្រឹត្យ"
     ],
     [
-      "ornukrertyo",
+      "aknukrertyo",
       "អនុក្រឹត្យ"
     ],
     [
-      "ornukroeutyo",
+      "aknukroeutyo",
       "អនុក្រឹត្យ"
     ],
     [
@@ -296,9 +296,9 @@
   ],
   "prefixes": [
     [
-      "sor",
+      "sa",
       "សព្ទ",
-      "sorpto"
+      "sap"
     ],
     [
       "kiriyasa",

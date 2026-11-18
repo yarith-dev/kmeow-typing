@@ -38,7 +38,8 @@ fn personal_exact_readings_precede_compositions_and_keep_base_duplicates() {
 #[test]
 fn public_personal_input_rejects_invalid_fields_instead_of_ignoring_them() {
     for input in [r#"[{"word":"x","language":"english","spellings":["x"]}]"#,
-        r#"[{"word":"x","language":"english","rank":-1}]"#,
+        r#"[{"word":"x","language":"english","rank":-1000001}]"#,
+        r#"[{"word":"x","language":"english","rank":1000001}]"#,
         r#"[{"word":"x","language":"english","rnak":1}]"#,
         r#"[{"word":"ក","spellings":["UPPER"]}]"#,
         r#"[{"word":"ក"},{"word":"ក"}]"#, r#"{}"#,

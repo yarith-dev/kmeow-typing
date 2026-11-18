@@ -29,7 +29,7 @@ fn checked_terminal_written_vowels_preserve_full_readings_and_guard_scope() {
                 .unwrap_or_else(|| panic!("{input}: {word}"));
             let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
             assert_eq!(hit.mapping_id, Some(100800 + index as u64));
-            assert_eq!(hit.rank, index as u32);
+            assert_eq!(hit.rank, index as i32);
             for features in [
                 SuggestionFeatures { sound_map: false, ..Default::default() },
                 SuggestionFeatures { romanized: false, ..Default::default() },

@@ -24,7 +24,7 @@ fn terminal_composites_keep_original_end_scope_feature_gates_and_saved_identitie
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {

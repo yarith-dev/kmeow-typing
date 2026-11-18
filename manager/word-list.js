@@ -5,6 +5,8 @@ export function wordList(bundled,personal,language,query=''){
     let row=rows.get(entry.word);
     if(!row){row={word:entry.word,language,bundled:true,ids:[],partsOfSpeech:[],spellings:[],romanizations:[],soundMapInputs:[],soundMapInputsTruncated:false,personalIndices:[]};rows.set(entry.word,row);}
     if(entry.commonnessLevel!=null)row.commonnessLevel=Math.min(row.commonnessLevel??Infinity,entry.commonnessLevel);
+    if(language==='khmer')row.shorthands=[...new Set([...(row.shorthands??[]),...(entry.shorthands??[])])];
+    if(language==='khmer')row.excludedInputs=[...new Set([...(row.excludedInputs??[]),...(entry.excludedInputs??[])])];
     if(language==='khmer'&&Object.hasOwn(entry,'components'))row.components=entry.components;
     if(language==='khmer')row.soundMapEnabled=(row.soundMapEnabled??true)&&(entry.soundMapEnabled??true);
     row.romanizations=[...new Set([...row.romanizations,...(entry.romanizations??[])])];row.soundMapInputs=[...new Set([...row.soundMapInputs,...(entry.soundMapInputs??[])])];row.soundMapInputsTruncated ||= entry.soundMapInputsTruncated??false;
@@ -17,7 +19,7 @@ export function wordList(bundled,personal,language,query=''){
     row.personalIndices.push(index);row.spellings=[...new Set([...row.spellings,...(entry.spellings??[])])];
   });
   const needle=query.trim().toLowerCase();
-  return [...rows.values()].filter(row=>[row.word,...row.spellings,...row.romanizations,...row.soundMapInputs].some(value=>value.toLowerCase().includes(needle)))
+  return [...rows.values()].filter(row=>[row.word,...row.spellings,...row.romanizations,...row.soundMapInputs,...(row.shorthands??[])].some(value=>value.toLowerCase().includes(needle)))
     .sort((a,b)=>a.word<b.word?-1:a.word>b.word?1:0);
 }
 export function wordPage(rows,page,size=25){
@@ -55,7 +57,7 @@ export function wordsForLetter(rows,language,letter=''){
   return letter?rows.filter(row=>wordInitial(row.word,language)===letter):rows;
 }
 
-export function romanizedKeys(row){return [...new Set([...row.spellings,...row.romanizations,...row.soundMapInputs])];}
+export function romanizedKeys(row){const excluded=new Set(row.excludedInputs??[]);return [...new Set([...row.spellings,...row.romanizations,...row.soundMapInputs,...(row.shorthands??[])])].filter(key=>!excluded.has(key.toLowerCase()));}
 
 export function wordsWithoutRomanized(rows){
   return rows.filter(row=>row.language==='khmer'&&!romanizedKeys(row).length&&!row.soundMapInputsTruncated);

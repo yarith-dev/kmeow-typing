@@ -20,7 +20,7 @@ fn checked_kda_additions_keep_old_paths_and_exact_exception_identities() {
             let hit = result.exact_candidates.iter().find(|c| c.khmer == word).unwrap_or_else(|| panic!("{input}: {word}"));
             let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
             assert_eq!(hit.mapping_id, Some(93900 + index as u64));
-            assert_eq!(hit.rank, index as u32);
+            assert_eq!(hit.rank, index as i32);
             for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
                 SuggestionFeatures {romanized: false, ..Default::default()},
                 SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {

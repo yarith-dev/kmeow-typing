@@ -129,7 +129,7 @@ impl Engine {
     }
     /// Current static fallback values, read directly from compact typing data.
     /// Values are not changed by a caller's learned display score.
-    pub fn ranking_word_prior(&self, language: &str, word: &str) -> Option<(u8, u32)> {
+    pub fn ranking_word_prior(&self, language: &str, word: &str) -> Option<(u8, i32)> {
         let (index, key, english) = match language {
             "english" if valid_english(word) && !contains_profanity(word, ProfanityLanguage::English) =>
                 (&self.dictionary.english, word.to_ascii_lowercase(), true),

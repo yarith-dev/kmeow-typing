@@ -22,7 +22,7 @@ fn checked_chakra_root_keeps_independent_readings_and_db_only_exceptions() {
                 .unwrap_or_else(|| panic!("{input}: {word}"));
             let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
             assert_eq!(hit.mapping_id, Some(98400 + index as u64));
-            assert_eq!(hit.rank, index as u32);
+            assert_eq!(hit.rank, index as i32);
             for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
                 SuggestionFeatures {romanized: false, ..Default::default()},
                 SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -45,7 +45,7 @@ fn checked_chakra_root_keeps_independent_readings_and_db_only_exceptions() {
     assert_eq!(Engine::from_binary(bytes).unwrap().suggest("rongjak").unwrap(), core.suggest("rongjak").unwrap());
     for (i,row) in proof["aliasYes"].as_array().unwrap().iter().enumerate() {
         data.mappings.push(ApprovedMapping {id: 99500+i as u64, romanized: row[0].as_str().unwrap().into(),
-            khmer: row[1].as_str().unwrap().into(), rank: 300+i as u32, status: ApprovedStatus::Approved});
+            khmer: row[1].as_str().unwrap().into(), rank: 300+i as i32, status: ApprovedStatus::Approved});
     }
     let saved = Engine::new(data).unwrap();
     for (i,row) in proof["aliasYes"].as_array().unwrap().iter().enumerate() {
@@ -53,7 +53,7 @@ fn checked_chakra_root_keeps_independent_readings_and_db_only_exceptions() {
         for features in [Default::default(), SuggestionFeatures {sound_map: false, ..Default::default()}] {
             let query = saved.suggest_with_context(input, features, &Default::default()).unwrap();
             let hit = query.exact_candidates.iter().find(|c| c.khmer == word).unwrap();
-            assert_eq!(hit.mapping_id, Some(99500+i as u64)); assert_eq!(hit.rank, 300+i as u32);
+            assert_eq!(hit.mapping_id, Some(99500+i as u64)); assert_eq!(hit.rank, 300+i as i32);
         }
         for features in [SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {emptyDraft,replace,editMessage,contextFor,spaceChoice,literalSpace,history,suggestDraft} from '../composer.js';
+import {emptyDraft,replace,editMessage,contextFor,spaceChoice,spaceText,literalSpace,history,suggestDraft} from '../composer.js';
 import {createEngine} from '../../dist/public/node.js';
 
 test('sentence choices insert at the cursor, replace selections and preserve surrounding text',()=>{
@@ -26,12 +26,69 @@ test('undo and redo restore exact text, composition, selections and context',()=
   state.undo();state.push(replace(state.current,'literal'));assert.equal(state.canRedo,false);
 });
 
-test('Space never accepts completions or explicit-selection-only words',()=>{
+test('Auto accepts exact matches and eligible completions while Manual keeps them literal',()=>{
   const word={mappingId:1,khmer:'កូន'},result={candidates:[word],exactCandidates:[word]};
   assert.equal(spaceChoice(result,0),word);
-  for(const flag of ['tapOnly','manualOnly','completion'])assert.equal(spaceChoice({...result,candidates:[{...word,[flag]:true}],exactCandidates:[{...word,[flag]:true}]},0),undefined);
+  const completion={...word,completion:'kon'};
+  assert.equal(spaceChoice({input:'ko',candidates:[completion],exactCandidates:[]},0),completion);
+  for(const query of [result,{input:'ko',candidates:[completion],exactCandidates:[]}])assert.equal(spaceChoice(query,0,{acceptance:'manual'}),undefined);
+  for(const flag of ['tapOnly','manualOnly'])assert.equal(spaceChoice({...result,candidates:[{...word,[flag]:true}],exactCandidates:[{...word,[flag]:true}]},0),undefined);
   assert.equal(spaceChoice({candidates:[{...word,tapOnly:true}],exactCandidates:[word]},0),undefined);
-  assert.equal(literalSpace('hello'),'hello ');assert.equal(literalSpace('កូន'),'កូន');assert.equal(literalSpace(''),' ');
+  assert.equal(spaceChoice({input:'ko',candidates:[{...completion,tapOnly:true},{mappingId:2,khmer:'កូនសិស្ស',completion:'konsis'}]},0),undefined);
+  assert.equal(spaceChoice({...result,kind:'next-word'},0),undefined);
+  assert.equal(spaceChoice({...result,input:''},0),undefined);
+  assert.equal(literalSpace('hello'),'hello ');assert.equal(literalSpace('កូន'),'កូន ');assert.equal(literalSpace(''),' ');
+});
+
+test('Space prefers an exact match and does not automatically accept Khmer typo recovery',()=>{
+  const exact={mappingId:1,khmer:'គេ'},completion={mappingId:2,khmer:'គេង',completion:'keng'};
+  assert.equal(spaceChoice({input:'ke',candidates:[completion,exact],exactCandidates:[exact]},0),exact);
+  const correction={mappingId:3,khmer:'ប្រសា',completion:'brosa',correction:'brosa'};
+  assert.equal(spaceChoice({input:'broya',candidates:[correction],exactCandidates:[]},0),undefined);
+  const prefix={mappingId:4,khmer:'ប្រយ័ត្ន',completion:'broyat'};
+  assert.equal(spaceChoice({input:'broya',candidates:[correction,prefix],exactCandidates:[]},0),prefix);
+});
+
+test('Space honors a navigated completion without bypassing exact matches or selection protections',()=>{
+  const first={mappingId:1,khmer:'កូន',completion:'kon'},selected={mappingId:2,khmer:'កូនសិស្ស',completion:'konsis'};
+  const result={input:'ko',candidates:[first,selected],exactCandidates:[]};
+  assert.equal(spaceChoice(result,1),selected);
+  assert.equal(spaceChoice(result,1,{acceptance:'manual'}),undefined);
+  for(const flag of ['tapOnly','manualOnly','correction'])assert.equal(spaceChoice({...result,candidates:[first,{...selected,[flag]:flag==='correction'?'konsis':true}]},1),undefined);
+  const exact={mappingId:3,khmer:'គោ'};
+  assert.equal(spaceChoice({...result,candidates:[first,selected,exact],exactCandidates:[exact]},1),exact);
+  const contraction={mappingId:0,text:"I'm",completion:"I'm",correction:"I'm",wordAlternative:true};
+  const image={mappingId:4,text:'image',completion:'image'};
+  assert.equal(spaceChoice({input:'im',candidates:[contraction,image],exactCandidates:[]},1,{language:'english',correction:true}),image);
+});
+
+test('English Auto respects correction settings, contextual choices and manual-only protections',()=>{
+  const correction={mappingId:1,text:'and',completion:'and',correction:'and'};
+  const result={input:'adn',candidates:[correction],exactCandidates:[]};
+  assert.equal(spaceChoice(result,0,{language:'english',correction:false}),undefined);
+  assert.equal(spaceChoice(result,0,{language:'english',correction:true}),correction);
+  assert.equal(spaceChoice(result,0,{language:'english',correction:true,acceptance:'manual'}),undefined);
+  for(const flag of ['manualOnly','tapOnly'])assert.equal(spaceChoice({...result,candidates:[{...correction,[flag]:true}]},0,{language:'english',correction:true}),undefined);
+  const alternative={mappingId:0,text:"let's",completion:"let's",wordAlternative:true};
+  assert.equal(spaceChoice({input:'lets',candidates:[alternative]},0,{language:'english'}),alternative);
+});
+
+test('undoing a selected suggestion suppresses immediate automatic acceptance until editing resumes',()=>{
+  const initial={...emptyDraft(),input:'outeaho'},state=history(initial);
+  state.push(replace(state.current,'ឧទាហរណ៍',{}),{accepted:true});
+  const accepted=state.current;
+  assert.deepEqual(state.undo(),initial);assert.equal(state.restoredAcceptance,true);
+  state.push({...state.current});assert.equal(state.restoredAcceptance,true);
+  assert.deepEqual(state.redo(),accepted);assert.equal(state.restoredAcceptance,false);
+  state.undo();state.push({...state.current,input:'outeahor'});assert.equal(state.restoredAcceptance,false);
+});
+
+test('automatic English insertion preserves capitalization and inserts one trailing space',()=>{
+  const candidate={text:'book'};
+  for(const [input,expected]of [['bo','book '],['Bo','Book '],['BO','BOOK ']])assert.equal(spaceText(input,candidate,'english'),expected);
+  assert.equal(spaceText('outeaho',{khmer:'ឧទាហរណ៍'},'khmer'),'ឧទាហរណ៍');
+  assert.equal(spaceText('outeaho',undefined,'khmer'),'outeaho ');
+  assert.equal(spaceText('កូន',undefined,'khmer'),'កូន ');
 });
 
 test('real engine suggestions compose a message without altering typing results',async()=>{

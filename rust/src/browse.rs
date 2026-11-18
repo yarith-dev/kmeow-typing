@@ -22,6 +22,13 @@ pub struct DictionaryPage {
     pub next_after: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct SoundMapInputPage {
+    pub inputs: Vec<String>,
+    pub next_after: Option<String>,
+}
+
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct Request {
@@ -31,6 +38,23 @@ struct Request {
 }
 
 impl Engine {
+    /// Read generated spellings for one bundled word, including disabled or excluded inputs.
+    /// Saved aliases are separate. Each page contains at most 64 unique spellings.
+    pub fn sound_map_inputs(&self, word: &str, after: &str) -> Result<SoundMapInputPage, EngineError> {
+        if !crate::valid_khmer(word) || word.chars().count() > 240 || after.len() > 512
+            || !after.bytes().all(|byte| byte.is_ascii_lowercase() || byte == b'\'') {
+            return Err(invalid("Invalid Sound map word or spelling cursor."));
+        }
+        let (inputs, next_after) = if self.dictionary.sound_map_disabled(word) {
+            let preview = self.dictionary.with_sound_map_enabled(word);
+            crate::sound_map::Index::new(&preview).input_page(word, after, 64)
+        } else {
+            let sounds = self.sound_index.get_or_init(|| crate::sound_map::Index::new(&self.dictionary));
+            sounds.input_page(word, after, 64)
+        };
+        Ok(SoundMapInputPage { inputs, next_after })
+    }
+
     pub fn browse_words_json(&self, request: &str) -> Result<String, EngineError> {
         let request: Request = serde_json::from_str(request).map_err(|e| invalid(&e.to_string()))?;
         let page = self.browse_words(&request.query, request.after.as_deref(), request.limit)?;

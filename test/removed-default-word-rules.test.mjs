@@ -7,7 +7,7 @@ initSync({module:read('wasm/khmer_engine_bg.wasm')});
 
 test('removed default-equivalent overrides use remaining readings and retain their dictionary words',()=>{
   const {examples}=JSON.parse(read('test/fixtures/removed-default-word-rules.json'));
-  const parts=JSON.parse(read('data/khmer-sound-map.json')).runtime.wordParts;
+  const parts=JSON.parse(read('data/khmer-sound-map.json')).runtime.wordParts??[];
   const core=WasmEngine.fromAppData(read('compiled-data/khmer.kmd'),read('compiled-data/english.kmd'));
   try{
     // This fixture describes the ordinary map after the 35 overrides were

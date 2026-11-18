@@ -154,22 +154,6 @@
       "មេពាក្យ"
     ],
     [
-      "paletphol",
-      "ផលិតផល"
-    ],
-    [
-      "paletpol",
-      "ផលិតផល"
-    ],
-    [
-      "palitphol",
-      "ផលិតផល"
-    ],
-    [
-      "palitpol",
-      "ផលិតផល"
-    ],
-    [
       "peaksao",
       "ពាក្យសោ"
     ],
@@ -192,22 +176,6 @@
     [
       "petbrakod",
       "ពិតប្រាកដ"
-    ],
-    [
-      "phaletphol",
-      "ផលិតផល"
-    ],
-    [
-      "phaletpol",
-      "ផលិតផល"
-    ],
-    [
-      "phalitphol",
-      "ផលិតផល"
-    ],
-    [
-      "phalitpol",
-      "ផលិតផល"
     ],
     [
       "piaksao",
@@ -1891,6 +1859,38 @@
       [
         "surnkuma",
         "សួនកុមារ"
+      ],
+      [
+        "paletphol",
+        "ផលិតផល"
+      ],
+      [
+        "paletpol",
+        "ផលិតផល"
+      ],
+      [
+        "palitphol",
+        "ផលិតផល"
+      ],
+      [
+        "palitpol",
+        "ផលិតផល"
+      ],
+      [
+        "phaletphol",
+        "ផលិតផល"
+      ],
+      [
+        "phaletpol",
+        "ផលិតផល"
+      ],
+      [
+        "phalitphol",
+        "ផលិតផល"
+      ],
+      [
+        "phalitpol",
+        "ផលិតផល"
       ]
     ]
   }

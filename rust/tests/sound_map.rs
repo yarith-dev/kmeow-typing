@@ -1,10 +1,50 @@
 #[test]
+fn initial_carrier_before_direct_written_vowel_uses_ak() {
+    let cases = [
+        ("អធិដ្ឋាន", &["akthidthan", "akthedthan"][..],
+            &["orthidthan", "arthidthan", "oathidthan"][..]),
+        ("អតិថិជន", &["aktithichon"][..], &["ortithichon"][..]),
+        ("អគារ", &["akkea", "akkia"][..], &["orkea"][..]),
+        ("អធ្រាត្រ", &["orthreatro"][..], &["akthreatro"][..]),
+        ("អង្គុយ", &["orngkoy"][..], &["akngkoy"][..]),
+        ("អង្គការ", &["orngkoka"][..], &["akngkoka"][..]),
+        ("អត្ថន័យ", &["ortthorney"][..], &["aktthorney"][..]),
+        ("អាន", &["an"][..], &["akn"][..]),
+        ("អ្នកអភិបាល", &["neakorpebal"][..], &["neakakpebal"][..]),
+    ];
+    let mut data = dataset();
+    data.mappings = vec![ApprovedMapping {
+        id: 99120, romanized: "orthidthan".into(), khmer: "អធិដ្ឋាន".into(),
+        rank: 77, status: ApprovedStatus::Approved,
+    }];
+    data.words = Some(cases.iter().enumerate().map(|(i, (word, _, _))| ApprovedWord {
+        id: 98000 + i as u64, khmer: (*word).into(), rank: i as i32,
+        status: ApprovedStatus::Approved,
+    }).collect());
+    let core = Engine::new(data.clone()).unwrap();
+    let saved_only = core.suggest_with_context("orthidthan",
+        SuggestionFeatures {sound_map: false, ..Default::default()}, &Default::default()).unwrap();
+    assert!(saved_only.exact_candidates.iter().any(|c| c.mapping_id == Some(99120) && c.rank == 77));
+    data.mappings.clear();
+    let generated = Engine::new(data).unwrap();
+    for (word, accepted, rejected) in cases {
+        for (inputs, expected) in [(accepted, true), (rejected, false)] {
+            for input in inputs {
+                let result = generated.suggest_with_context(input, Default::default(), &Default::default()).unwrap();
+                assert_eq!(result.exact_candidates.iter().any(|c| c.khmer == word), expected,
+                    "{input} → {word}");
+            }
+        }
+    }
+}
+
+#[test]
 fn initial_carrier_nasal_preserves_later_keys_guards_and_saved_inputs() {
     let proof: serde_json::Value = serde_json::from_str(include_str!("../../test/fixtures/initial-carrier-nasal-o.json")).unwrap();
     let words = proof["words"].as_array().unwrap();
     let mut data = dataset(); data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i,w)| ApprovedWord {
-        id: 98000+i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32, status: ApprovedStatus::Approved,
+        id: 98000+i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32, status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap(); let bytes = core.to_binary();
     for row in proof["yes"].as_array().unwrap().iter().chain(proof["compatibility"].as_array().unwrap()) {
@@ -12,7 +52,7 @@ fn initial_carrier_nasal_preserves_later_keys_guards_and_saved_inputs() {
         let query = core.suggest_with_context(input, Default::default(), &Default::default()).unwrap();
         let found = query.exact_candidates.iter().find(|c| c.khmer == word).expect(input);
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
-        assert_eq!(found.mapping_id, Some(98000+position as u64)); assert_eq!(found.rank,position as u32);
+        assert_eq!(found.mapping_id, Some(98000+position as u64)); assert_eq!(found.rank,position as i32);
     }
     for row in proof["no"].as_array().unwrap() {
         let input = row[0].as_str().unwrap(); let word = row[1].as_str().unwrap();
@@ -37,7 +77,7 @@ fn exact_pech_replaces_old_generated_paths_without_alias_or_kor_changes() {
     let words = proof["words"].as_array().unwrap();
     let mut data = dataset(); data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i,w)| ApprovedWord {
-        id: 98000+i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32, status: ApprovedStatus::Approved,
+        id: 98000+i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32, status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap(); let bytes = core.to_binary();
     for row in proof["yes"].as_array().unwrap().iter().chain(proof["compatibility"].as_array().unwrap()) {
@@ -45,7 +85,7 @@ fn exact_pech_replaces_old_generated_paths_without_alias_or_kor_changes() {
         let query = core.suggest_with_context(input, Default::default(), &Default::default()).unwrap();
         let found = query.exact_candidates.iter().find(|c| c.khmer == word).expect(input);
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
-        assert_eq!(found.mapping_id, Some(98000+position as u64)); assert_eq!(found.rank,position as u32);
+        assert_eq!(found.mapping_id, Some(98000+position as u64)); assert_eq!(found.rank,position as i32);
     }
     for row in proof["no"].as_array().unwrap() {
         let input = row[0].as_str().unwrap(); let word = row[1].as_str().unwrap();
@@ -72,7 +112,7 @@ fn terminal_nasal_compound_keeps_keys_guards_identity_and_saved_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -85,7 +125,7 @@ fn terminal_nasal_compound_keeps_keys_guards_identity_and_saved_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -131,7 +171,7 @@ fn plain_a_terminal_sign_keeps_scoped_keys_identity_guards_and_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -144,7 +184,7 @@ fn plain_a_terminal_sign_keeps_scoped_keys_identity_guards_and_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -190,7 +230,7 @@ fn explicit_glottal_bantoc_keeps_scoped_keys_guards_and_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -203,7 +243,7 @@ fn explicit_glottal_bantoc_keeps_scoped_keys_guards_and_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -247,7 +287,7 @@ fn written_nasal_glottal_boundary_keeps_later_keys_guards_and_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -260,7 +300,7 @@ fn written_nasal_glottal_boundary_keeps_later_keys_guards_and_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -304,7 +344,7 @@ fn written_ndr_boundary_keeps_later_keys_guards_and_collisions() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -317,7 +357,7 @@ fn written_ndr_boundary_keeps_later_keys_guards_and_collisions() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -365,7 +405,7 @@ fn unwritten_nasal_stop_boundary_preserves_later_vowels_and_saved_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -378,7 +418,7 @@ fn unwritten_nasal_stop_boundary_preserves_later_vowels_and_saved_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -422,7 +462,7 @@ fn written_velar_r_boundary_keeps_pronounced_subscripts_closed_syllables_and_gua
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -435,7 +475,7 @@ fn written_velar_r_boundary_keeps_pronounced_subscripts_closed_syllables_and_gua
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -479,7 +519,7 @@ fn unwritten_nasal_r_boundary_controls_only_the_reviewed_complete_frame() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -492,7 +532,7 @@ fn unwritten_nasal_r_boundary_controls_only_the_reviewed_complete_frame() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -536,7 +576,7 @@ fn written_nh_r_boundary_keeps_two_pronounced_onset_subscripts_and_guards() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -549,7 +589,7 @@ fn written_nh_r_boundary_keeps_two_pronounced_onset_subscripts_and_guards() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -593,7 +633,7 @@ fn written_nh_boundary_uses_coda_keys_preserves_initials_and_saved_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -606,7 +646,7 @@ fn written_nh_boundary_uses_coda_keys_preserves_initials_and_saved_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -650,7 +690,7 @@ fn written_ntr_boundary_keeps_coda_onset_roles_guards_and_saved_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -663,7 +703,7 @@ fn written_ntr_boundary_keeps_coda_onset_roles_guards_and_saved_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -706,7 +746,7 @@ fn checked_root_continuations_require_named_boundaries_and_keep_saved_exceptions
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 98000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 98000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -720,7 +760,7 @@ fn checked_root_continuations_require_named_boundaries_and_keep_saved_exceptions
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(98000 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -749,7 +789,7 @@ fn checked_root_continuations_require_named_boundaries_and_keep_saved_exceptions
     data.mappings.push(ApprovedMapping {id: 99100, romanized: "seripheap".into(), khmer: "សេរីភាព".into(), rank: 77, status: ApprovedStatus::Approved});
     for (i, row) in proof["aliasYes"].as_array().unwrap().iter().enumerate() {
         data.mappings.push(ApprovedMapping {id: 99101 + i as u64, romanized: row[0].as_str().unwrap().into(),
-            khmer: row[1].as_str().unwrap().into(), rank: 88 + i as u32, status: ApprovedStatus::Approved});
+            khmer: row[1].as_str().unwrap().into(), rank: 88 + i as i32, status: ApprovedStatus::Approved});
     }
     let saved = Engine::new(data).unwrap();
     for features in [Default::default(), SuggestionFeatures {sound_map: false, ..Default::default()}] {
@@ -761,7 +801,7 @@ fn checked_root_continuations_require_named_boundaries_and_keep_saved_exceptions
         for features in [Default::default(), SuggestionFeatures {sound_map: false, ..Default::default()}] {
             let query = saved.suggest_with_context(row[0].as_str().unwrap(), features, &Default::default()).unwrap();
             let candidate = query.exact_candidates.iter().find(|c| c.khmer == row[1].as_str().unwrap()).unwrap();
-            assert_eq!(candidate.mapping_id, Some(99101 + i as u64));assert_eq!(candidate.rank, 88 + i as u32);
+            assert_eq!(candidate.mapping_id, Some(99101 + i as u64));assert_eq!(candidate.rank, 88 + i as i32);
         }
         for features in [SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -779,7 +819,7 @@ fn initial_open_samaa_changes_only_the_parsed_vowel_and_preserves_identities() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 98000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 98000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -794,7 +834,7 @@ fn initial_open_samaa_changes_only_the_parsed_vowel_and_preserves_identities() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(98000 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -838,7 +878,7 @@ fn local_written_clusters_keep_parsed_scope_identities_and_feature_gates() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 96000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 96000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -853,7 +893,7 @@ fn local_written_clusters_keep_parsed_scope_identities_and_feature_gates() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(96000 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -894,7 +934,7 @@ fn original_gaps_keep_scoped_derivations_boundaries_and_saved_identities() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 8000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as u32,
+        id: 8000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -907,7 +947,7 @@ fn original_gaps_keep_scoped_derivations_boundaries_and_saved_identities() {
         let found = query.exact_candidates.iter().find(|c| c.khmer == word).unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(found.mapping_id, Some(8000 + position as u64));
-        assert_eq!(found.rank, position as u32);
+        assert_eq!(found.rank, position as i32);
         assert_eq!(restored.suggest(input).unwrap(), core.suggest(input).unwrap());
         for features in [SuggestionFeatures { sound_map: false, ..Default::default() },
             SuggestionFeatures { romanized: false, ..Default::default() },
@@ -953,7 +993,7 @@ fn reviewed_onset_series_covers_the_source_cohort_and_preserves_saved_aliases() 
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 41000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 41000 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -966,7 +1006,7 @@ fn reviewed_onset_series_covers_the_source_cohort_and_preserves_saved_aliases() 
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(41000 + index as u64));
-        assert_eq!(candidate.rank, index as u32);
+        assert_eq!(candidate.rank, index as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -1006,7 +1046,7 @@ fn mapped_defaults_and_reviewed_endings_apply_locally_without_changing_saved_dat
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 20000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as u32,
+        id: 20000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     data.mappings.push(ApprovedMapping {id: 30000, romanized: "jah".into(), khmer: "ចា៎ស".into(), rank: 80, status: ApprovedStatus::Approved});
@@ -1021,7 +1061,7 @@ fn mapped_defaults_and_reviewed_endings_apply_locally_without_changing_saved_dat
         assert_eq!(matches.len(), 1, "{input}: {word}");
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(matches[0].mapping_id, Some(20000 + position as u64));
-        assert_eq!(matches[0].rank, position as u32);
+        assert_eq!(matches[0].rank, position as i32);
         assert_eq!(restored.suggest(input).unwrap(), core.suggest(input).unwrap());
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
@@ -1075,7 +1115,7 @@ fn narrow_closing_stems_and_ry_keep_alternatives_identities_and_boundaries() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 8000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as u32,
+        id: 8000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -1088,7 +1128,7 @@ fn narrow_closing_stems_and_ry_keep_alternatives_identities_and_boundaries() {
         let found = query.exact_candidates.iter().find(|c| c.khmer == word).unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(found.mapping_id, Some(8000 + position as u64));
-        assert_eq!(found.rank, position as u32);
+        assert_eq!(found.rank, position as i32);
         assert_eq!(restored.suggest(input).unwrap(), core.suggest(input).unwrap());
         for features in [SuggestionFeatures { sound_map: false, ..Default::default() },
             SuggestionFeatures { romanized: false, ..Default::default() },
@@ -1127,7 +1167,7 @@ fn accepted_pair_mark_and_final_rules_preserve_words_and_exact_order() {
         "ន័យក", "សា", "សាលា", "ចម្លើយ", "ស្ពាន", "ពិសោធន៍", "សាសនា", "ម៉ន្ដា"];
     let mut data = dataset();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 1000 + i as u64, khmer: word.to_string(), rank: i as u32, status: ApprovedStatus::Approved,
+        id: 1000 + i as u64, khmer: word.to_string(), rank: i as i32, status: ApprovedStatus::Approved,
     }).collect());
     data.mappings.clear();
     let core = Engine::new(data.clone()).unwrap();
@@ -1144,7 +1184,7 @@ fn accepted_pair_mark_and_final_rules_preserve_words_and_exact_order() {
         let found = query.exact_candidates.iter().find(|c| c.khmer == word).expect(input);
         let position = words.iter().position(|w| *w == word).unwrap();
         assert_eq!(found.mapping_id, Some(1000 + position as u64), "{input}: identity");
-        assert_eq!(found.rank, position as u32, "{input}: saved rank");
+        assert_eq!(found.rank, position as i32, "{input}: saved rank");
         assert_eq!(restored.suggest(input).unwrap(), core.suggest(input).unwrap());
         for features in [SuggestionFeatures { sound_map: false, ..Default::default() },
             SuggestionFeatures { romanized: false, ..Default::default() },
@@ -1159,7 +1199,7 @@ fn accepted_pair_mark_and_final_rules_preserve_words_and_exact_order() {
         ("kanha", "កញ្ញា"), ("sanha", "សញ្ញា"), ("po", "ពោធិ៍ក"), ("po", "ធិ៍"),
         ("po", "ពោធុ៍"), ("ke", "កេរ្តិ៍"), ("sey", "ស័យ"), ("koa", "ក័រ"),
         ("nhoa", "ញ៉័រ"), ("neyk", "ន័យក"), ("jomhleuy", "ចម្លើយ"),
-        ("span", "ស្ពាន"), ("pisaot", "ពិសោធន៍"), ("monda", "ម៉ន្ដា")] {
+        ("span", "ស្ពាន"), ("pisaoth", "ពិសោធន៍"), ("monda", "ម៉ន្ដា")] {
         assert!(!core.suggest_with_context(input, Default::default(), &Default::default()).unwrap().exact_candidates.iter().any(|c| c.khmer == word), "{input}: scope guard for {word}");
     }
     for input in ["jom", "ne", "nh", "ja"] {
@@ -1213,7 +1253,7 @@ fn dataset() -> ApprovedDataset {
             .map(|(i, w)| ApprovedWord {
                 id: i as u64 + 1,
                 khmer: w.to_string(),
-                rank: i as u32,
+                rank: i as i32,
                 status: ApprovedStatus::Approved,
             })
             .collect(),
@@ -1231,7 +1271,7 @@ fn closing_mp_and_nasal_y_keep_base_finals_and_written_boundaries() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 7000 + i as u64, khmer: word.to_string(), rank: i as u32, status: ApprovedStatus::Approved,
+        id: 7000 + i as u64, khmer: word.to_string(), rank: i as i32, status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
     let bytes = core.to_binary();
@@ -1247,7 +1287,7 @@ fn closing_mp_and_nasal_y_keep_base_finals_and_written_boundaries() {
         let found = query.exact_candidates.iter().find(|c| c.khmer == word).unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| *w == word).unwrap();
         assert_eq!(found.mapping_id, Some(7000 + position as u64));
-        assert_eq!(found.rank, position as u32);
+        assert_eq!(found.rank, position as i32);
         assert_eq!(restored.suggest(input).unwrap(), core.suggest(input).unwrap());
         for features in [SuggestionFeatures { sound_map: false, ..Default::default() },
             SuggestionFeatures { romanized: false, ..Default::default() },
@@ -1287,7 +1327,7 @@ fn reusable_coda_and_kam_units_and_nasal_governance_keep_boundaries() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 4000 + i as u64, khmer: word.to_string(), rank: i as u32, status: ApprovedStatus::Approved,
+        id: 4000 + i as u64, khmer: word.to_string(), rank: i as i32, status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
     let bytes = core.to_binary();
@@ -1342,7 +1382,7 @@ fn final_cho_and_nyo_use_selected_ending_keys_without_changing_initials() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 6000 + i as u64, khmer: word.to_string(), rank: i as u32, status: ApprovedStatus::Approved,
+        id: 6000 + i as u64, khmer: word.to_string(), rank: i as i32, status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
     let bytes = core.to_binary();
@@ -1353,7 +1393,7 @@ fn final_cho_and_nyo_use_selected_ending_keys_without_changing_initials() {
         let query = core.suggest_with_context(input, Default::default(), &Default::default()).unwrap();
         let found = query.exact_candidates.iter().find(|c| c.khmer == word).expect(input);
         assert_eq!(found.mapping_id, Some(6000 + words.iter().position(|w| *w == word).unwrap() as u64));
-        assert_eq!(found.rank, words.iter().position(|w| *w == word).unwrap() as u32);
+        assert_eq!(found.rank, words.iter().position(|w| *w == word).unwrap() as i32);
         assert_eq!(core.suggest(input).unwrap(), restored.suggest(input).unwrap());
         for features in [SuggestionFeatures { sound_map: false, ..Default::default() },
             SuggestionFeatures { romanized: false, ..Default::default() },
@@ -1424,7 +1464,7 @@ fn glottal_apostrophes_and_scoped_f_keep_boundaries_and_saved_aliases() {
     data.words.as_mut().unwrap().extend(
         ["ផ្អែម", "ក្អក", "ល្អ", "ស្អាត", "កាហ្វេ", "ហ្វឹកហាត់", "កាហ្វេក", "អាន", "អៀន", "សប្បាយ", "កញ្ញា", "សញ្ញា", "ក្អក់", "ក្អ្រា", "ក្អ៉ា"]
             .iter().enumerate().map(|(i, word)| ApprovedWord {
-                id: 200 + i as u64, khmer: word.to_string(), rank: i as u32, status: ApprovedStatus::Approved,
+                id: 200 + i as u64, khmer: word.to_string(), rank: i as i32, status: ApprovedStatus::Approved,
             }),
     );
     let core = Engine::new(data.clone()).unwrap();
@@ -1590,7 +1630,7 @@ fn silent_endings_keep_word_identities_and_do_not_silence_initials() {
             .map(|(i, word)| ApprovedWord {
                 id: 200 + i as u64,
                 khmer: word.to_string(),
-                rank: 200 + i as u32,
+                rank: 200 + i as i32,
                 status: ApprovedStatus::Approved,
             }),
     );
@@ -1671,7 +1711,7 @@ fn nikahit_before_final_ngo_uses_one_nasal_and_preserves_series_and_other_ending
             .map(|(i, word)| ApprovedWord {
                 id: 300 + i as u64,
                 khmer: word.to_string(),
-                rank: 300 + i as u32,
+                rank: 300 + i as i32,
                 status: ApprovedStatus::Approved,
             }),
     );
@@ -1814,7 +1854,7 @@ fn contextual_vowels_use_the_final_and_guarded_governing_series() {
         .map(|(i, word)| ApprovedWord {
             id: 500 + i as u64,
             khmer: word.to_string(),
-            rank: 500 + i as u32,
+            rank: 500 + i as i32,
             status: ApprovedStatus::Approved,
         }),
     );
@@ -1959,7 +1999,7 @@ fn verified_silent_endings_preserve_vowels_boundaries_and_saved_aliases() {
         .map(|(i, word)| ApprovedWord {
             id: 700 + i as u64,
             khmer: word.to_string(),
-            rank: 700 + i as u32,
+            rank: 700 + i as i32,
             status: ApprovedStatus::Approved,
         }),
     );
@@ -2116,7 +2156,7 @@ fn reviewed_presyllables_and_short_velar_keys_preserve_scope_and_identity() {
         .extend(words.iter().enumerate().map(|(i, word)| ApprovedWord {
             id: 800 + i as u64,
             khmer: word.to_string(),
-            rank: 800 + i as u32,
+            rank: 800 + i as i32,
             status: ApprovedStatus::Approved,
         }));
     let core = Engine::new(data.clone()).unwrap();
@@ -2142,7 +2182,7 @@ fn reviewed_presyllables_and_short_velar_keys_preserve_scope_and_identity() {
             .expect(input);
         let position = words.iter().position(|w| *w == word).unwrap();
         assert_eq!(matched.mapping_id, Some(800 + position as u64), "{input}");
-        assert_eq!(matched.rank, 800 + position as u32, "{input}");
+        assert_eq!(matched.rank, 800 + position as i32, "{input}");
         assert_eq!(
             restored.suggest(input).unwrap(),
             core.suggest(input).unwrap()
@@ -2286,7 +2326,7 @@ fn terminal_sap_unit_and_named_y_aliases_keep_scope_and_identity() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, w)| ApprovedWord {
-        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as u32,
+        id: 97500 + i as u64, khmer: w.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -2299,7 +2339,7 @@ fn terminal_sap_unit_and_named_y_aliases_keep_scope_and_identity() {
                 .unwrap_or_else(|| panic!("{input}: {word}"));
             let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
             assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-            assert_eq!(candidate.rank, position as u32);
+            assert_eq!(candidate.rank, position as i32);
             for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
                 SuggestionFeatures {romanized: false, ..Default::default()},
                 SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -2324,7 +2364,9 @@ fn terminal_sap_unit_and_named_y_aliases_keep_scope_and_identity() {
             let retired = [&medical, &remaining].iter().any(|fixture|
                 fixture["retiredGenerated"].as_object().is_some_and(|groups|
                     groups.values().any(|rows| rows.as_array().unwrap().contains(row))));
-            let selected = !retired && medical["newPairs"].as_array().unwrap().iter()
+            let selected_read_as = matches!((input,word),
+                ("peak" | "piak", "ពាក្យ") | ("pinit", "ពិនិត្យ"));
+            let selected = selected_read_as || !retired && medical["newPairs"].as_array().unwrap().iter()
                 .chain(remaining["newPairs"].as_array().unwrap()).any(|pair|
                 pair[0].as_str() == Some(input) && pair[1].as_str() == Some(word));
             assert_eq!(core.suggest_with_context(input, Default::default(), &Default::default()).unwrap()
@@ -2342,7 +2384,7 @@ fn terminal_sap_unit_and_named_y_aliases_keep_scope_and_identity() {
     assert_eq!(Engine::from_binary(bytes).unwrap().suggest("sap").unwrap(), core.suggest("sap").unwrap());
     for (i,row) in proof["aliasYes"].as_array().unwrap().iter().enumerate() {
         data.mappings.push(ApprovedMapping {id: 99100+i as u64, romanized: row[0].as_str().unwrap().into(),
-            khmer: row[1].as_str().unwrap().into(), rank: 300+i as u32, status: ApprovedStatus::Approved});
+            khmer: row[1].as_str().unwrap().into(), rank: 300+i as i32, status: ApprovedStatus::Approved});
     }
     let saved = Engine::new(data).unwrap();
     for (i,row) in proof["aliasYes"].as_array().unwrap().iter().enumerate() {
@@ -2350,7 +2392,7 @@ fn terminal_sap_unit_and_named_y_aliases_keep_scope_and_identity() {
         for features in [Default::default(), SuggestionFeatures {sound_map: false, ..Default::default()}] {
             let query = saved.suggest_with_context(input, features, &Default::default()).unwrap();
             let candidate = query.exact_candidates.iter().find(|c| c.khmer==word).unwrap();
-            assert_eq!(candidate.mapping_id, Some(99100+i as u64)); assert_eq!(candidate.rank,300+i as u32);
+            assert_eq!(candidate.mapping_id, Some(99100+i as u64)); assert_eq!(candidate.rank,300+i as i32);
         }
         for features in [SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -2365,7 +2407,7 @@ fn reviewed_map_combinations_keep_shared_series_original_end_and_identity() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 98000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as u32,
+        id: 98000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -2381,7 +2423,7 @@ fn reviewed_map_combinations_keep_shared_series_original_end_and_identity() {
             if let Some(candidate) = found {
                 let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
                 assert_eq!(candidate.mapping_id, Some(98000 + index as u64));
-                assert_eq!(candidate.rank, index as u32);
+                assert_eq!(candidate.rank, index as i32);
                 for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
                     SuggestionFeatures {romanized: false, ..Default::default()},
                     SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {
@@ -2409,7 +2451,7 @@ fn plain_o_eu_replaces_generated_ueu_and_preserves_combinations_and_aliases() {
     let mut data = dataset();
     data.mappings.clear();
     data.words = Some(words.iter().enumerate().map(|(i, word)| ApprovedWord {
-        id: 98000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as u32,
+        id: 98000 + i as u64, khmer: word.as_str().unwrap().into(), rank: i as i32,
         status: ApprovedStatus::Approved,
     }).collect());
     let core = Engine::new(data.clone()).unwrap();
@@ -2425,7 +2467,7 @@ fn plain_o_eu_replaces_generated_ueu_and_preserves_combinations_and_aliases() {
             if let Some(candidate) = found {
                 let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
                 assert_eq!(candidate.mapping_id, Some(98000 + index as u64));
-                assert_eq!(candidate.rank, index as u32);
+                assert_eq!(candidate.rank, index as i32);
                 for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
                     SuggestionFeatures {romanized: false, ..Default::default()},
                     SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {

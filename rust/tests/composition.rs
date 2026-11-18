@@ -1,7 +1,7 @@
 use khmer_engine::{ApprovedDataset, ApprovedMapping, ApprovedStatus, Candidate, Engine};
 use std::collections::BTreeSet;
 
-fn mapping(id: u64, input: &str, output: &str, rank: u32) -> ApprovedMapping {
+fn mapping(id: u64, input: &str, output: &str, rank: i32) -> ApprovedMapping {
     ApprovedMapping {
         id,
         romanized: input.into(),

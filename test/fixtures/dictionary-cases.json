@@ -75,7 +75,8 @@
       "noun"
     ],
     "inputs": [
-      "preahchnto"
+      "preahchnto",
+      "preaschnto"
     ]
   },
   {
@@ -165,12 +166,20 @@
       "intj"
     ],
     "inputs": [
+      "chomreablea",
+      "chomreablia",
       "chomreaplea",
       "chomreaplia",
+      "chomriablea",
+      "chomriablia",
       "chomriaplea",
       "chomriaplia",
+      "jomreablea",
+      "jomreablia",
       "jomreaplea",
       "jomreaplia",
+      "jomriablea",
+      "jomriablia",
       "jomriaplea",
       "jomriaplia"
     ]
@@ -186,7 +195,11 @@
       "muryphlaet",
       "muryphlet",
       "muryplaet",
-      "muryplet"
+      "muryplet",
+      "muyphlaet",
+      "muyphlet",
+      "muyplaet",
+      "muyplet"
     ]
   },
   {
@@ -209,6 +222,8 @@
       "adv"
     ],
     "inputs": [
+      "yobmenh",
+      "yobminh",
       "yopmenh",
       "yopminh"
     ]
@@ -224,7 +239,11 @@
       "thonhtroan",
       "thonhtrorn",
       "thunhtroan",
-      "thunhtrorn"
+      "thunhtrorn",
+      "tonhtroan",
+      "tonhtrorn",
+      "tunhtroan",
+      "tunhtrorn"
     ]
   },
   {

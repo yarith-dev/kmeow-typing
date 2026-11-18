@@ -47,7 +47,7 @@ fn reject_unapproved_invalid_and_duplicate_data() {
         let mut data = fixture["dataset"].clone();
         data["mappings"][0][field] = match field {
             "status" => "pending".into(),
-            "rank" => (-1).into(),
+            "rank" => (-1_000_001).into(),
             "id" => 0.into(),
             "romanized" => "SUR".into(),
             _ => "hello".into(),

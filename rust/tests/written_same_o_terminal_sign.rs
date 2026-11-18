@@ -22,7 +22,7 @@ fn written_same_o_terminal_sign_requires_closed_key_and_preserves_existing_ident
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(97500 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(i64::from(candidate.rank), position as i64);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {

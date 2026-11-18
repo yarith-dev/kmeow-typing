@@ -11,7 +11,10 @@ impl Index {
         let search = (!joined.is_empty() && joined.bytes().all(|b| b.is_ascii_lowercase() || b == b'\''))
             .then(|| Substring::new(joined.as_bytes()));
         self.words.iter().filter(|word| word.candidate.khmer.contains(query)
-            || search.as_ref().is_some_and(|search| word.readings.iter().any(|reading| search.matches(reading))))
+            || search.as_ref().is_some_and(|search| match &word.graph {
+                Some(graph)=>graph.contains(&search.query),
+                None=>word.readings.iter().any(|reading| search.matches(reading)),
+            }))
             .map(|word| word.candidate.khmer.as_str()).collect()
     }
 
@@ -19,11 +22,15 @@ impl Index {
         let Ok(index) = self.words.binary_search_by(|word| word.candidate.khmer.as_str().cmp(khmer)) else {
             return (Vec::new(), false);
         };
-        display_inputs(&self.words[index].readings, DISPLAY_INPUT_LIMIT)
+        display_inputs(self.words[index].ordinary_readings(), DISPLAY_INPUT_LIMIT)
     }
 }
 
 pub(super) fn display_inputs(readings: &[Vec<Vec<Key>>], limit: usize) -> (Vec<String>, bool) {
+    if super::factored::has_paths(readings) {
+        let (inputs,next)=super::input_pages::input_page(readings,"",limit);
+        return (inputs,next.is_some());
+    }
     let mut inputs = BTreeSet::new();
     let mut truncated = false;
     for reading in readings {

@@ -1,19 +1,21 @@
 import { pronunciationSection } from './pronunciations.js';
+import { attachRomanizedConverter } from './converter.js';
 import { attachFieldHelp } from './field-help.js';
 import { t, uiMessage, posLabel, setUiText, translatePage, setUiLanguage, getUiLanguage, readUiLanguage, UI_LANGUAGE_KEY } from './i18n.js';
 import { createEngine } from '/dist/public/browser.js';
-import { history, replace, editMessage, suggestDraft, spaceChoice, literalSpace } from './composer.js';
+import { history, replace, editMessage, suggestDraft, spaceChoice, spaceText } from './composer.js';
 import { suggestionStatuses, suggestionStatus, suggestionReading } from './suggestion-view.js';
 import { suggestionGesture } from './suggestion-gesture.js';
 import { wordList, wordPage, wordPageLinks, wordLetters, wordsForLetter, romanizedKeys, wordsWithoutRomanized, suggestionWord } from './word-list.js';
 import { WORDS_KEY, parseImport, parseImportSpec, wordExport, loadSharedDictionary, saveSharedDictionary } from './state.js';
 import { soundRules, ruleFamilies, renderRuleValue, renderRuleExamples } from './sound-rules.js';
-import { exampleTopics, examplePage, initialExample, customExampleTopics, loadExample, saveExample, addExample, convertExample, trackExampleInput, exampleChanged, exampleWordAt, exampleDisplayParts, exampleSuggestions, chooseExampleWord } from './examples.js';
+import { exampleTopics, examplePage, initialExample, customExampleTopics, loadExample, saveExample, addExample, convertExample, trackExampleInput, exampleChanged, exampleWordAt, exampleSuggestions, chooseExampleWord, renderParagraph, paragraphSuggestion } from './examples.js';
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
 const el = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
 attachFieldHelp($('#word-dialog'));
-let engine, map, editRow=null, editCatalog=null, editInitial=null, busy=false, damagedWords=null, legacyWords=[];
+let engine, map, editRow=null, editCatalog=null, editInitial=null, busy=false, damagedWords=null, legacyWords=[],sentenceConverter;
+let typingMode='typing';
 const settings = { language: 'khmer', conversion: true, soundMap: true, completion: true, correction: false };
 let wordLanguage='khmer',wordLetter='',missingRomanized=false;
 const exampleDrafts=new Map();let exampleComposing=false,exampleTarget=null;
@@ -39,7 +41,7 @@ function route(event) {
   if(examplePath&&!example)window.history.replaceState(null,'','#words');
   const page=example?'examples':examplePath?'words':pronunciation?'pronunciation':Object.hasOwn(titles,requested)?requested:'typing';
   const activePage=example?'words':pronunciation?'soundmap':page;
-  const title=example?exampleTitle(example.topic):t(pronunciation?'Pronunciation':titles[page]);
+  const title=example?exampleTitle(example.topic):t(pronunciation?'Read-As':titles[page]);
   $$('.page').forEach(node => { node.hidden = node.id !== page; });
   $$('[data-page]').forEach(node => { if (node.dataset.page === activePage) node.setAttribute('aria-current','page'); else node.removeAttribute('aria-current'); });
   const parent=example?t('Word list'):pronunciation?t('Sound map'):'';
@@ -56,6 +58,8 @@ function route(event) {
     if(pronunciation){
       $('#pronunciation-title').focus({preventScroll:true});
       window.scrollTo({top:0,behavior:'instant'});
+    }else if(page==='words'&&event.oldURL?.endsWith('#soundmap/pronunciation')){
+      $('#word-results').focus({preventScroll:true});
     }else if(page==='soundmap'&&event.oldURL?.endsWith('#soundmap/pronunciation')){
       const link=$('#pronunciation-open');
       link.focus({preventScroll:true});
@@ -124,29 +128,13 @@ function refreshExampleEditor(){
 }
 function renderExampleWords(draft,topicId){
   for(const [id,language]of [['#example-romanized-view','romanized'],['#example-khmer','khmer']]){
-    const paragraph=$(id);
-    if(paragraph.exampleDraft!==draft||paragraph.exampleTopic!==topicId||paragraph.exampleEngine!==engine){
-      paragraph.replaceChildren();paragraph.exampleDraft=draft;paragraph.exampleTopic=topicId;paragraph.exampleEngine=engine;
-      for(const part of exampleDisplayParts(draft,language)){
-        if(!part.text)continue;
-        const selectable=part.token&&engine,node=el(selectable?'button':'span',part.text,selectable?'example-word':undefined);
-        if(selectable){
-          node.type='button';node.exampleToken=part.token;node.setAttribute('aria-controls','example-suggestions');
-          node.onclick=()=>{
-            if(exampleComposing||currentExample()?.id!==topicId||exampleDrafts.get(topicId)?.draft!==draft||$('#example-romanized').value!==draft.romanized)return;
-            exampleTarget={topicId,...part.token};refreshExampleEditor();
-            $('#example-suggestion-panel').scrollIntoView({block:'nearest'});
-          };
-        }
-        paragraph.append(node);
-      }
-    }
-    for(const node of paragraph.children)if(node.exampleToken){
-      const token=node.exampleToken;
-      node.disabled=exampleComposing||$('#example-romanized').value!==draft.romanized;
-      node.setAttribute('aria-pressed',String(exampleTarget?.topicId===topicId&&exampleTarget.start===token.start&&exampleTarget.end===token.end));
-      node.title=t('Choose a suggestion for {input}',{input:token.input});
-    }
+    renderParagraph({element:$(id),draft,language,identity:topicId,engine,el,
+      selected:exampleTarget?.topicId===topicId?exampleTarget:null,
+      disabled:exampleComposing||$('#example-romanized').value!==draft.romanized,suggestionsId:'example-suggestions',
+      onSelect:token=>{
+        if(exampleComposing||currentExample()?.id!==topicId||exampleDrafts.get(topicId)?.draft!==draft||$('#example-romanized').value!==draft.romanized)return;
+        exampleTarget={topicId,...token};refreshExampleEditor();$('#example-suggestion-panel').scrollIntoView({block:'nearest'});
+      }});
   }
 }
 function renderExampleSuggestions(){
@@ -162,12 +150,7 @@ function renderExampleSuggestions(){
     $('#example-suggestion-title').textContent=t('Suggestions for {input}',{input:selection.target.input});
     const draft=entry.draft;
     for(const candidate of selection.result.candidates){
-      const button=el('button',undefined,'candidate'),word=el('span',candidate.khmer,'candidate-word');word.lang='km';
-      const reading=el('small',suggestionReading(candidate,selection.result,'khmer')||'—','candidate-reading');reading.lang='en';
-      const selected=candidate.khmer===selection.target.word;button.type='button';button.lang=getUiLanguage();
-      button.setAttribute('aria-label',t('Choose {word}',{word:candidate.khmer}));button.setAttribute('aria-pressed',String(selected));
-      if(selected)button.className+=' highlighted';button.append(word,reading);
-      button.addEventListener('mousedown',event=>event.preventDefault());
+      const button=paragraphSuggestion(el,candidate,selection.result,selection.target);
       button.onclick=()=>{
         const active=currentExample(),current=active&&exampleDrafts.get(active.id);
         if(exampleComposing||active?.id!==topic.id||current?.draft!==draft||$('#example-romanized').value!==draft.romanized||exampleTarget?.topicId!==topic.id
@@ -290,14 +273,11 @@ $('#example-cancel').onclick=()=>{
 };
 // Only presentation follows the viewport; the same controls and editor remain mounted.
 const mobileLayout=window.matchMedia('(max-width: 760px)');
-let mobileOptionsOpen=false;
 const typingOptions=$('#typing-options');
 function syncLayout(){
-  typingOptions.open=mobileLayout.matches?mobileOptionsOpen:true;typingOptions.querySelector('summary').tabIndex=mobileLayout.matches?0:-1;
   const filter=$('#missing-romanized'),slot=$(mobileLayout.matches?'#word-filter-mobile':'#word-filter-column');
   if(filter.parentElement!==slot){const focused=document.activeElement===filter;slot.append(filter);if(focused)filter.focus({preventScroll:true});}
 }
-typingOptions.addEventListener('toggle',()=>{if(mobileLayout.matches)mobileOptionsOpen=typingOptions.open;else if(!typingOptions.open)typingOptions.open=true;});
 mobileLayout.addEventListener('change',syncLayout);syncLayout();
 
 function appearance(theme) {
@@ -322,13 +302,64 @@ for (const [key,label] of Object.entries({conversion:'Romanized conversion',soun
   const row = el('label',undefined,'setting-row'), input = el('input'); input.type='checkbox'; input.checked=settings[key]; input.dataset.setting=key;
   input.onchange=()=>{settings[key]=input.checked; suggest();}; const text=el('span',label);text.setAttribute('data-i18n',label);row.append(text,input); $('#settings').append(row);
 }
+const optionsButton=$('#typing-options-toggle'),optionsMenu=$('#typing-options-menu');
+let optionsPointerActive=false;
+function setTypingOptionsOpen(open,restoreFocus=false){
+  optionsMenu.hidden=!open;optionsButton.setAttribute('aria-expanded',String(open));
+  if(open)positionTypingOptions();
+  else if(restoreFocus)optionsButton.focus({preventScroll:true});
+}
+function positionTypingOptions(){
+  if(optionsMenu.hidden||optionsPointerActive)return;
+  const view=window.visualViewport,gap=8,edge=12;
+  const left=(view?.offsetLeft??0)+edge,top=(view?.offsetTop??0)+edge;
+  const right=left+(view?.width??window.innerWidth)-edge*2,bottom=top+(view?.height??window.innerHeight)-edge*2;
+  const anchor=optionsButton.getBoundingClientRect();
+  if(anchor.bottom<top||anchor.top>bottom){setTypingOptionsOpen(false);return;}
+  optionsMenu.style.maxWidth=`${right-left}px`;
+  const below=bottom-anchor.bottom-gap,above=anchor.top-gap-top;
+  const down=below>=Math.min(optionsMenu.scrollHeight,360)||below>=above;
+  optionsMenu.style.maxHeight=`${Math.max(0,down?below:above)}px`;
+  const box=optionsMenu.getBoundingClientRect();
+  optionsMenu.style.left=`${Math.max(left,Math.min(anchor.right-box.width,right-box.width))}px`;
+  optionsMenu.style.top=`${down?anchor.bottom+gap:anchor.top-gap-box.height}px`;
+}
+optionsButton.addEventListener('click',()=>setTypingOptionsOpen(optionsMenu.hidden));
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&!optionsMenu.hidden){event.preventDefault();setTypingOptionsOpen(false,true);}
+});
+typingOptions.addEventListener('focusout',event=>{
+  if(!optionsPointerActive&&event.relatedTarget&&!typingOptions.contains(event.relatedTarget))setTypingOptionsOpen(false);
+});
+document.addEventListener('pointerdown',event=>{
+  optionsPointerActive=typingOptions.contains(event.target);
+  if(!optionsPointerActive)setTypingOptionsOpen(false);
+},true);
+function finishOptionsPointer(){optionsPointerActive=false;positionTypingOptions();}
+document.addEventListener('pointerup',finishOptionsPointer,true);
+document.addEventListener('pointercancel',finishOptionsPointer,true);
+window.addEventListener('blur',()=>{optionsPointerActive=false;});
+window.addEventListener('resize',positionTypingOptions);
+window.addEventListener('scroll',positionTypingOptions,true);
+window.visualViewport?.addEventListener('resize',positionTypingOptions);
+window.addEventListener('hashchange',()=>setTypingOptionsOpen(false));
 function language(value) {
   settings.language=value;
   $$('[data-language]').forEach(node=>node.setAttribute('aria-pressed',String(node.dataset.language===value)));
   $('#typing-input').placeholder=t(value==='khmer'?'Try sievphov':'Try books');
   $$('[data-setting]').forEach(node=>{node.disabled=(node.dataset.setting==='correction' ? value!=='english' : ['conversion','soundMap'].includes(node.dataset.setting) && value!=='khmer');});
-  suggest();
+  syncTypingMode();suggest();
 }
+function syncTypingMode(){
+  const active=settings.language==='khmer'&&typingMode==='converter';
+  $('#typing-mode').hidden=settings.language!=='khmer';
+  $('#typing-pad').hidden=active;$('#romanized-converter').hidden=!active;$('#typing-options').hidden=active;
+  if(active)setTypingOptionsOpen(false);
+  $('#typing-layout').classList.toggle('converter-mode',active);
+  for(const mode of ['typing','converter'])$('#mode-'+mode).setAttribute('aria-pressed',String(typingMode===mode));
+  sentenceConverter?.setActive(active);
+}
+for(const mode of ['typing','converter'])$('#mode-'+mode).onclick=()=>{typingMode=mode;syncTypingMode();};
 $$('[data-language]').forEach(node=>{node.onclick=()=>language(node.dataset.language);});
 for(const status of suggestionStatuses){
   const item=el('span',undefined,'legend-item'),dot=el('span',undefined,`status-dot status-${status.kind}`);
@@ -344,6 +375,7 @@ function applyUiLanguage(value,persist=true){
   $('#typing-input').placeholder=t(settings.language==='khmer'?'Try sievphov':'Try books');
   renderWordList();if(engine)suggest();if(map)renderMap({preserveDetails:true});
   renderPronunciations();
+  sentenceConverter?.refresh();
   if(persist)try{localStorage.setItem(UI_LANGUAGE_KEY,selected);}catch{}
 }
 $$('[data-ui-language]').forEach(control=>{control.onclick=()=>applyUiLanguage(getUiLanguage()==='en'?'km':'en');});
@@ -354,6 +386,11 @@ function readingFor(candidate,currentResult){
 const editor=history();let result,resultDraft,active=0,composing=false;
 let suggestionGestures=[];
 const input=$('#typing-input'),message=$('#message');
+const acceptance=$('#suggestion-acceptance');
+try{acceptance.value=localStorage.getItem('kmeow-manager-acceptance-v1')==='manual'?'manual':'auto';}catch{acceptance.value='auto';}
+acceptance.addEventListener('change',()=>{
+  try{localStorage.setItem('kmeow-manager-acceptance-v1',acceptance.value==='manual'?'manual':'auto');}catch{}
+});
 function clearSuggestions(){for(const dispose of suggestionGestures)dispose();suggestionGestures=[];$('#suggestions').replaceChildren();}
 function syncEditor(restoreSelection=false){
   const draft=editor.current;
@@ -364,13 +401,12 @@ function syncEditor(restoreSelection=false){
   if(messageChanged)message.value=draft.text;
   const direction=draft.direction??'none';
   if((messageChanged||restoreSelection)&&(message.selectionStart!==draft.start||message.selectionEnd!==draft.end||message.selectionDirection!==direction))message.setSelectionRange(draft.start,draft.end,direction);
-  $('#undo').disabled=!editor.canUndo;$('#redo').disabled=!editor.canRedo;$('#copy-message').disabled=!draft.text;
   $('#message-count').textContent=`${draft.text.length.toLocaleString()} / 20,000`;
   suggest();
 }
 function insert(text,choice){
   if(!engine||composing||!text)return;
-  try{const next=replace(editor.current,text,choice);editor.push(next);active=0;syncEditor(true);input.focus();}
+  try{const next=replace(editor.current,text,choice);editor.push(next,{accepted:!!choice});active=0;syncEditor(true);input.focus();}
   catch(error){announce(errorMessage(error));}
 }
 function choose(index){const candidate=result?.candidates[index];if(candidate)insert(candidate.khmer??candidate.text,candidate);}
@@ -393,7 +429,12 @@ input.addEventListener('keydown',event=>{
   if(event.altKey||event.metaKey||event.ctrlKey){if(event.key==='Enter'&&(event.metaKey||event.ctrlKey)){event.preventDefault();insert(editor.current.input);}return;}
   if(!event.shiftKey&&(event.key==='ArrowDown'||event.key==='ArrowUp')){const current=currentSuggestions();if(current?.candidates.length){event.preventDefault();active=(active+(event.key==='ArrowDown'?1:-1)+current.candidates.length)%current.candidates.length;highlight();}}
   else if(event.key==='Enter'){event.preventDefault();if(!event.repeat){currentSuggestions();choose(active);}}
-  else if(event.key===' '&&!event.shiftKey&&$('#space-commits').checked){event.preventDefault();if(event.repeat)return;const candidate=spaceChoice(currentSuggestions(),active);insert(candidate?(candidate.khmer??candidate.text):literalSpace(editor.current.input),candidate);}
+  else if(event.key===' '&&!event.shiftKey){
+    event.preventDefault();if(event.repeat)return;
+    const current=currentSuggestions();
+    const candidate=editor.restoredAcceptance?undefined:spaceChoice(current,active,{acceptance:acceptance.value,...settings});
+    insert(spaceText(editor.current.input,candidate,settings.language),candidate);
+  }
 });
 function rememberSelection(event){
   if(composing)return;
@@ -407,8 +448,6 @@ message.addEventListener('compositionstart',()=>{composing=true;result=undefined
 message.addEventListener('compositionend',()=>{composing=false;editor.push(editMessage(editor.current,message.value,message.selectionStart,message.selectionEnd,message.selectionDirection));syncEditor();});
 message.addEventListener('input',event=>{if(event.isComposing||composing)return;editor.push(editMessage(editor.current,message.value,message.selectionStart,message.selectionEnd,message.selectionDirection));syncEditor();});
 message.addEventListener('keydown',event=>{if(!event.isComposing&&(event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==='z'){event.preventDefault();event.shiftKey?editor.redo():editor.undo();syncEditor(true);}});
-$('#undo').onclick=()=>{editor.undo();syncEditor(true);};$('#redo').onclick=()=>{editor.redo();syncEditor(true);};
-$('#copy-message').onclick=async()=>{try{await navigator.clipboard.writeText(editor.current.text);announce('Message copied.');}catch{message.focus();message.select();announce('Press Ctrl+C or Command+C to copy your message.');}};
 function suggest() {
   if(!engine||composing)return;
   const target=$('#suggestions');clearSuggestions();$('#result-count').textContent='';result=undefined;resultDraft=undefined;
@@ -428,7 +467,7 @@ function suggest() {
       if(reading){reading.lang='en';button.append(reading);}
       button.lang=getUiLanguage();word.lang=settings.language==='khmer'?'km':'en';
       button.setAttribute('aria-label',t(reading&&reading.textContent!=='—'?'Insert {word}, {reading}, {states}':'Insert {word}, {states}',{word:text,reading:reading?.textContent,states:description}));
-      button.setAttribute('aria-describedby','suggestion-help');button.setAttribute('aria-keyshortcuts','Shift+F10');
+      button.setAttribute('aria-keyshortcuts','Shift+F10');
       button.addEventListener('mousedown',event=>event.preventDefault());
       const suggestionLanguage=settings.language;
       suggestionGestures.push(suggestionGesture(button,{manage:()=>{
@@ -540,6 +579,8 @@ function showWordDetails(row){
   if(row.language==='khmer'){
     field('Use default Sound map',t(row.soundMapEnabled===false?'Off · saved spellings only':'On'));
     field('Saved Romanized spellings',row.romanizations.join(', ')||t('None'));
+    field('Shorthand',(row.shorthands??[]).join(', ')||t('None'));
+    field('Excluded Romanized inputs',(row.excludedInputs??[]).join(', ')||t('None'));
     field('Sound map spellings',row.soundMapInputs.join(', ')||t('None'));
     if(row.soundMapInputsTruncated)field('More spellings',t('This word has additional generated readings. Try them in Typing.'));
     if(row.spellings.length)field('Previous browser spellings',row.spellings.join(', '));
@@ -595,7 +636,7 @@ async function loadWordList(catalog,words){
       catch(error){loaded.engine.dispose();throw new Error('Dictionary saved, but the previous browser copy could not be updated. Export its recovery copy before retrying.');}
     }
     const previous=engine;engine=loaded.engine;legacyWords=words;dictionaryWords=loaded.catalog;previous?.dispose();
-    renderWordList();suggest();refreshExampleEditor();renderPronunciations();
+    renderWordList();suggest();refreshExampleEditor();renderPronunciations();sentenceConverter?.refresh();
     if(map)renderMap({preserveDetails:true});
     return true;
   }catch(error){dictionaryError=errorMessage(error);announce(dictionaryError);renderWordList();return false;}
@@ -614,11 +655,53 @@ $('#words-jump').onsubmit=event=>{
 function spellingField(){
   const english=$('#word-language').value==='english';
   $('#spelling-field').hidden=english;$('#word-spellings').disabled=english;
+  $('#shorthand-field').hidden=english;$('#word-shorthands').disabled=english;
+  $('#excluded-inputs-field').hidden=english;$('#word-excluded-inputs').disabled=english;
   $('#word-sound-map-field').hidden=english;$('#word-sound-map').disabled=english;
+  $('#word-generated-field').hidden=english||!editRow?.bundled;
   $('#word-components-section').hidden=english||!editRow?.bundled||editRow.word.includes(' ');
   $('#component-mode').disabled=$('#word-components-section').hidden;componentFields();
 }
 $('#word-language').onchange=spellingField;
+function markExcludedReadings(){
+  const excluded=new Set($('#word-excluded-inputs').value.split(',').map(input=>input.trim().toLowerCase()));
+  for(const chip of $('#word-generated-inputs').children){
+    const blocked=excluded.has(chip.textContent);
+    chip.className=blocked?'key excluded-reading':'key';
+    chip.title=blocked?t('Excluded Romanized inputs'):'';
+    if(blocked)chip.setAttribute('aria-label',t('Excluded input {input}',{input:chip.textContent}));
+    else chip.removeAttribute('aria-label');
+  }
+}
+$('#word-excluded-inputs').oninput=markExcludedReadings;
+function renderWordReadings(append=false){
+  const list=$('#word-generated-inputs'),more=$('#word-generated-more'),status=$('#word-generated-status');
+  if(!append){
+    list.replaceChildren();
+    list.scrollTop=0;
+    more.dataset.after='';
+    more.hidden=true;
+  }
+  status.textContent='';
+  if($('#word-generated-field').hidden)return;
+  try{
+    const page=engine.soundMapInputs(editRow.word,more.dataset.after);
+    for(const input of page.inputs){
+      const chip=el('span',input,'key');
+      chip.lang='en';list.append(chip);
+    }
+    if(!list.children.length)list.textContent=t('None');
+    more.dataset.after=page.nextAfter??'';
+    more.hidden=!page.nextAfter;
+    setUiText(more,'Show more');
+    markExcludedReadings();
+  }catch(error){
+    status.textContent=t(errorMessage(error));
+    more.hidden=false;
+    setUiText(more,'Retry');
+  }
+}
+$('#word-generated-more').onclick=()=>renderWordReadings(Boolean($('#word-generated-more').dataset.after));
 function openWord(row){
   editRow=row??null;editCatalog=dictionaryWords;$('#word-form').reset();
   const legacy=row?.personalIndices.length?legacyWords[row.personalIndices[0]]:null;
@@ -626,14 +709,16 @@ function openWord(row){
   $('#word-text').value=row?.word??'';$('#word-language').value=row?.language??wordLanguage;
   $('#word-text').readOnly=!!row?.bundled;$('#word-language').disabled=!!row?.bundled;
   $('#word-spellings').value=[...new Set([...(row?.romanizations??[]),...(row?.spellings??[])])].join(', ');
+  $('#word-shorthands').value=(row?.shorthands??[]).join(', ');
+  $('#word-excluded-inputs').value=(row?.excludedInputs??[]).join(', ');
   $('#word-rank').value=legacy?.rank??row?.rank??1;
   $('#word-level').value=String(row?.commonnessLevel??'');
   $('#word-sound-map').checked=row?.soundMapEnabled!==false;
   $('#component-mode').value=row?.components==null?'default':row.components.length?'connected':'standalone';
   $('#component-parts').value=(row?.components??[]).map(parts=>parts.join(' + ')).join('\n');
-  editInitial={rank:Number($('#word-rank').value),spellings:$('#word-spellings').value.split(',').map(value=>value.trim()).filter(Boolean),components:row?.components??null};
+  editInitial={rank:Number($('#word-rank').value),spellings:$('#word-spellings').value.split(',').map(value=>value.trim()).filter(Boolean),components:row?.components??null,excludedInputs:row?.excludedInputs??[],shorthands:row?.shorthands??[]};
   $('#review-field').hidden=!!row?.bundled;$('#word-reviewed').required=!row?.bundled;
-  $('#form-error').textContent='';spellingField();$('#word-dialog').showModal();$('#word-text').focus();
+  $('#form-error').textContent='';spellingField();renderWordReadings();$('#word-dialog').showModal();$('#word-text').focus();
 }
 $('#add-word').onclick=()=>openWord();
 for(const id of ['close-dialog','cancel-dialog']) $('#'+id).onclick=()=>$('#word-dialog').close();
@@ -652,11 +737,18 @@ $('#word-form').onsubmit=async event=>{
   if(busy)return;
   const word={word:$('#word-text').value.trim(),language:$('#word-language').value};
   const rank=Number($('#word-rank').value),spellings=word.language==='english'?[]:$('#word-spellings').value.split(',').map(value=>value.trim()).filter(Boolean);
+  if(String($('#word-rank').value).trim()===''||!Number.isSafeInteger(rank)||rank< -1000000||rank>1000000){
+    $('#form-error').textContent=t('Rank must be an integer from -1000000 to 1000000.');$('#word-rank').focus();return;
+  }
   const rankChanged=rank!==editInitial.rank,spellingsChanged=JSON.stringify(spellings)!==JSON.stringify(editInitial.spellings);
   if(!editRow?.bundled||rankChanged)word.rank=rank;
   if(!editRow?.bundled||spellingsChanged)word.spellings=spellings;
   const level=$('#word-level').value?Number($('#word-level').value):null;
   if(level!==(editRow?.commonnessLevel??null))word.commonnessLevel=level;
+  const shorthands=[...new Set($('#word-shorthands').value.split(',').map(value=>value.trim().toLowerCase()).filter(Boolean))].sort();
+  if(word.language==='khmer'&&JSON.stringify(shorthands)!==JSON.stringify([...editInitial.shorthands].sort()))word.shorthands=shorthands;
+  const excludedInputs=[...new Set($('#word-excluded-inputs').value.split(',').map(value=>value.trim().toLowerCase()).filter(Boolean))].sort();
+  if(word.language==='khmer'&&JSON.stringify(excludedInputs)!==JSON.stringify([...editInitial.excludedInputs].sort()))word.excludedInputs=excludedInputs;
   if(word.language==='khmer'&&$('#word-sound-map').checked!==(editRow?.soundMapEnabled!==false))word.soundMapEnabled=$('#word-sound-map').checked;
   try{
     if(!$('#word-components-section').hidden){
@@ -752,7 +844,7 @@ const pronunciationEditor=pronunciationSection({document,
 $('#pronunciation-editor').append(pronunciationEditor.root);
 function renderPronunciations(){
   const query=$('#pronunciation-search').value.trim().toLowerCase();
-  pronunciationEditor.update(dictionaryWords?.pronunciations??[],query,Boolean(map&&engine&&dictionaryWords),map?.pronunciationSyllables??[]);
+  pronunciationEditor.update(dictionaryWords?.pronunciations??[],query,Boolean(map&&engine&&dictionaryWords),[...(map?.pronunciationSyllables??[]),...(map?.runtime?.pronunciationParts??[])]);
 }
 $('#pronunciation-search').oninput=renderPronunciations;
 function renderMap({preserveDetails=false}={}){
@@ -799,7 +891,7 @@ function renderMap({preserveDetails=false}={}){
       familyRow.append(el('summary',family.title));
       for(const rule of family.rules){
         const guide=()=>soundRules(map.runtime).find(item=>item.id===rule.id)??rule;
-        if(['wordParts','shorthands'].includes(rule.id)&&Array.isArray(rule.value)){
+        if(rule.id==='shorthands'&&Array.isArray(rule.value)){
           familyRow.append(el('p',rule.description,'helper'));
           if(rule.examples.length){
             const examples=el('button',undefined,'rule-link');examples.type='button';examples.setAttribute('aria-haspopup','dialog');examples.setAttribute('data-rule-trigger',`rule/${rule.id}/examples`);
@@ -828,6 +920,8 @@ function renderMap({preserveDetails=false}={}){
 }
 $('#sound-search').oninput=renderMap;$('#sound-group').onchange=renderMap;
 async function start(){
+  sentenceConverter=attachRomanizedConverter({document,getEngine:()=>engine,
+    onManage:candidate=>openWord(suggestionWord(dictionaryWords??{},engine.getWords(),'khmer',candidate))});
   language('khmer');
   let stored;
   try{stored=localStorage.getItem(WORDS_KEY);if(stored){const parsed=JSON.parse(stored);legacyWords=Array.isArray(parsed)&&!parsed.length?[]:parseImport(stored);}}

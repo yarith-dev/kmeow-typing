@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut best = BinaryHeap::new();
         let start = Instant::now();
         let engine = Engine::compile_sorted_english((0..count).map(|i| {
-            let rank = ((i * 15485863) % 1_000_001) as u32;
+            let rank = ((i * 15485863) % 1_000_001) as i32;
             if best.len() < 20 {
                 best.push((rank, i + 1));
             } else if (rank, i + 1) < *best.peek().unwrap() {

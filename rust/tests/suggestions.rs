@@ -109,7 +109,7 @@ fn completions_are_bounded_and_deterministic_without_truncating_exact_alternativ
             id: i + 1,
             romanized: "phrase".into(),
             khmer: char::from_u32(0x1780 + i as u32).unwrap().to_string(),
-            rank: 25 - i as u32,
+            rank: 25 - i as i32,
             status: ApprovedStatus::Approved,
         })
         .collect();

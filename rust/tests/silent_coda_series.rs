@@ -25,7 +25,7 @@ fn consumed_ss_coda_governs_plain_naa_without_a_saved_word_alias() {
             let result = core.suggest_with_context(input, Default::default(), &Default::default()).unwrap();
             let hit = result.exact_candidates.iter().find(|candidate| candidate.khmer == word).unwrap();
             assert_eq!(hit.mapping_id, Some(97000+i as u64));
-            assert_eq!(hit.rank, i as u32);
+            assert_eq!(i64::from(hit.rank), i as i64);
             assert_eq!(restored.suggest(input).unwrap(), core.suggest(input).unwrap());
         }
         if let Some(removed) = row["removed"].as_array() {

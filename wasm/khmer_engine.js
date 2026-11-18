@@ -238,6 +238,35 @@ export class WasmEngine {
         return WasmEngine.__wrap(ret[0]);
     }
     /**
+     * @param {string} json
+     */
+    setShorthands(json) {
+        const ptr0 = passStringToWasm0(json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.wasmengine_setShorthands(this.__wbg_ptr, ptr0, len0);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
+    }
+    /**
+     * @param {string} word
+     * @returns {string}
+     */
+    wordShorthands(word) {
+        let deferred2_0;
+        let deferred2_1;
+        try {
+            const ptr0 = passStringToWasm0(word, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len0 = WASM_VECTOR_LEN;
+            const ret = wasm.wasmengine_wordShorthands(this.__wbg_ptr, ptr0, len0);
+            deferred2_0 = ret[0];
+            deferred2_1 = ret[1];
+            return getStringFromWasm0(ret[0], ret[1]);
+        } finally {
+            wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+        }
+    }
+    /**
      * @param {string} khmer
      * @param {string} english
      * @param {string} provenance
@@ -260,6 +289,33 @@ export class WasmEngine {
         var v5 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
         wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
         return v5;
+    }
+    /**
+     * @param {string} word
+     * @param {string} after
+     * @returns {string}
+     */
+    soundMapInputs(word, after) {
+        let deferred4_0;
+        let deferred4_1;
+        try {
+            const ptr0 = passStringToWasm0(word, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len0 = WASM_VECTOR_LEN;
+            const ptr1 = passStringToWasm0(after, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len1 = WASM_VECTOR_LEN;
+            const ret = wasm.wasmengine_soundMapInputs(this.__wbg_ptr, ptr0, len0, ptr1, len1);
+            var ptr3 = ret[0];
+            var len3 = ret[1];
+            if (ret[3]) {
+                ptr3 = 0; len3 = 0;
+                throw takeFromExternrefTable0(ret[2]);
+            }
+            deferred4_0 = ptr3;
+            deferred4_1 = len3;
+            return getStringFromWasm0(ptr3, len3);
+        } finally {
+            wasm.__wbindgen_free(deferred4_0, deferred4_1, 1);
+        }
     }
     /**
      * @param {string} json
@@ -431,6 +487,17 @@ export class WasmEngine {
             return getStringFromWasm0(ptr2, len2);
         } finally {
             wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+        }
+    }
+    /**
+     * @param {string} json
+     */
+    setInputExclusions(json) {
+        const ptr0 = passStringToWasm0(json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.wasmengine_setInputExclusions(this.__wbg_ptr, ptr0, len0);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
         }
     }
     /**
@@ -648,6 +715,19 @@ export class WasmEngine {
             wasm.__wbindgen_free(deferred4_0, deferred4_1, 1);
         }
     }
+    /**
+     * @param {WasmEngine} extension
+     * @param {string} json
+     */
+    setShorthandsWithExtension(extension, json) {
+        _assertClass(extension, WasmEngine);
+        const ptr0 = passStringToWasm0(json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.wasmengine_setShorthandsWithExtension(this.__wbg_ptr, extension.__wbg_ptr, ptr0, len0);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
+        }
+    }
     clearComponentExtensionCache() {
         wasm.wasmengine_clearComponentExtensionCache(this.__wbg_ptr);
     }
@@ -675,6 +755,19 @@ export class WasmEngine {
             return getStringFromWasm0(ptr2, len2);
         } finally {
             wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+        }
+    }
+    /**
+     * @param {WasmEngine} extension
+     * @param {string} json
+     */
+    setInputExclusionsWithExtension(extension, json) {
+        _assertClass(extension, WasmEngine);
+        const ptr0 = passStringToWasm0(json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.wasmengine_setInputExclusionsWithExtension(this.__wbg_ptr, extension.__wbg_ptr, ptr0, len0);
+        if (ret[1]) {
+            throw takeFromExternrefTable0(ret[0]);
         }
     }
     /**
@@ -887,4 +980,4 @@ async function __wbg_init(module_or_path) {
 export { initSync };
 export default __wbg_init;
 
-export const wasmBuildFingerprint = "2a49dd7d74eabdc56637cdf1dea2d239aca78f4a367109b5556008119b04610a";
+export const wasmBuildFingerprint = "d239ae49c84b9dd7f78a150041a43ff122115f0a1cd171f7867473edcdf8e122";

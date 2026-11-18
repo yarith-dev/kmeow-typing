@@ -32,22 +32,58 @@ export function suggestDraft(engine,draft,settings){
   // Empty input can still produce contextual next-word suggestions.
   return engine.suggest(draft.input,{...settings,...contextFor(draft,settings.language)});
 }
-export function spaceChoice(result,active){
-  const selected=result?.candidates[active];
+export function spaceChoice(result,active,{acceptance='auto',language='khmer',correction=false}={}){
+  if(acceptance!=='auto'||!result||result.kind==='next-word'||result.input===''||result.normalizedInput==='')return;
+  const candidates=result.candidates??[],selected=candidates[active];
+  const eligible=candidate=>candidate&&!candidate.tapOnly&&!candidate.manualOnly;
   const matches=(a,b)=>a.mappingId===b.mappingId&&(a.khmer??a.text)===(b.khmer??b.text);
-  const exact=result?.exactCandidates??[];
+  const exact=result.exactCandidates??[];
+  if(language==='english'){
+    const input=result.input??result.normalizedInput??'';
+    const permitsCase=input.length>1&&input===input.toUpperCase()||!/[A-Z]/.test(input.slice(1));
+    if(!permitsCase)return;
+  }
+  // Arrow navigation chooses among completions only when there is no exact
+  // match. A protected highlighted choice must not accept a different word.
+  if(active>0&&!exact.length){
+    if(!eligible(selected)||selected.correction&&!(language==='english'&&(correction||selected.wordAlternative)))return;
+    return selected;
+  }
+  if(language==='english'){
+    // Mobile applies an eligible contextual English replacement before
+    // ordinary completion. Khmer typo recovery always requires a choice.
+    const first=candidates[0];
+    if(eligible(first)&&(first.wordAlternative||correction&&first.correction))return first;
+    if(candidates.some(candidate=>candidate.manualOnly))return;
+  }
   const candidate=exact.find(c=>selected&&!selected.completion&&matches(c,selected))??exact[0];
-  if(!candidate||candidate.tapOnly||candidate.manualOnly||candidate.completion)return;
-  if(result.candidates.some(c=>matches(c,candidate)&&(c.tapOnly||c.manualOnly)))return;
-  return candidate;
+  if(candidate){
+    if(!eligible(candidate)||candidates.some(c=>matches(c,candidate)&&!eligible(c)))return;
+    return candidate;
+  }
+  // Keep the engine's order. A rare first completion never silently falls
+  // through to a different word farther down the list.
+  const completion=candidates.find(candidate=>!candidate.correction&&!candidate.manualOnly);
+  return eligible(completion)?completion:undefined;
 }
-export function literalSpace(input){return /^[\u1780-\u17ff]+$/.test(input)?input:input+' ';}
+export function literalSpace(input){return input+' ';}
+export function spaceText(input,candidate,language){
+  if(!candidate)return literalSpace(input);
+  let text=candidate.khmer??candidate.text;
+  if(language!=='english')return text;
+  if(input.length>1&&input===input.toUpperCase())text=text.toUpperCase();
+  else if(/^[A-Z]/.test(input))text=text[0].toUpperCase()+text.slice(1);
+  return text+' ';
+}
 export function history(initial=emptyDraft()){
-  let current=initial;const past=[],future=[];
-  return {get current(){return current;},select(start,end,direction='none'){current={...current,start,end,direction};},push(next){
+  let current=initial,accepted=false,restoredAcceptance=false;const past=[],future=[];
+  return {get current(){return current;},get restoredAcceptance(){return restoredAcceptance;},select(start,end,direction='none'){
+    if(start!==current.start||end!==current.end||direction!==current.direction)restoredAcceptance=false;
+    current={...current,start,end,direction};
+  },push(next,{accepted:choice=false}={}){
     // Browsers may emit a final input after compositionend. Selection changes
     // and unchanged content do not create an undo step or discard redo.
     if(next.text===current.text&&next.input===current.input&&JSON.stringify(next.spans)===JSON.stringify(current.spans)){current=next;return;}
-    past.push(current);if(past.length>100)past.shift();future.length=0;current=next;
-  },undo(){if(past.length){future.push(current);current=past.pop();}return current;},redo(){if(future.length){past.push(current);current=future.pop();}return current;},get canUndo(){return past.length>0;},get canRedo(){return future.length>0;}};
+    past.push({draft:current,accepted});if(past.length>100)past.shift();future.length=0;current=next;accepted=choice;restoredAcceptance=false;
+  },undo(){if(past.length){future.push({draft:current,accepted});restoredAcceptance=accepted;({draft:current,accepted}=past.pop());}return current;},redo(){if(future.length){past.push({draft:current,accepted});({draft:current,accepted}=future.pop());restoredAcceptance=false;}return current;},get canUndo(){return past.length>0;},get canRedo(){return future.length>0;}};
 }

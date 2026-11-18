@@ -25,7 +25,7 @@ fn terminal_o_ii_preserves_existing_controllers_guards_features_and_aliases() {
             .unwrap_or_else(|| panic!("{input}: {word}"));
         let position = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
         assert_eq!(candidate.mapping_id, Some(990000 + position as u64));
-        assert_eq!(candidate.rank, position as u32);
+        assert_eq!(candidate.rank, position as i32);
         for features in [SuggestionFeatures {sound_map: false, ..Default::default()},
             SuggestionFeatures {romanized: false, ..Default::default()},
             SuggestionFeatures {mode: TypingMode::English, ..Default::default()}] {

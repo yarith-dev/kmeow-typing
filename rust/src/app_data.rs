@@ -166,6 +166,8 @@ impl Engine {
         engine.load_shared_words(&provenance)?;
         engine.load_word_components(&provenance)?;
         engine.load_pronunciations(&provenance)?;
+        engine.load_input_exclusions(&provenance)?;
+        engine.load_shorthands(&provenance)?;
         engine.app_data = Some(Loaded { manifest: km, metadata: Some((
             kj.to_owned(), ej.to_owned()
         )), lexicon: OnceLock::new() });

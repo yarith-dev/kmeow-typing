@@ -1,6 +1,12 @@
 //! Match-path ranking, independent of dictionary ranks and research confidence.
 use serde::{Deserialize, Deserializer};
 use std::collections::BTreeMap;
+use std::sync::Arc;
+
+// Additive choices stay below existing strict, consonant-count and component
+// paths, including their bounded signed key priorities, in every ranking view.
+const PRESERVE_EXISTING_PRIORITY: i64 = -(1 << 55);
+pub(super) const LATEST_PREDICTION_STAGE: u8 = 4;
 
 /// A rule's local typing choice. Plain map strings remain neutral. An explicit
 /// `{ "key": "o", "rankPriority": -2 }` lowers only paths using that choice.
@@ -9,9 +15,16 @@ use std::collections::BTreeMap;
 pub(super) struct Key {
     pub text: String,
     pub priority: i64,
+    pub preserve_existing: bool,
+    // Prediction precedence: 0 original, 1 added glottal vowels, 2 added
+    // onsets, 3 closed-vowel alternatives, 4 ending alternatives. A later stage votes only when
+    // earlier stages no longer match.
+    pub prediction_stage: u8,
+    // Large Read as choices retain their lattice instead of its Cartesian product.
+    pub paths: Option<Arc<Vec<Vec<Vec<Key>>>>>,
 }
 impl From<String> for Key {
-    fn from(text: String) -> Self { Self { text, priority: 0 } }
+    fn from(text: String) -> Self { Self { text, priority: 0, preserve_existing: false, prediction_stage: 0, paths: None } }
 }
 impl From<&str> for Key {
     fn from(text: &str) -> Self { text.to_owned().into() }
@@ -21,27 +34,45 @@ impl std::ops::Deref for Key {
     fn deref(&self) -> &str { &self.text }
 }
 impl Key {
+    pub(super) fn additive_path(priority: i32) -> Self {
+        Self { text: String::new(), priority: PRESERVE_EXISTING_PRIORITY + i64::from(priority), preserve_existing: true, prediction_stage: 0, paths: None }
+    }
+    pub(super) fn factored(paths: Vec<Vec<Vec<Key>>>) -> Self {
+        let text=paths.first().into_iter().flatten().filter_map(|keys|keys.first()).map(|key|key.text.as_str()).collect();
+        Self {text,paths:Some(Arc::new(paths)),..Self::from(String::new())}
+    }
     pub fn joined(&self, next: &Self) -> Self {
+        if self.paths.is_some() || next.paths.is_some() {
+            return Self::factored(vec![vec![vec![self.clone()],vec![next.clone()]]]);
+        }
         Self { text: format!("{}{}", self.text, next.text),
-            priority: self.priority.saturating_add(next.priority) }
+            priority: self.priority.saturating_add(next.priority),
+            preserve_existing: self.preserve_existing || next.preserve_existing,
+            prediction_stage: self.prediction_stage.max(next.prediction_stage), paths: None }
     }
 }
 impl<'de> Deserialize<'de> for Key {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         #[derive(Deserialize)]
         #[serde(rename_all = "camelCase", deny_unknown_fields)]
-        struct Ranked { key: String, rank_priority: i32 }
+        struct Ranked {
+            key: String,
+            rank_priority: i32,
+            #[serde(default)]
+            preserve_existing: bool,
+        }
         #[derive(Deserialize)]
         #[serde(untagged)]
         enum Encoding { Plain(String), Ranked(Ranked) }
-        let (text, priority) = match Encoding::deserialize(deserializer)? {
-            Encoding::Plain(text) => (text, 0),
-            Encoding::Ranked(value) => (value.key, i64::from(value.rank_priority)),
+        let (text, priority, preserve_existing) = match Encoding::deserialize(deserializer)? {
+            Encoding::Plain(text) => (text, 0, false),
+            Encoding::Ranked(value) => (value.key, i64::from(value.rank_priority)
+                + if value.preserve_existing { PRESERVE_EXISTING_PRIORITY } else { 0 }, value.preserve_existing),
         };
         if text.is_empty() || !text.bytes().all(|b| b.is_ascii_lowercase() || b == b'\'') {
             return Err(serde::de::Error::custom("Sound keys require nonempty lowercase ASCII or apostrophe."));
         }
-        Ok(Self { text, priority })
+        Ok(Self { text, priority, preserve_existing, prediction_stage: 0, paths: None })
     }
 }
 
@@ -102,7 +133,7 @@ fn match_suffix(chunks: &[Vec<Key>], ceilings: &[i64], unit: usize, input: &str,
 #[cfg(test)]
 mod tests {
     use super::*;
-    fn key(text: &str, priority: i64) -> Key { Key { text: text.into(), priority } }
+    fn key(text: &str, priority: i64) -> Key { Key { text: text.into(), priority, preserve_existing: false, prediction_stage: 0, paths: None } }
     fn hit(chunks: &[Vec<Key>], input: &str) -> Match {
         match_chunks(chunks, 0, input, &mut Memo::new()).unwrap()
     }
@@ -115,6 +146,10 @@ mod tests {
         assert_eq!(ranked, key("o", -2));
         assert_eq!(serde_json::from_str::<Key>(r#"{"key":"oa","rankPriority":0}"#).unwrap(), key("oa", 0));
         assert_eq!(serde_json::from_str::<Key>(r#"{"key":"o","rankPriority":2}"#).unwrap(), key("o", 2));
+        let additive: Key = serde_json::from_str(r#"{"key":"as","rankPriority":-1000000,"preserveExisting":true}"#).unwrap();
+        assert!(additive.preserve_existing);
+        assert_eq!(additive.priority, PRESERVE_EXISTING_PRIORITY - 1000000);
+        assert!(key("k",0).joined(&additive).preserve_existing);
         for invalid in ["\"\"", r#""O""#, r#"" o""#, r#""អ""#,
             r#"{"key":"o"}"#, r#"{"key":"o","rankPenalty":1}"#,
             r#"{"key":"o","rankPriority":0.5}"#, r#"{"key":"o","rankPriority":2147483648}"#,

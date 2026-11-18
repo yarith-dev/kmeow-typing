@@ -109,3 +109,11 @@ test('suggestion management resolves the exact identity, its additions and Engli
   assert.equal(generated.word,'books');assert.equal(generated.bundled,false);assert.deepEqual(generated.personalIndices,[]);
   assert.equal(JSON.stringify({bundled,personal}),before);
 });
+
+test('excluded inputs remain stored but do not appear as available readings in compact rows',()=>{
+  const catalog={khmer:[{word:'កូន',id:1,partsOfSpeech:[],romanizations:['kon','kid'],soundMapInputs:['kon','kun'],excludedInputs:['kon']}],english:[]};
+  const before=structuredClone(catalog),row=wordList(catalog,[{word:'កូន',spellings:['kon','mykid']}],'khmer')[0];
+  assert.deepEqual(row.excludedInputs,['kon']);
+  assert.deepEqual(romanizedKeys(row),['mykid','kid','kun']);
+  assert(row.romanizations.includes('kon'));assert.deepEqual(catalog,before);
+});

@@ -16,7 +16,7 @@ pub struct PersonalWord {
     #[serde(default)]
     pub spellings: Vec<String>,
     #[serde(default)]
-    pub rank: u32,
+    pub rank: i32,
 }
 fn personal_language() -> TypingMode { TypingMode::Khmer }
 
@@ -26,7 +26,7 @@ pub struct TypingOverride {
     pub language: String,
     pub word: String,
     pub sound_map_enabled: Option<bool>,
-    pub rank: Option<u32>,
+    pub rank: Option<i32>,
     /// Research-only runtime withholding. Never changes the compact source.
     pub excluded: Option<bool>,
 }
@@ -88,7 +88,8 @@ impl Engine {
         let mut composed = Vec::new();
         for candidate in base.candidates.into_iter().chain(extra.candidates) {
             if self.dictionary.excluded_khmer.contains(&candidate.khmer)
-                || extension.dictionary.excluded_khmer.contains(&candidate.khmer) { continue; }
+                || extension.dictionary.excluded_khmer.contains(&candidate.khmer)
+                || self.input_excluded(&base.normalized_input, &candidate.khmer, Some(&extension.dictionary)) { continue; }
             if candidate.mapping_id.is_some() { complete.push(candidate); }
             else { composed.push(candidate); }
         }
@@ -142,6 +143,19 @@ impl Engine {
             }
         }
         (scores, priorities, saved)
+    }
+
+    /// Only explicitly additive keys yield to existing exact matches in either
+    /// dictionary. Older signed priorities retain their existing merge order.
+    pub(crate) fn rank_added_exact(&self, candidates: &mut [Candidate], extension: &Engine, input: &str) {
+        let mut existing = BTreeSet::new();
+        for engine in [self, extension] {
+            if let Some(index) = engine.sound_index.get() {
+                existing.extend(index.existing_exact_words(input, Some(&self.dictionary)));
+            }
+            existing.extend(engine.exact_candidates(input, usize::MAX).into_iter().map(|word| word.khmer));
+        }
+        candidates.sort_by_key(|candidate| !existing.contains(&candidate.khmer));
     }
 
     pub(crate) fn rank_local_exact(&self, candidates: &mut [Candidate], extension: &Engine,
@@ -209,6 +223,22 @@ impl Engine {
         });
     }
 
+    /// Exact matches already have their final context, rank and preservation
+    /// order. Keep their display slots in that same order, retaining each
+    /// suggestion's flags and leaving other suggestion types in their slots.
+    pub(crate) fn align_exact_suggestions(candidates: &mut [Suggestion], exact: &[Candidate]) {
+        if exact.len() < 2 { return; }
+        let order: BTreeMap<_,_> = exact.iter().enumerate()
+            .map(|(position, word)| (word.khmer.as_str(), position)).collect();
+        let is_exact = |hit: &Suggestion| hit.completion.is_none() && hit.correction.is_none()
+            && order.contains_key(crate::suggestion_output(hit));
+        let mut ordered: Vec<_> = candidates.iter().filter(|hit| is_exact(hit)).cloned().collect();
+        ordered.sort_by_key(|hit| order[crate::suggestion_output(hit)]);
+        for (slot, hit) in candidates.iter_mut().filter(|hit| is_exact(hit)).zip(ordered) {
+            *slot = hit;
+        }
+    }
+
     /// Returns an independent runtime view sharing the compact bytes. Missing
     /// settings inherit defaults; an explicit enabled setting can reopen a
     /// base-disabled generated word without affecting any saved alias.
@@ -223,7 +253,7 @@ impl Engine {
                 "english" => crate::valid_english(&setting.word) && setting.word == setting.word.to_ascii_lowercase(),
                 _ => false,
             };
-            if !valid_word || setting.rank.is_some_and(|rank| rank > 1_000_000)
+            if !valid_word || setting.rank.is_some_and(|rank| !crate::valid_rank(rank))
                 || (setting.language == "english" && setting.sound_map_enabled.is_some())
                 || (setting.rank.is_none() && setting.sound_map_enabled.is_none() && setting.excluded.is_none())
                 || !seen.insert((&setting.language, &setting.word)) {

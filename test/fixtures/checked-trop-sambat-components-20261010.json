@@ -26,6 +26,10 @@
     [
       "tropyosombat",
       "ទ្រព្យសម្បត្តិ"
+    ],
+    [
+      "trop",
+      "ទ្រព្យ"
     ]
   ],
   "negativePairs": [
@@ -40,10 +44,6 @@
     [
       "troapsombat",
       "ទ្រព្យសម្បត្តិ"
-    ],
-    [
-      "trop",
-      "ទ្រព្យ"
     ],
     [
       "santepheap",

@@ -16,7 +16,7 @@ fn checked_aam_ng_words_replace_mechanical_paths_and_preserve_controls() {
         let result = core.suggest_with_context(input, Default::default(), &Default::default()).unwrap();
         let hit = result.exact_candidates.iter().find(|c| c.khmer == word).unwrap_or_else(|| panic!("{input}: {word}"));
         let index = words.iter().position(|w| w.as_str() == Some(word)).unwrap();
-        assert_eq!(hit.mapping_id, Some(989000 + index as u64)); assert_eq!(hit.rank, index as u32);
+        assert_eq!(hit.mapping_id, Some(989000 + index as u64)); assert_eq!(hit.rank, index as i32);
         for features in [SuggestionFeatures {sound_map:false, ..Default::default()},
             SuggestionFeatures {romanized:false, ..Default::default()},
             SuggestionFeatures {mode:TypingMode::English, ..Default::default()}] {
